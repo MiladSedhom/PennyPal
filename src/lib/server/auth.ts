@@ -3,6 +3,7 @@ import { dev } from '$app/environment'
 import { PrismaAdapter } from '@lucia-auth/adapter-prisma'
 import { db } from './database'
 import { GitHub } from 'arctic'
+import { GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET } from '$env/static/private'
 
 const adapter = new PrismaAdapter(db.session, db.user)
 
@@ -18,10 +19,7 @@ export const lucia = new Lucia(adapter, {
 	}
 })
 
-export const github = new GitHub(
-	import.meta.env.GITHUB_CLIENT_ID,
-	import.meta.env.GITHUB_CLIENT_SECRET
-)
+export const github = new GitHub(GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET)
 
 declare module 'lucia' {
 	interface Register {
