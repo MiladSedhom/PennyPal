@@ -26,3 +26,4 @@
 
 	<button type="submit">Login</button>
 </form>
+<a href="/login/github">Log in With Github</a>
