@@ -15,7 +15,6 @@ export const actions: Actions = {
 
 		// if credentials is wrong
 		const user = await db.user.findUnique({ where: { username } })
-		console.log(user)
 		if (!user) return fail(400, { credentials: true })
 
 		const userPassword = bcrypt.compare(password, user.passwordHash)
