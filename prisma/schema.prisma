@@ -11,15 +11,22 @@ datasource db {
 }
 
 model User {
-  id           String  @id @default(uuid())
-  username     String  @unique
+  id           String          @id @default(uuid())
+  username     String          @unique
   passwordHash String?
-  github_id    Int?    @unique
+  provider     Oauth_account[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   sessions Session[]
+}
+
+model Oauth_account {
+  provider_id      String @id @default(uuid())
+  provider_user_id String @unique
+  User             User   @relation(fields: [userId], references: [id])
+  userId           String
 }
 
 model Session {
