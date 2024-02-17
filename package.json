@@ -29,6 +29,7 @@
 		"@lucia-auth/adapter-prisma": "^4.0.0",
 		"@prisma/client": "^5.9.1",
 		"@types/bcrypt": "^5.0.2",
+		"arctic": "^1.1.6",
 		"bcrypt": "^5.1.1",
 		"lucia-auth": "^1.8.0"
 	}
