@@ -1,4 +1,4 @@
-import type { RequestHandler } from './$types'
+import type { RequestEvent, RequestHandler } from './$types'
 import { github, lucia } from '$lib/server/auth'
 import { db } from '$lib/server/database'
 
@@ -12,10 +12,10 @@ export const GET: RequestHandler = async (event) => {
 		return new Response(null, { status: 400 })
 
 	try {
-		//get the token
+		//get the github token token
 		const tokens = await github.validateAuthorizationCode(code)
 
-		//send the token and get the user
+		//send the token and get the github user
 		const githubUserResponse = await fetch('https://api.github.com/user', {
 			headers: {
 				Authorization: `Bearer ${tokens.accessToken}`
@@ -24,32 +24,24 @@ export const GET: RequestHandler = async (event) => {
 
 		const githubUser = await githubUserResponse.json()
 
-		const user = await db.user.findUnique({
+		const oauthAcc = await db.oauth_account.findUnique({
 			where: {
-				github_id: githubUser.id
+				provider_user_id: String(githubUser.id)
 			}
 		})
 
-		if (user) {
-			const session = await lucia.createSession(user.id, {})
-			const sessionCookie = lucia.createSessionCookie(session.id)
-			event.cookies.set(sessionCookie.name, sessionCookie.value, {
-				path: '.',
-				...sessionCookie.attributes
-			})
+		if (oauthAcc) {
+			await createAndSetSessinoCookie(oauthAcc.userId, event)
 		} else {
 			const newUser = await db.user.create({
 				data: {
-					github_id: githubUser.id,
-					username: githubUser.login
+					username: githubUser.login,
+					provider: {
+						create: { provider_id: 'github', provider_user_id: String(githubUser.id) }
+					}
 				}
 			})
-			const session = await lucia.createSession(newUser.id, {})
-			const sessionCookie = lucia.createSessionCookie(session.id)
-			event.cookies.set(sessionCookie.name, sessionCookie.value, {
-				path: '.',
-				...sessionCookie.attributes
-			})
+			await createAndSetSessinoCookie(newUser.id, event)
 		}
 
 		return new Response(null, {
@@ -64,4 +56,13 @@ export const GET: RequestHandler = async (event) => {
 			status: 500
 		})
 	}
+}
+
+const createAndSetSessinoCookie = async (userId: string, event: RequestEvent) => {
+	const session = await lucia.createSession(userId, {})
+	const sessionCookie = lucia.createSessionCookie(session.id)
+	event.cookies.set(sessionCookie.name, sessionCookie.value, {
+		path: '.',
+		...sessionCookie.attributes
+	})
 }
