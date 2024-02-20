@@ -17,8 +17,10 @@ export const actions: Actions = {
 		const user = await db.user.findUnique({ where: { username } })
 		if (!user) return fail(400, { credentials: true })
 
-		const userPassword = bcrypt.compare(password, user.passwordHash)
-		if (!userPassword) return fail(400, { credentials: true })
+		if (user.passwordHash) {
+			const userPassword = bcrypt.compare(password, user.passwordHash)
+			if (!userPassword) return fail(400, { credentials: true })
+		}
 
 		// else login and redirect
 
