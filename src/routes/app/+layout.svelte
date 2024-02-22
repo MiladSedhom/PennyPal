@@ -1,8 +1,8 @@
-<script lang="ts">
+<script>
+	import Sidebar from './Sidebar.svelte'
 </script>
 
-sidebar
-
+<Sidebar />
 <main>
 	<slot />
 </main>
