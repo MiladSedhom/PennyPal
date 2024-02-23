@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { page } from '$app/stores'
-
 	export let data
 </script>
 
@@ -19,7 +17,7 @@
 </nav>
 
 {#if data.user}
-	<h1>Hello {$page.data.user.username}</h1>
+	<h1>Hello {data.user.username}</h1>
 {/if}
 <h1>very cool landing page</h1>
 
