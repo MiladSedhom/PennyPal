@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Accordion, AccordionItem } from '$lib/components/Accordion'
+	import { page } from '$app/stores'
 </script>
 
 <aside>
@@ -10,70 +11,97 @@
 				<h3 slot="header">Choose Your Filters</h3>
 
 				<form slot="content" action="filter">
-					<label for="tags">Tags</label>
-					<select name="tags" placeholder="Select your tags">
-						<option value="food">food</option>
-					</select>
+					<div class="field">
+						<label for="tags">Tags</label>
+						<select name="tags" placeholder="Select your tags">
+							<option value="food">food</option>
+						</select>
+					</div>
 
-					<span class="oneline">
-						<label for="start-date">Start Date</label>
-						<input type="date" name="start-date" id="start-date" />
-					</span>
+					<div class="field">
+						<span class="oneline">
+							<label for="start-date">Start Date</label>
+							<input type="date" name="start-date" id="start-date" />
+						</span>
+					</div>
 
-					<span class="oneline">
-						<label for="end-date">End Date</label>
-						<input type="date" name="end-date" id="end-date" />
-					</span>
+					<div class="field">
+						<span class="oneline">
+							<label for="end-date">End Date</label>
+							<input type="date" name="end-date" id="end-date" />
+						</span>
+					</div>
+					<div class="field">
+						<span class="sort">
+							<label for="sort-by">Sort By</label>
+							<select name="sort-by" id="sort-by"></select>
 
-					<span class="sort">
-						<label for="sort-by">Sort By</label>
-						<select name="sort-by" id="sort-by"></select>
-
-						<button class="toggle-sort-type" type="button">
-							<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
-								><g fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"
-									><path
-										d="M10.293 7.707a1 1 0 0 1 0-1.414l3-3a1 1 0 1 1 1.414 1.414l-3 3a1 1 0 0 1-1.414 0Z"
-									/><path
-										d="M17.707 7.707a1 1 0 0 1-1.414 0l-3-3a1 1 0 0 1 1.414-1.414l3 3a1 1 0 0 1 0 1.414Z"
-									/><path
-										d="M14 5a1 1 0 0 1 1 1v8a1 1 0 1 1-2 0V6a1 1 0 0 1 1-1Zm-4.293 7.293a1 1 0 0 1 0 1.414l-3 3a1 1 0 0 1-1.414-1.414l3-3a1 1 0 0 1 1.414 0Z"
-									/><path
-										d="M2.293 12.293a1 1 0 0 1 1.414 0l3 3a1 1 0 1 1-1.414 1.414l-3-3a1 1 0 0 1 0-1.414Z"
-									/><path d="M6 15a1 1 0 0 1-1-1V6a1 1 0 1 1 2 0v8a1 1 0 0 1-1 1Z" /></g
-								></svg
-							>
-						</button>
-					</span>
+							<button class="toggle-sort-type" type="button">
+								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
+									><g fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"
+										><path
+											d="M10.293 7.707a1 1 0 0 1 0-1.414l3-3a1 1 0 1 1 1.414 1.414l-3 3a1 1 0 0 1-1.414 0Z"
+										/><path
+											d="M17.707 7.707a1 1 0 0 1-1.414 0l-3-3a1 1 0 0 1 1.414-1.414l3 3a1 1 0 0 1 0 1.414Z"
+										/><path
+											d="M14 5a1 1 0 0 1 1 1v8a1 1 0 1 1-2 0V6a1 1 0 0 1 1-1Zm-4.293 7.293a1 1 0 0 1 0 1.414l-3 3a1 1 0 0 1-1.414-1.414l3-3a1 1 0 0 1 1.414 0Z"
+										/><path
+											d="M2.293 12.293a1 1 0 0 1 1.414 0l3 3a1 1 0 1 1-1.414 1.414l-3-3a1 1 0 0 1 0-1.414Z"
+										/><path d="M6 15a1 1 0 0 1-1-1V6a1 1 0 1 1 2 0v8a1 1 0 0 1-1 1Z" /></g
+									></svg
+								>
+							</button>
+						</span>
+					</div>
 				</form>
 			</AccordionItem>
 
 			<AccordionItem open>
 				<h3 slot="header">Add A New Payment</h3>
 				<form slot="content" action="?/addPayment" method="post">
-					<label for="amount">Amount</label>
-					<input type="number" name="amount" id="amount" placeholder="amount" />
+					<div class="field">
+						<label for="amount">Amount</label>
+						<input type="number" name="amount" id="amount" placeholder="amount" />
+						{#if $page.form?.errors?.amount}
+							<p class="error">{$page.form.errors.amount}</p>
+						{/if}
+					</div>
 
-					<label for="">Tags</label>
-					<select name="tags" id="tags" multiple>
-						<option value="food">food</option>
-						<option value="drink">drink</option>
-						<option value="fun">fun</option>
-						<option value="fuck">fuck</option>
-					</select>
+					<div class="field">
+						<label for="">Tags</label>
+						<select name="tags" id="tags" multiple>
+							<option value="food">food</option>
+							<option value="drink">drink</option>
+							<option value="fun">fun</option>
+							<option value="fuck">fuck</option>
+						</select>
+						{#if $page.form?.error?.tags}
+							<div class="error">{$page.form.error.tags}</div>
+						{/if}
+					</div>
 
-					<label for="date">Date</label>
-					<input
-						type="date"
-						name="date"
-						id="date"
-						value={new Date().toISOString().substring(0, 10)}
-					/>
+					<div class="field">
+						<label for="date">Date</label>
+						<input
+							type="date"
+							name="date"
+							id="date"
+							value={new Date().toISOString().substring(0, 10)}
+						/>
+						{#if $page.form?.error?.date}
+							<div class="error">{$page.form.error.date}</div>
+						{/if}
+					</div>
 
-					<label for="note">Note</label>
-					<textarea name="note" id="note" />
+					<div class="field">
+						<label for="note">Note</label>
+						<textarea name="note" id="note" />
+						{#if $page.form?.errors?.note}
+							<p class="error">{$page.form.errors.note}</p>
+						{/if}
+					</div>
 
-					<button type="submit"> Add Payment</button>
+					<button type="submit">Add Payment</button>
 				</form>
 			</AccordionItem>
 		</Accordion>
@@ -120,9 +148,7 @@
 		padding-bottom: var(--spacing-48);
 	}
 
-	input,
-	textarea,
-	:not(.sort) > select {
+	.field {
 		margin-bottom: var(--spacing-16);
 	}
 

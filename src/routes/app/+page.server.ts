@@ -1,6 +1,7 @@
 import { db } from '$lib/server/database'
 import { fail, redirect } from '@sveltejs/kit'
 import type { Actions, PageServerLoad } from './$types'
+import { paymentSchema } from './zodSchema'
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.user) throw redirect(303, '/login')
@@ -23,8 +24,15 @@ export const actions: Actions = {
 		const date = new Date(String(formData.get('date')))
 		const note = String(formData.get('note'))
 
-		if (!locals.user) return fail(400, { notAuthrized: true })
+		const result = paymentSchema.safeParse(formData)
 
+		if (!result.success) {
+			const data = {
+				data: Object.fromEntries(formData),
+				errors: result.error.flatten().fieldErrors
+			}
+			return fail(400, data)
+		}
 		try {
 			const storedTags = await db.tag.findMany({
 				where: {
@@ -45,6 +53,7 @@ export const actions: Actions = {
 					amount,
 					note,
 					createdAt: new Date(date),
+					// @ts-ignore
 					userId: locals.user.id,
 					tags: {
 						create: tagsCreate
