@@ -7,3 +7,5 @@ export const paymentSchema = zfd.formData({
 	date: z.coerce.date(),
 	note: zfd.text(z.optional(z.string().max(256, 'Note should have 256 character or less.')))
 })
+
+export type payment = Zod.infer<typeof paymentSchema>

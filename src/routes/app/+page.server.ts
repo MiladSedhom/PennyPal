@@ -1,6 +1,7 @@
 import { db } from '$lib/server/database'
 import { fail, redirect } from '@sveltejs/kit'
 import type { Actions, PageServerLoad } from './$types'
+import { addPayment } from '$lib/server/database'
 import { paymentSchema } from './zodSchema'
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -19,50 +20,22 @@ export const load: PageServerLoad = async ({ locals }) => {
 export const actions: Actions = {
 	addPayment: async ({ request, locals }) => {
 		const formData = await request.formData()
-		const amount = Number(formData.get('amount'))
-		const tags = formData.getAll('tags').map((t) => String(t))
-		const date = new Date(String(formData.get('date')))
-		const note = String(formData.get('note'))
 
+		//validate from data
 		const result = paymentSchema.safeParse(formData)
 
 		if (!result.success) {
-			const data = {
+			return fail(400, {
 				data: Object.fromEntries(formData),
 				errors: result.error.flatten().fieldErrors
-			}
-			return fail(400, data)
+			})
 		}
+
+		//query
 		try {
-			const storedTags = await db.tag.findMany({
-				where: {
-					OR: tags.map((n) => ({
-						name: n
-					}))
-				}
-			})
-			const newTagsNames = tags.filter((name) => !storedTags.some((tag) => tag.name === name))
-
-			const tagsCreate = [
-				...storedTags.map((t) => ({ tag: { connect: { id: t.id } } })),
-				...newTagsNames.map((t) => ({ tag: { create: { name: t } } }))
-			]
-
-			const payment = await db.payment.create({
-				data: {
-					amount,
-					note,
-					createdAt: new Date(date),
-					// @ts-ignore
-					userId: locals.user.id,
-					tags: {
-						create: tagsCreate
-					}
-				},
-				include: { tags: { select: { tag: { select: { name: true } } } } }
-			})
-
-			const p = { ...payment, tags: payment.tags.map((o) => o.tag?.name) }
+			//@ts-ignore
+			await addPayment({ ...result.data }, locals.user.id)
+			return { succes: true }
 		} catch (error) {
 			console.log(error)
 			fail(500, { error })
