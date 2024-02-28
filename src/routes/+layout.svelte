@@ -9,6 +9,7 @@
 <style>
 	:global(.error) {
 		color: tomato;
+		font-size: var(--fs-base);
 	}
 	:global(a) {
 		color: white;
