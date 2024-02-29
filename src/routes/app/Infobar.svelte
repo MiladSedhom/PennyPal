@@ -2,8 +2,6 @@
 	import type { Payment } from '@prisma/client'
 	export let payments: Payment[]
 
-	$: console.log(payments)
-
 	$: sum = roundNumber(
 		payments.reduce((total: any, currentValue: any) => total + currentValue.amount, 0),
 		2
