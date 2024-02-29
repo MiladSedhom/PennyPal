@@ -88,7 +88,7 @@
 
 	.tag {
 		background-color: var(--color-primary);
-		color: var(--color-text);
+		color: var(--color-text-on-primary);
 		padding: 4px var(--spacing-16);
 		border-radius: 1rem;
 		text-align: center;
