@@ -9,25 +9,16 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 
 	const searchParams = searchParamsSchema.parse(Object.fromEntries(url.searchParams))
 
-	const tagsList = searchParams.tags.map((t) => ({
-		tag: {
-			name: t
-		}
-	}))
-
-	console.log(Object.fromEntries(url.searchParams))
-	console.log('sp: ', searchParams)
-	console.log('spt: ', searchParams.tags)
-	console.log(tagsList)
-
 	try {
 		const payments = await db.payment.findMany({
 			where: {
 				userId: locals.user.id,
 				createdAt: { gte: searchParams.startDate, lte: searchParams.endDate },
 				tags: {
-					every: {
-						OR: tagsList
+					some: {
+						tag: {
+							name: { in: searchParams.tags }
+						}
 					}
 				}
 			},
