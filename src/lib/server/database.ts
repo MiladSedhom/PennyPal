@@ -1,5 +1,5 @@
 import prisma from '@prisma/client'
-import type { payment } from '../../routes/app/zodSchema'
+import type { payment } from '../zodSchemas'
 
 export const db = new prisma.PrismaClient()
 

@@ -8,4 +8,12 @@ export const paymentSchema = zfd.formData({
 	note: zfd.text(z.optional(z.string().max(256, 'Note should have 256 character or less.')))
 })
 
+export const searchParamsSchema = z.object({
+	tags: z.string().transform((value) => value.split(',')),
+	startDate: z.coerce.date().catch(new Date('01-01-2000')),
+	endDate: z.coerce.date().catch(new Date()),
+	sortBy: z.enum(['date', 'amount']).catch('date'),
+	sortType: z.enum(['desc', 'asc']).catch('desc')
+})
+
 export type payment = Zod.infer<typeof paymentSchema>

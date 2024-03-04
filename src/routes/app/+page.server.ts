@@ -2,16 +2,7 @@ import { db } from '$lib/server/database'
 import { fail, redirect } from '@sveltejs/kit'
 import type { Actions, PageServerLoad } from './$types'
 import { addPayment } from '$lib/server/database'
-import { paymentSchema } from './zodSchema'
-import { z } from 'zod'
-
-const searchParamsSchema = z.object({
-	tags: z.string().transform((value) => value.split(',')),
-	startDate: z.coerce.date().catch(new Date('01-01-2000')),
-	endDate: z.coerce.date().catch(new Date()),
-	sortBy: z.enum(['date', 'amount']).catch('date'),
-	sortType: z.enum(['desc', 'asc']).catch('desc')
-})
+import { paymentSchema, searchParamsSchema } from '../../lib/zodSchemas'
 
 export const load: PageServerLoad = async ({ locals, url }) => {
 	if (!locals.user) throw redirect(303, '/login')
