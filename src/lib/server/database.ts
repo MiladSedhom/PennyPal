@@ -38,17 +38,22 @@ export const addPayment = async ({ amount, tags, date, note }: payment, userId: 
 }
 
 export const getPayments = async (filters: PaymentFilters, userId: string) => {
+	const tagsFilters =
+		filters.tags.length != 0
+			? {
+					some: {
+						tag: {
+							name: { in: filters.tags }
+						}
+					}
+				}
+			: {}
+
 	const payments = await db.payment.findMany({
 		where: {
 			userId,
 			createdAt: { gte: filters.startDate, lte: filters.endDate },
-			tags: {
-				some: {
-					tag: {
-						name: { in: filters.tags }
-					}
-				}
-			}
+			tags: tagsFilters
 		},
 		include: { tags: { include: { tag: { select: { name: true } } } } },
 		orderBy: [

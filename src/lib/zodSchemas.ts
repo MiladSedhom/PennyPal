@@ -9,7 +9,10 @@ export const paymentSchema = zfd.formData({
 })
 
 export const searchParamsSchema = z.object({
-	tags: z.string().transform((value) => value.split(',')),
+	tags: z
+		.string()
+		.transform((value) => value.split(','))
+		.catch([]),
 	startDate: z.coerce.date().catch(new Date('01-01-2000')),
 	endDate: z.coerce.date().catch(new Date()),
 	sortBy: z.enum(['date', 'amount']).catch('date'),
