@@ -1,5 +1,5 @@
 import prisma from '@prisma/client'
-import type { payment } from '../zodSchemas'
+import type { payment, PaymentFilters } from '../zodSchemas'
 
 export const db = new prisma.PrismaClient()
 
@@ -35,4 +35,34 @@ export const addPayment = async ({ amount, tags, date, note }: payment, userId: 
 	})
 
 	return payment
+}
+
+export const getPayments = async (filters: PaymentFilters, userId: string) => {
+	const payments = await db.payment.findMany({
+		where: {
+			userId,
+			createdAt: { gte: filters.startDate, lte: filters.endDate },
+			tags: {
+				some: {
+					tag: {
+						name: { in: filters.tags }
+					}
+				}
+			}
+		},
+		include: { tags: { include: { tag: { select: { name: true } } } } },
+		orderBy: [
+			filters.sortBy === 'amount'
+				? {
+						amount: filters.sortType
+					}
+				: {
+						createdAt: filters.sortType
+					}
+		]
+	})
+
+	const formatedPayments = payments.map((p) => ({ ...p, tags: p.tags.map((o) => o.tag?.name) }))
+
+	return formatedPayments
 }

@@ -17,3 +17,4 @@ export const searchParamsSchema = z.object({
 })
 
 export type payment = Zod.infer<typeof paymentSchema>
+export type PaymentFilters = Zod.infer<typeof searchParamsSchema>

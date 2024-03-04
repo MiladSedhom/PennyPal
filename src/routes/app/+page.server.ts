@@ -1,7 +1,6 @@
-import { db } from '$lib/server/database'
+import { addPayment, getPayments } from '$lib/server/database'
 import { fail, redirect } from '@sveltejs/kit'
 import type { Actions, PageServerLoad } from './$types'
-import { addPayment } from '$lib/server/database'
 import { paymentSchema, searchParamsSchema } from '../../lib/zodSchemas'
 
 export const load: PageServerLoad = async ({ locals, url }) => {
@@ -10,33 +9,8 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 	const searchParams = searchParamsSchema.parse(Object.fromEntries(url.searchParams))
 
 	try {
-		const payments = await db.payment.findMany({
-			where: {
-				userId: locals.user.id,
-				createdAt: { gte: searchParams.startDate, lte: searchParams.endDate },
-				tags: {
-					some: {
-						tag: {
-							name: { in: searchParams.tags }
-						}
-					}
-				}
-			},
-			include: { tags: { include: { tag: { select: { name: true } } } } },
-			orderBy: [
-				searchParams.sortBy === 'amount'
-					? {
-							amount: searchParams.sortType
-						}
-					: {
-							createdAt: searchParams.sortType
-						}
-			]
-		})
-
-		const formatedPayments = payments.map((p) => ({ ...p, tags: p.tags.map((o) => o.tag?.name) }))
-
-		return { payments: formatedPayments }
+		const payments = await getPayments(searchParams, locals.user.id)
+		return { payments }
 	} catch (e) {
 		console.log(e)
 	}
