@@ -79,6 +79,7 @@
 		overflow: auto;
 		padding: 0.4rem 0;
 		scrollbar-gutter: stable both-edges;
+		background-color: var(--color-dark);
 
 		&::-webkit-scrollbar-thumb {
 			height: 1px;
