@@ -1,4 +1,4 @@
-import { addPayment, getPayments } from '$lib/server/database'
+import { addPayment, getPayments, getUserTags } from '$lib/server/database'
 import { fail, redirect } from '@sveltejs/kit'
 import type { Actions, PageServerLoad } from './$types'
 import { paymentSchema, searchParamsSchema } from '../../lib/zodSchemas'
@@ -10,7 +10,8 @@ export const load: PageServerLoad = async ({ locals, url }) => {
 
 	try {
 		const payments = await getPayments(searchParams, locals.user.id)
-		return { payments }
+		const tags = await getUserTags(locals.user.id)
+		return { payments, tags }
 	} catch (e) {
 		console.log(e)
 	}
