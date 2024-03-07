@@ -13,18 +13,20 @@
 </script>
 
 <div class="container">
-	{#each data.payments as payment}
-		<PaymentCard
-			{payment}
-			selected={selectedPayments.has(payment.id)}
-			on:click={() => {
-				handleOnClick(payment.id)
-			}}
-			on:keydown={(event) => {
-				if (event.code === 'Enter' || event.code === 'Space') handleOnClick(payment.id)
-			}}
-		/>
-	{/each}
+	{#if data.payments?.length != 0}
+		{#each data.payments as payment}
+			<PaymentCard
+				{payment}
+				selected={selectedPayments.has(payment.id)}
+				on:click={() => {
+					handleOnClick(payment.id)
+				}}
+				on:keydown={(event) => {
+					if (event.code === 'Enter' || event.code === 'Space') handleOnClick(payment.id)
+				}}
+			/>
+		{/each}
+	{/if}
 </div>
 <div class="bot">
 	<Infobar
