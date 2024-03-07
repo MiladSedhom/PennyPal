@@ -2,6 +2,7 @@
 	import { Accordion, AccordionItem } from '$lib/components/Accordion'
 	import { page } from '$app/stores'
 	import { queryParameters, ssp } from 'sveltekit-search-params'
+	import Select from '$lib/components/Select.svelte'
 
 	const filters = queryParameters({
 		startDate: ssp.string(getLastWeeksDate().toISOString().substring(0, 10)),
@@ -10,21 +11,11 @@
 		sortType: ssp.string('desc')
 	})
 
+	let selectedOptions: string[] = $filters.tags ? $filters?.tags?.split(',') : []
+
 	function getLastWeeksDate() {
 		const now = new Date()
 		return new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7)
-	}
-	const selectHandler = (e: Event) => {
-		const selectedOptions: string[] = []
-		const target = e.target as HTMLSelectElement
-
-		Array.from(target.options).forEach((option) => {
-			if (option.selected) {
-				selectedOptions.push(option.value)
-			}
-		})
-
-		$filters.tags = selectedOptions.toString()
 	}
 </script>
 
@@ -38,20 +29,14 @@
 				<form slot="content" action="filter">
 					<div class="field">
 						<label for="tags">Tags</label>
-						<select
-							name="tags"
-							placeholder="Select your tags"
+						<Select
 							multiple
-							value={$filters.tags || ''}
-							on:change={(e) => {
-								selectHandler(e)
+							bind:selectedValues={selectedOptions}
+							options={$page.data.tags.map((t) => ({ label: t, value: t }))}
+							onSelect={() => {
+								$filters.tags = selectedOptions.toString()
 							}}
-						>
-							<option value="food">food</option>
-							<option value="fuck">fuck</option>
-							<option value="drink">drink</option>
-							<option value="fun">fun</option>
-						</select>
+						/>
 					</div>
 
 					<div class="field">
@@ -211,6 +196,23 @@
 	form {
 		/* not using margin cuz it doesnt work with the transition */
 		padding-bottom: var(--spacing-48);
+	}
+
+	:global(.select) {
+		width: 100% !important;
+		padding: 0 var(--spacing-16) !important;
+		font-size: var(--fs-base) !important;
+		background-color: var(--color-fields) !important;
+		color: var(--color-text-alt) !important;
+		border-radius: 2px !important;
+
+		&:focus {
+			outline: 1px solid color-mix(in srgb, var(--color-fields) 80%, var(--color-text-alt)) !important;
+		}
+
+		&::placeholder {
+			color: var(--color-grey-70) !important;
+		}
 	}
 
 	.field {
