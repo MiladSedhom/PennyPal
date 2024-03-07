@@ -5,10 +5,9 @@
 	import { tick } from 'svelte'
 
 	export let options: { label: string; value: string }[]
-	export let selectedValues: string[] = []
-	export let selectedValue: string | undefined = undefined
-	export let placeholder: string = ''
 	export let multiple: boolean = false
+	export let value: string[] | string = multiple ? [] : ''
+	export let placeholder: string = ''
 	export let onSelect: Function | undefined = undefined
 	export let noStyles: boolean = false
 
@@ -32,15 +31,14 @@
 	const [floatingRef, floatingContent] = createFloatingActions(_floatingConfig)
 
 	//functions
-	const addOrRemoveFromSelectedValues = (value: any) => {
-		selectedValues.includes(value)
-			? selectedValues.splice(selectedValues.indexOf(value), 1)
-			: selectedValues.push(value)
-		selectedValues = selectedValues
+	const addOrRemoveFromSelectedValues = (v: any) => {
+		if (!Array.isArray(value)) return
+		value.includes(v) ? value.splice(value.indexOf(v), 1) : value.push(v)
+		value = value
 	}
 
-	const select = (value: string) => {
-		multiple ? addOrRemoveFromSelectedValues(value) : (selectedValue = value)
+	const select = (v: string) => {
+		multiple ? addOrRemoveFromSelectedValues(v) : (value = v)
 		onSelect?.(value)
 		!multiple && (isOpen = false)
 	}
@@ -74,7 +72,7 @@
 				removeTag(hoverdTag)
 				hoverdTag = undefined
 			} else {
-				hoverdTag = selectedValues.at(-1)
+				hoverdTag = value.at(-1)
 			}
 		} else {
 			hoverdTag = undefined
@@ -104,8 +102,9 @@
 	}
 
 	const removeTag = (tag: string) => {
-		selectedValues.splice(selectedValues.indexOf(tag), 1)
-		selectedValues = selectedValues
+		if (!Array.isArray(value)) return
+		value.splice(value.indexOf(tag), 1)
+		value = value
 	}
 
 	const handleOptionClick = (option: any) => {
@@ -115,6 +114,8 @@
 	const closeDropDown = () => {
 		isOpen = false
 	}
+
+	// use:scrollAction={{ isScroll: option === hoverdOption }}
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -140,9 +141,9 @@
 	aria-expanded={isOpen}
 	tabindex="0"
 >
-	{#if selectedValues.length != 0}
+	{#if multiple && value.length != 0}
 		<div class="tags-container">
-			{#each selectedValues as tag}
+			{#each value as tag}
 				<button
 					class="tag"
 					class:hoverd-tag={hoverdTag === tag}
@@ -161,7 +162,7 @@
 		{#if !isInput}
 			<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 			<p>
-				{options.filter((e) => e.value === selectedValue)[0]?.label}
+				{options.filter((e) => e.value === value)[0]?.label}
 			</p>
 		{/if}
 
@@ -197,10 +198,9 @@
 					on:keydown={(e) => {
 						if (e.key != 'Tab') e.preventDefault()
 					}}
-					use:scrollAction={{ isScroll: option === hoverdOption }}
 					class:hoverd-option={hoverdOption?.value === option.value}
 					class="option"
-					class:selected-option={selectedValues.includes(option.value)}
+					class:selected-option={value.includes(option.value)}
 					on:mouseenter={() => {
 						hoverdOption = option
 					}}
@@ -225,7 +225,6 @@
 			justify-content: center;
 			min-height: 2.5rem;
 			width: var(--width);
-			margin: var(--margin, 0 0 var(--spacing-16) 0);
 			background-color: var(--color-fields);
 			border-radius: 2px;
 			position: relative;

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import PaymentCard from './PaymentCard.svelte'
-	import Infobar from './Infobar.svelte'
+	import PaymentCard from './(components)/PaymentCard.svelte'
+	import Infobar from './(components)/Infobar.svelte'
 	export let data
 
 	let selectedPayments = new Set<number>()
