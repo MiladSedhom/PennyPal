@@ -5,7 +5,7 @@ export const db = new prisma.PrismaClient()
 
 export const addPayment = async ({ amount, tags, date, note }: payment, userId: string) => {
 	// because tags can be a string or an array of string
-	tags = typeof tags === 'string' ? [tags] : [...tags]
+	if (typeof tags === 'string') tags = [tags]
 
 	const storedTags = await db.tag.findMany({
 		where: {
@@ -27,11 +27,11 @@ export const addPayment = async ({ amount, tags, date, note }: payment, userId: 
 			note,
 			createdAt: new Date(date),
 			userId,
-			tags: {
+			paymentTag: {
 				create: tagsCreate
 			}
 		},
-		include: { tags: { select: { tag: { select: { name: true } } } } }
+		include: { paymentTag: { select: { tag: { select: { name: true } } } } }
 	})
 
 	return payment
@@ -53,9 +53,9 @@ export const getPayments = async (filters: PaymentFilters, userId: string) => {
 		where: {
 			userId,
 			createdAt: { gte: filters.startDate, lte: filters.endDate },
-			tags: tagsFilters
+			paymentTag: tagsFilters
 		},
-		include: { tags: { include: { tag: { select: { name: true } } } } },
+		include: { paymentTag: { include: { tag: { select: { name: true } } } } },
 		orderBy: [
 			filters.sortBy === 'amount'
 				? {
@@ -67,7 +67,7 @@ export const getPayments = async (filters: PaymentFilters, userId: string) => {
 		]
 	})
 
-	const formatedPayments = payments.map((p) => ({ ...p, tags: p.tags.map((o) => o.tag?.name) }))
+	const formatedPayments = payments.map((p) => ({ ...p, tags: p.paymentTag.map((o) => o.tag?.name) }))
 
 	return formatedPayments
 }
@@ -76,7 +76,7 @@ export const getUserTags = async (userId: string) => {
 	const tags = await db.tag.findMany({
 		select: { name: true },
 		where: {
-			payments: {
+			paymentTag: {
 				some: {
 					payment: { userId: userId }
 				}
