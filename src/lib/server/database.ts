@@ -86,3 +86,7 @@ export const getUserTags = async (userId: string) => {
 
 	return tags.map((t) => t.name)
 }
+
+export const removePayment = async (id: number, userId: string) => {
+	await db.payment.delete({ where: { id, userId } })
+}

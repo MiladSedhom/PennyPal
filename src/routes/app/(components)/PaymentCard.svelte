@@ -3,7 +3,9 @@
 	export let payment: any
 	export let selected: boolean
 
-	const deleteButtonHandler = async () => {}
+	const deleteButtonHandler = async () => {
+		console.log('clicked')
+	}
 </script>
 
 <div class="card" class:selected on:click on:keydown role="button" tabindex="0">
@@ -17,14 +19,17 @@
 		</div>
 		<span class="date">{new Date(payment.createdAt).toLocaleDateString()}</span>
 	</div>
-	<button class="remove-btn" on:click={deleteButtonHandler}
-		><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-			><path
-				fill="currentColor"
-				d="M20 6.91L17.09 4L12 9.09L6.91 4L4 6.91L9.09 12L4 17.09L6.91 20L12 14.91L17.09 20L20 17.09L14.91 12L20 6.91Z"
-			/></svg
-		></button
-	>
+	<form action="?/removePayment" method="post">
+		<input type="hidden" name="id" value={payment.id} />
+		<button class="remove-btn" on:click={deleteButtonHandler}>
+			<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+				<path
+					fill="currentColor"
+					d="M20 6.91L17.09 4L12 9.09L6.91 4L4 6.91L9.09 12L4 17.09L6.91 20L12 14.91L17.09 20L20 17.09L14.91 12L20 6.91Z"
+				/></svg
+			></button
+		>
+	</form>
 </div>
 
 <style>
@@ -118,8 +123,12 @@
 		translate: 100%;
 		border-radius: 2px;
 		background-color: var(--color-semantic-red);
-		color: var(--color-text-alt);
 		display: none;
+	}
+
+	svg {
+		color: white;
+		margin: 0;
 	}
 
 	.card:hover .remove-btn {

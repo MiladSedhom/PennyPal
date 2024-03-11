@@ -1,4 +1,4 @@
-import { addPayment, getPayments, getUserTags } from '$lib/server/database'
+import { addPayment, getPayments, getUserTags, removePayment } from '$lib/server/database'
 import { fail, redirect } from '@sveltejs/kit'
 import type { Actions, PageServerLoad } from './$types'
 import { paymentSchema, searchParamsSchema } from '../../lib/zodSchemas'
@@ -39,6 +39,19 @@ export const actions: Actions = {
 		} catch (error) {
 			console.log(error)
 			fail(500, { error })
+		}
+	},
+	removePayment: async ({ request, locals }) => {
+		console.log('removein payment')
+		const formData = await request.formData()
+		const id = Number(formData.get('id'))
+
+		if (!locals.user) return
+
+		try {
+			await removePayment(id, locals.user?.id)
+		} catch (e) {
+			console.log(e)
 		}
 	}
 }
