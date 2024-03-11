@@ -3,10 +3,6 @@
 	import { makeHorizontalScrollableWithWheel } from '$lib/actions/makeHorizontalScrollableWithWheel'
 	export let payment: any
 	export let selected: boolean
-
-	const deleteButtonHandler = async () => {
-		console.log('clicked')
-	}
 </script>
 
 <div class="card" class:selected on:click on:keydown role="button" tabindex="0">
@@ -22,7 +18,7 @@
 	</div>
 	<form action="?/removePayment" method="post" use:enhance>
 		<input type="hidden" name="id" value={payment.id} />
-		<button class="remove-btn" on:click={deleteButtonHandler}>
+		<button class="remove-btn" on:click|stopPropagation={() => {}}>
 			<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
 				<path
 					fill="currentColor"
