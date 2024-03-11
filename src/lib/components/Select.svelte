@@ -8,8 +8,10 @@
 	export let multiple: boolean = false
 	export let value: string[] | string = multiple ? [] : ''
 	export let placeholder: string = ''
-	export let onSelect: Function | undefined = undefined
+	export let onSelect: Function | null = null
 	export let noStyles: boolean = false
+	export let name: string | null = null
+	export let id: string | null = null
 
 	let isOpen = false
 	let isInput = multiple ? true : false //i know :)
@@ -37,7 +39,7 @@
 		value = value
 	}
 
-	const select = (v: string) => {
+	const select = async (v: string) => {
 		multiple ? addOrRemoveFromSelectedValues(v) : (value = v)
 		onSelect?.(value)
 		!multiple && (isOpen = false)
@@ -216,6 +218,12 @@
 		{/each}
 	</ul>
 </div>
+
+<select hidden {multiple} {name} {id}>
+	{#each options as o}
+		<option value={o.value} selected={Array.isArray(value) ? value.includes(o.value) : value == o.value}></option>
+	{/each}
+</select>
 
 {#if !noStyles}
 	<style>
