@@ -4,7 +4,7 @@ export function scrollAction(node: HTMLElement, args: { isScroll: boolean }) {
 	return {
 		// @ts-ignore
 		update(args) {
-			args.isScroll && node.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' })
+			args.isScroll && node.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' })
 		},
 
 		destroy() {

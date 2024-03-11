@@ -116,8 +116,6 @@
 	const closeDropDown = () => {
 		isOpen = false
 	}
-
-	// use:scrollAction={{ isScroll: option === hoverdOption }}
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -192,7 +190,7 @@
 	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 	<ul class:show={isOpen} use:floatingContent id="options-list">
 		{#each filteredOptions as option}
-			<li>
+			<li use:scrollAction={{ isScroll: option === hoverdOption }}>
 				<button
 					on:click={() => {
 						handleOptionClick(option)
