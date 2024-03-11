@@ -11,6 +11,13 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 	}
+
+	namespace svelteHTML {
+		interface HTMLAttributes<T> {
+			'on:clickoutside'?: (event: Event) => void
+			'on:focusoutside'?: (event: Event) => void
+		}
+	}
 }
 
 export {}
