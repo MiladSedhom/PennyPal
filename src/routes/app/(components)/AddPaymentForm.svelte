@@ -1,8 +1,13 @@
 <script lang="ts">
+	import { enhance } from '$app/forms'
 	import { page } from '$app/stores'
+	import Select from '$lib/components/Select.svelte'
+
+	let selectedTags: string[]
+	const options = $page.data.tags.map((o: string) => ({ label: o, value: o }))
 </script>
 
-<form action="?/addPayment" method="post">
+<form action="?/addPayment" method="post" use:enhance>
 	<div class="field">
 		<label for="amount">Amount</label>
 		<input type="number" name="amount" id="amount" placeholder="amount" />
@@ -13,22 +18,17 @@
 
 	<div class="field">
 		<label for="">Tags</label>
-		<select name="tags" id="tags" multiple>
-			<option value="food">food</option>
-			<option value="drink">drink</option>
-			<option value="fun">fun</option>
-			<option value="fuck">fuck</option>
-		</select>
-		{#if $page.form?.error?.tags}
-			<div class="error">{$page.form.error.tags}</div>
+		<Select name="tags" id="tags" bind:value={selectedTags} multiple {options} />
+		{#if $page.form?.errors?.tags}
+			<div class="error">{$page.form.errors.tags}</div>
 		{/if}
 	</div>
 
 	<div class="field">
 		<label for="date">Date</label>
 		<input type="date" name="date" id="date" value={new Date().toISOString().substring(0, 10)} />
-		{#if $page.form?.error?.date}
-			<div class="error">{$page.form.error.date}</div>
+		{#if $page.form?.errors?.date}
+			<div class="error">{$page.form.errors.date}</div>
 		{/if}
 	</div>
 
