@@ -36,7 +36,7 @@
 	.card {
 		width: clamp(320px, 90%, 909px);
 		max-width: 909px;
-		height: 4rem;
+		min-height: 4rem;
 		padding-inline: var(--spacing-32);
 		display: flex;
 		align-items: center;

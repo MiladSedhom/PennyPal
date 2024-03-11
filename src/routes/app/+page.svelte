@@ -37,9 +37,12 @@
 <style>
 	.container {
 		width: 100%;
+		min-height: 100%;
 		padding: var(--spacing-32);
 		display: flex;
-		flex-flow: column;
+		flex-flow: column nowrap;
+		justify-content: flex-start;
+		align-items: center;
 		gap: var(--spacing-16);
 	}
 
