@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { enhance } from '$app/forms'
 	import { makeHorizontalScrollableWithWheel } from '$lib/actions/makeHorizontalScrollableWithWheel'
 	export let payment: any
 	export let selected: boolean
@@ -19,7 +20,7 @@
 		</div>
 		<span class="date">{new Date(payment.createdAt).toLocaleDateString()}</span>
 	</div>
-	<form action="?/removePayment" method="post">
+	<form action="?/removePayment" method="post" use:enhance>
 		<input type="hidden" name="id" value={payment.id} />
 		<button class="remove-btn" on:click={deleteButtonHandler}>
 			<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
