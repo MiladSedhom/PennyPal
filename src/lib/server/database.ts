@@ -4,9 +4,6 @@ import type { payment, PaymentFilters } from '../zodSchemas'
 export const db = new prisma.PrismaClient()
 
 export const addPayment = async ({ amount, tags, date, note }: payment, userId: string) => {
-	// because tags can be a string or an array of string
-	if (typeof tags === 'string') tags = [tags]
-
 	const storedTags = await db.tag.findMany({
 		where: {
 			OR: tags.map((n) => ({
