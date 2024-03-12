@@ -20,7 +20,7 @@
 	}
 </script>
 
-<form action="?/addPayment" method="post" use:enhance={submitter}>
+<form action="/app?/addPayment" method="post" use:enhance={submitter}>
 	<div class="field">
 		<label for="amount">Amount</label>
 		<input type="number" name="amount" id="amount" placeholder="amount" />
