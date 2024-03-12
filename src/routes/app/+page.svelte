@@ -13,7 +13,7 @@
 </script>
 
 <div class="container">
-	{#if data.payments?.length != 0}
+	{#if data.payments?.length}
 		{#each data.payments as payment}
 			<PaymentCard
 				{payment}
@@ -29,9 +29,11 @@
 	{/if}
 </div>
 <div class="bot">
-	<Infobar
-		payments={selectedPayments.size === 0 ? data.payments : data.payments.filter((p) => selectedPayments.has(p.id))}
-	/>
+	{#if data.payments?.length}
+		<Infobar
+			payments={selectedPayments.size === 0 ? data.payments : data.payments.filter((p) => selectedPayments.has(p.id))}
+		/>
+	{/if}
 </div>
 
 <style>
