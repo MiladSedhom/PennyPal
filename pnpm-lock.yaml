@@ -23,6 +23,9 @@ dependencies:
   svelte-floating-ui:
     specifier: ^1.5.8
     version: 1.5.8
+  tinycolor2:
+    specifier: ^1.6.0
+    version: 1.6.0
   zod:
     specifier: ^3.22.4
     version: 3.22.4
@@ -2230,6 +2233,10 @@ packages:
       globalyzer: 0.1.0
       globrex: 0.1.2
     dev: true
+
+  /tinycolor2@1.6.0:
+    resolution: {integrity: sha512-XPaBkWQJdsf3pLKJV9p4qN/S+fm2Oj8AIPo1BTUhg5oxkvm9+SVEGFdhyOz7tTdUTfvxMiAs4sp6/eZO2Ew+pw==}
+    dev: false
 
   /to-regex-range@5.0.1:
     resolution: {integrity: sha512-65P7iz6X5yEr1cwcgvQxbbIw7Uk3gOy5dIdtZ4rDveLqhrdJP+Li/Hx6tyK0NEb+2GCyneCMJiGqrADCSNk8sQ==}

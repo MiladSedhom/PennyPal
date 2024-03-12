@@ -33,6 +33,7 @@
 		"arctic": "^1.1.6",
 		"bcrypt": "^5.1.1",
 		"svelte-floating-ui": "^1.5.8",
+		"tinycolor2": "^1.6.0",
 		"zod": "^3.22.4",
 		"zod-form-data": "^2.0.2"
 	}
