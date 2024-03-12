@@ -1,21 +1,7 @@
-import { addPayment, getPayments, getUserTags, removePayment } from '$lib/server/database'
-import { fail, redirect } from '@sveltejs/kit'
-import type { Actions, PageServerLoad } from './$types'
-import { paymentSchema, searchParamsSchema } from '../../lib/zodSchemas'
-
-export const load: PageServerLoad = async ({ locals, url }) => {
-	if (!locals.user) throw redirect(303, '/login')
-
-	const searchParams = searchParamsSchema.parse(Object.fromEntries(url.searchParams))
-
-	try {
-		const payments = await getPayments(searchParams, locals.user.id)
-		const tags = await getUserTags(locals.user.id)
-		return { payments, tags }
-	} catch (e) {
-		console.log(e)
-	}
-}
+import { addPayment, removePayment } from '$lib/server/database'
+import { fail } from '@sveltejs/kit'
+import type { Actions } from './$types'
+import { paymentSchema } from '../../lib/zodSchemas'
 
 export const actions: Actions = {
 	addPayment: async ({ request, locals }) => {
