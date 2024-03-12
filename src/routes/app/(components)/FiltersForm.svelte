@@ -17,7 +17,7 @@
 		return new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7)
 	}
 
-	const options = $page.data.tags.map((t: string) => ({ label: t, value: t }))
+	const options = $page.data.tags?.map((t: string) => ({ label: t, value: t })) || []
 </script>
 
 <form action="filter">
