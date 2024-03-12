@@ -33,7 +33,7 @@
 		<label for="">Tags</label>
 		<Select name="tags" id="tags" bind:value={selectedTags} multiple {options} />
 		{#if $page.form?.errors?.tags}
-			<div class="error">{$page.form.errors.tags}</div>
+			<div class="error">{$page.form.errors.tags[0]}</div>
 		{/if}
 	</div>
 
