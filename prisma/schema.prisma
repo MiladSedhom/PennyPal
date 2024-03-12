@@ -30,13 +30,12 @@ model Payment {
 }
 
 model PaymentTag {
-  id        Int      @id @default(autoincrement())
-  paymentId Int?
-  tagId     Int?
-  tag       Tag?     @relation(fields: [tagId], references: [id])
-  payment   Payment? @relation(fields: [paymentId], references: [id])
+  paymentId Int
+  tagId     Int
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  payment   Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
 
-  @@index([paymentId, tagId])
+  @@id([paymentId, tagId])
 }
 
 model Tag {
