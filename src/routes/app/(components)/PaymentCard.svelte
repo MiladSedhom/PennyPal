@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { enhance } from '$app/forms'
 	import { makeHorizontalScrollableWithWheel } from '$lib/actions/makeHorizontalScrollableWithWheel'
-	export let payment: any
+	import type { Payment } from '@prisma/client'
+
+	export let payment: Payment & { tags: string[] }
 	export let selected: boolean
 </script>
 
