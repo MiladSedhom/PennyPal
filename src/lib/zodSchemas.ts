@@ -29,5 +29,5 @@ export const searchParamsSchema = z.object({
 	sortType: z.enum(['desc', 'asc']).catch('desc')
 })
 
-export type payment = Zod.infer<typeof paymentSchema>
+export type Payment = Zod.infer<typeof paymentSchema>
 export type PaymentFilters = Zod.infer<typeof searchParamsSchema>
