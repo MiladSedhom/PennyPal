@@ -188,7 +188,7 @@
 	</div>
 
 	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-	<ul class:show={isOpen} use:floatingContent id="options-list">
+	<ul class:show={isOpen && filteredOptions.length !== 0} use:floatingContent id="options-list">
 		{#each filteredOptions as option}
 			<li use:scrollAction={{ isScroll: option === hoverdOption }}>
 				<button
