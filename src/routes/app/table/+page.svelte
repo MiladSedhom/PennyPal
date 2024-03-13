@@ -71,14 +71,15 @@
 						>{table[String(day)][tag]}</TableCell
 					>
 				{/each}
-				<TableCell --_color-percentage={`${(table[String(day)].dailySum * 100) / table.sum}%`}
+				<TableCell --_color-percentage={`${(table[String(day)]?.dailySum * 100) / table.sum}%`}
 					>{table[String(day)].dailySum}</TableCell
 				>
 			</tr>
 		{/each}
 		<th>Tag sum</th>
 		{#each shownTags as tag}
-			<TableCell --_color-percentage={`${(table[tag].tagSum * 100) / table.sum}%`}>{table[tag].tagSum}</TableCell>
+			<TableCell --_color-percentage={`${(table[tag]?.tagSum * 100) / table.sum}%`}>{table[tag]?.tagSum || 0}</TableCell
+			>
 		{/each}
 		<TableCell --_color-percentage="100%">{table.sum}</TableCell>
 	</table>
