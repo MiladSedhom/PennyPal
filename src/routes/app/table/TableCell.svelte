@@ -1,5 +1,4 @@
 <script lang="ts">
-	// @ts-ignore
 	import tinycolor from 'tinycolor2'
 	import { onMount } from 'svelte'
 
