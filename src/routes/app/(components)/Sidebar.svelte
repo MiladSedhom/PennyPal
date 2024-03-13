@@ -28,13 +28,13 @@
 	<nav class="tabs-container">
 		<ul>
 			<li>
-				<a href="/app" class:active-tab={$page.route.id === '/app'}>Payments view</a>
+				<a href={`/app${$page.url.search}`} class:active-tab={$page.route.id === '/app'}>Payments view</a>
 			</li>
 			<li>
-				<a href="/app/graphs" class:active-tab={$page.route.id === '/app/graphs'}>Graphs view</a>
+				<a href={`/app/graphs${$page.url.search}`} class:active-tab={$page.route.id === '/app/graphs'}>Graphs view</a>
 			</li>
 			<li>
-				<a href="/app/table" class:active-tab={$page.route.id === '/app/table'}>Table view</a>
+				<a href={`/app/table${$page.url.search}`} class:active-tab={$page.route.id === '/app/table'}>Table view</a>
 			</li>
 		</ul>
 	</nav>
