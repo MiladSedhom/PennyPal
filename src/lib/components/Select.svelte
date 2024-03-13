@@ -9,7 +9,6 @@
 	export let value: string[] | string = multiple ? [] : ''
 	export let placeholder: string = ''
 	export let onSelect: Function | null = null
-	export let noStyles: boolean = false
 	export let name: string | null = null
 	export let id: string | null = null
 
@@ -223,132 +222,130 @@
 	{/each}
 </select>
 
-{#if !noStyles}
-	<style>
-		.container {
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			min-height: 2.5rem;
-			width: var(--width);
-			background-color: var(--color-fields);
-			border-radius: 2px;
-			position: relative;
+<style>
+	.container {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		min-height: 2.5rem;
+		width: var(--width);
+		background-color: var(--color-fields);
+		border-radius: 2px;
+		position: relative;
 
-			&:focus-within {
-				outline: 1px solid color-mix(in srgb, var(--color-fields) 80%, var(--color-text-alt));
-			}
+		&:focus-within {
+			outline: 1px solid color-mix(in srgb, var(--color-fields) 80%, var(--color-text-alt));
 		}
+	}
 
-		.tags-container {
-			background-color: var(--color-fields);
-			padding: 12px;
-			display: flex;
-			flex-flow: row wrap;
-			gap: var(--spacing-8);
-		}
+	.tags-container {
+		background-color: var(--color-fields);
+		padding: 12px;
+		display: flex;
+		flex-flow: row wrap;
+		gap: var(--spacing-8);
+	}
 
-		.tag {
-			text-align: center;
-			background-color: var(--color-primary);
-			color: var(--color-text-on-primary);
-			padding: 6px var(--spacing-16);
-			border-radius: 4px;
-			font-size: var(--fs-small);
-			font-weight: 500;
+	.tag {
+		text-align: center;
+		background-color: var(--color-primary);
+		color: var(--color-text-on-primary);
+		padding: 6px var(--spacing-16);
+		border-radius: 4px;
+		font-size: var(--fs-small);
+		font-weight: 500;
 
-			&:hover {
-				background-color: var(--color-semantic-red);
-				color: var(--color-text-alt);
-			}
-		}
-
-		.hoverd-tag {
+		&:hover {
 			background-color: var(--color-semantic-red);
 			color: var(--color-text-alt);
 		}
+	}
 
-		.input-caret-container {
-			height: 100%;
-			background-color: var(--color-fields);
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-		}
+	.hoverd-tag {
+		background-color: var(--color-semantic-red);
+		color: var(--color-text-alt);
+	}
 
-		p {
-			padding: 0 1rem;
-			font-size: var(--fs-base);
-		}
+	.input-caret-container {
+		height: 100%;
+		background-color: var(--color-fields);
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
 
-		svg {
-			margin-right: var(--spacing-16);
-			color: var(--caret-color, var(--color-grey-70));
-		}
+	p {
+		padding: 0 1rem;
+		font-size: var(--fs-base);
+	}
 
-		input:focus {
+	svg {
+		margin-right: var(--spacing-16);
+		color: var(--caret-color, var(--color-grey-70));
+	}
+
+	input:focus {
+		outline: none;
+	}
+
+	ul {
+		width: 100%;
+		display: none;
+		border-radius: 2px;
+		max-height: 10rem;
+		overflow: auto;
+		position: absolute;
+		z-index: 1;
+
+		outline: 1px solid color-mix(in srgb, var(--color-fields) 80%, var(--color-text-alt));
+	}
+
+	ul::-webkit-scrollbar {
+		width: 0;
+	}
+
+	li {
+		width: 100%;
+		display: block;
+		/* border-bottom: 2px solid hsl(150, 3%, 20%); */
+	}
+
+	.option {
+		width: 100%;
+		font-size: var(--fs-small);
+		font-weight: normal;
+		padding: 0.67rem;
+		border-radius: 0;
+
+		background-color: var(--color-fields);
+		color: var(--color-text-alt);
+
+		&:focus {
 			outline: none;
 		}
 
-		ul {
-			width: 100%;
-			display: none;
-			border-radius: 2px;
-			max-height: 10rem;
-			overflow: auto;
-			position: absolute;
-			z-index: 1;
-
-			outline: 1px solid color-mix(in srgb, var(--color-fields) 80%, var(--color-text-alt));
-		}
-
-		ul::-webkit-scrollbar {
-			width: 0;
-		}
-
-		li {
-			width: 100%;
-			display: block;
-			/* border-bottom: 2px solid hsl(150, 3%, 20%); */
-		}
-
-		.option {
-			width: 100%;
-			font-size: var(--fs-small);
-			font-weight: normal;
-			padding: 0.67rem;
-			border-radius: 0;
-
-			background-color: var(--color-fields);
-			color: var(--color-text-alt);
-
-			&:focus {
-				outline: none;
-			}
-
-			/* &:hover {
+		/* &:hover {
 			background-color: hsl(144, 65%, 42%);
 		} */
-		}
+	}
 
-		.selected-option {
-			background-color: color-mix(in srgb, var(--color-primary) 15%, var(--color-fields));
-		}
+	.selected-option {
+		background-color: color-mix(in srgb, var(--color-primary) 15%, var(--color-fields));
+	}
 
-		.hoverd-option {
-			background-color: color-mix(in srgb, var(--color-fields) 88%, white);
-		}
+	.hoverd-option {
+		background-color: color-mix(in srgb, var(--color-fields) 88%, white);
+	}
 
-		.selected-option.hoverd-option {
-			background-color: color-mix(in srgb, var(--color-primary) 30%, var(--color-fields));
-		}
+	.selected-option.hoverd-option {
+		background-color: color-mix(in srgb, var(--color-primary) 30%, var(--color-fields));
+	}
 
-		.show {
-			display: block;
-		}
+	.show {
+		display: block;
+	}
 
-		.hidden {
-			display: none;
-		}
-	</style>
-{/if}
+	.hidden {
+		display: none;
+	}
+</style>
