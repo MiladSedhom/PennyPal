@@ -159,9 +159,8 @@
 
 	<div class="input-caret-container">
 		{#if !isInput}
-			<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 			<p>
-				{options.filter((e) => e.value === value)[0]?.label}
+				{value ? options.filter((e) => e.value === value)[0]?.label : options[0].label}
 			</p>
 		{/if}
 
@@ -199,7 +198,7 @@
 					}}
 					class:hoverd-option={hoverdOption?.value === option.value}
 					class="option"
-					class:selected-option={value.includes(option.value)}
+					class:selected-option={multiple ? value.includes(option.value) : value === option.value}
 					on:mouseenter={() => {
 						hoverdOption = option
 					}}
