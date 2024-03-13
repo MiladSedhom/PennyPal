@@ -2,6 +2,7 @@
 	import Select from '$lib/components/Select.svelte'
 	import { queryParameters, ssp } from 'sveltekit-search-params'
 	import { page } from '$app/stores'
+	import { getLastWeeksDate } from '$lib/utils'
 
 	const filters = queryParameters({
 		startDate: ssp.string(),
@@ -11,11 +12,6 @@
 	})
 
 	let selectedOptions: string[] = $filters.tags ? $filters?.tags?.split(',') : []
-
-	function getLastWeeksDate() {
-		const now = new Date()
-		return new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7)
-	}
 
 	const options = $page.data.tags?.map((t: string) => ({ label: t, value: t })) || []
 </script>
