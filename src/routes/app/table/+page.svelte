@@ -4,12 +4,12 @@
 
 	$: payments = $page.data.payments
 
-	// @ts-ignore
-	$: days = getDayInRange($page.url.searchParams.get('startDate'), $page.url.searchParams.get('endDate'))
-	let shownTags = $page.url.searchParams.get('tags')?.split(',') || $page.data.tags
+	$: oldestDate = new Date(Math.min(...payments.map((p: any) => new Date(p.createdAt))))
+	$: latestDate = new Date(Math.max(...payments.map((p: any) => new Date(p.createdAt))))
 
-	console.log($page.data)
-	console.log(shownTags)
+	// @ts-ignore
+	$: days = getDayInRange(oldestDate, latestDate)
+	let shownTags = $page.url.searchParams.get('tags')?.split(',') || $page.data.tags
 
 	let table: any = {}
 	$: {
@@ -126,10 +126,5 @@
 		font-weight: 500;
 		background-color: var(--color-dark-1);
 		color: color-mix(in srgb, var(--color-text-alt) 90, transparent);
-	}
-
-	td {
-		background-color: color-mix(in srgb, var(--color-dark), var(--color-primary) var(--_color-percentage, 0));
-		color: color-mix(in srgb, var(--color-text-alt) 90%, transparent);
 	}
 </style>
