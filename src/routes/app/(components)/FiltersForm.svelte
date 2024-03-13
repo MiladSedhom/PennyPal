@@ -4,10 +4,10 @@
 	import { page } from '$app/stores'
 
 	const filters = queryParameters({
-		startDate: ssp.string(getLastWeeksDate().toISOString().substring(0, 10)),
-		endDate: ssp.string(new Date().toISOString().substring(0, 10)),
-		sortBy: ssp.string('date'),
-		sortType: ssp.string('desc')
+		startDate: ssp.string(),
+		endDate: ssp.string(),
+		sortBy: ssp.string(),
+		sortType: ssp.string()
 	})
 
 	let selectedOptions: string[] = $filters.tags ? $filters?.tags?.split(',') : []
@@ -40,7 +40,7 @@
 				type="date"
 				name="start-date"
 				id="start-date"
-				value={$filters.startDate}
+				value={getLastWeeksDate().toISOString().substring(0, 10)}
 				on:input={(e) => {
 					// @ts-ignore
 					$filters.startDate = e.target.value
@@ -56,7 +56,7 @@
 				type="date"
 				name="end-date"
 				id="end-date"
-				value={$filters.endDate}
+				value={new Date().toISOString().substring(0, 10)}
 				on:input={(e) => {
 					// @ts-ignore
 					$filters.endDate = e.target.value
@@ -70,8 +70,8 @@
 			<Select
 				bind:value={$filters.sortBy}
 				options={[
-					{ label: 'amount', value: 'amount' },
-					{ label: 'date', value: 'date' }
+					{ label: 'date', value: 'date' },
+					{ label: 'amount', value: 'amount' }
 				]}
 				--width="calc(100% / 1.68 - 1rem - 34px)"
 			/>
@@ -80,6 +80,10 @@
 				class="toggle-sort-type"
 				type="button"
 				on:click={() => {
+					if (!$filters.sortType) {
+						$filters.sortType = 'asc'
+						return
+					}
 					if ($filters.sortType === 'asc') $filters.sortType = 'desc'
 					else if ($filters.sortType === 'desc') $filters.sortType = 'asc'
 				}}
