@@ -1,15 +1,17 @@
 <script lang="ts">
 	import TableCell from './TableCell.svelte'
 	import { page } from '$app/stores'
+	import { getLastWeeksDate } from '$lib/utils'
 
 	$: payments = $page.data.payments
 
-	$: oldestDate = new Date(Math.min(...payments.map((p: any) => new Date(p.createdAt))))
-	$: latestDate = new Date(Math.max(...payments.map((p: any) => new Date(p.createdAt))))
+	$: oldestDate = payments
+		? new Date(Math.min(...[...payments.map((p: any) => new Date(p.createdAt)), Number(getLastWeeksDate())]))
+		: getLastWeeksDate()
+	$: latestDate = payments ? new Date(Math.max(...payments.map((p: any) => new Date(p.createdAt)))) : new Date()
 
-	// @ts-ignore
 	$: days = getDayInRange(oldestDate, latestDate)
-	let shownTags = $page.url.searchParams.get('tags')?.split(',') || $page.data.tags
+	$: shownTags = $page.url.searchParams.get('tags') ? $page.url.searchParams.get('tags')?.split(',') : $page.data.tags
 
 	let table: any = {}
 	$: {
