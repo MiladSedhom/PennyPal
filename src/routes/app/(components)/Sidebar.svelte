@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/stores'
 	import { Accordion, AccordionItem } from '$lib/components/Accordion'
 	import AddPaymentForm from './AddPaymentForm.svelte'
 	import FiltersForm from './FiltersForm.svelte'
@@ -23,6 +24,20 @@
 			</AccordionItem>
 		</Accordion>
 	</div>
+
+	<nav class="tabs-container">
+		<ul>
+			<li>
+				<a href="/app" class:active-tab={$page.route.id === '/app'}>Payments view</a>
+			</li>
+			<li>
+				<a href="/app/graphs" class:active-tab={$page.route.id === '/app/graphs'}>Graphs view</a>
+			</li>
+			<li>
+				<a href="/app/table" class:active-tab={$page.route.id === '/app/table'}>Table view</a>
+			</li>
+		</ul>
+	</nav>
 </aside>
 
 <style>
@@ -58,5 +73,43 @@
 	h3 {
 		font-size: var(--fs-base);
 		font-weight: 400;
+	}
+
+	nav {
+		width: 100%;
+		margin-inline: auto;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+
+		& ul {
+			width: 100%;
+			display: flex;
+			gap: 2px;
+			padding-bottom: 2px;
+		}
+
+		& li {
+			width: 100%;
+		}
+
+		& a {
+			display: grid;
+			place-content: center;
+			width: 100%;
+			height: 40px;
+			padding: 4px;
+			background-color: var(--color-dark-1);
+			color: var(--color-grey-60);
+			font-size: var(--fs-small);
+			font-weight: 500;
+			text-decoration: none;
+		}
+
+		& a.active-tab {
+			background-color: var(--color-dark-2);
+			color: var(--color-text-alt);
+			border-bottom: 2px solid var(--color-primary);
+		}
 	}
 </style>
