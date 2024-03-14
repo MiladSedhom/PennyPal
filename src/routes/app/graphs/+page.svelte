@@ -8,8 +8,19 @@
 
 	let chartCanvasRef: any
 	let graphType = 'doughnut'
-	let chartLabels = $page.url.searchParams.get('tags') || $page.data.tags
-	$: chartData = $page.data.payments.map((p: any) => p.amount)
+	$: chartLabels = (
+		$page.url.searchParams.get('tags') ? $page.url.searchParams.get('tags')?.split(',') : $page.data.tags
+	) as string[]
+
+	$: chartData =
+		$page.data.payments &&
+		chartLabels.map((t) =>
+			$page.data.payments
+				.filter((p: any) => p.tags.includes(t))
+				.reduce((total: any, next: any) => {
+					return total + next.amount
+				}, 0)
+		)
 
 	let chartConfig: any
 	$: chartConfig = {
