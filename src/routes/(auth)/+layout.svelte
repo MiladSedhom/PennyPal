@@ -20,7 +20,7 @@
 		padding: 3rem;
 		background-color: var(--color-dark);
 
-		--s: 200px; /* control the size */
+		--s: 100px; /* control the size */
 		--c1: #484c4b;
 		--c2: var(--color-dark);
 

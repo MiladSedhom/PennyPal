@@ -29,7 +29,7 @@
 
 <style>
 	dialog {
-		width: 32rem;
+		width: 28rem;
 		border-radius: 0.2rem;
 		border: none;
 		background-color: var(--color-dark);
