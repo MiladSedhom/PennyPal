@@ -19,8 +19,13 @@
 	<header>
 		<span class="logo"><span class="primary">Penny</span>Pal</span>
 		<nav>
-			<button on:click={() => showModal('login')}>Login</button>
-			<button on:click={() => showModal('signup')}>Signup</button>
+			{#if !$page.data.user}
+				<button on:click={() => showModal('login')}>Login</button>
+				<button on:click={() => showModal('signup')}>Signup</button>
+			{:else if $page.data.user}
+				<a href="/app">App</a>
+				<a href="/logout">Logout</a>
+			{/if}
 		</nav>
 		<div class="border-bot"></div>
 	</header>
@@ -85,7 +90,8 @@
 			gap: 0.5rem;
 		}
 
-		& button {
+		& button,
+		a {
 			padding: 0.4rem 0.5rem;
 			background-color: transparent;
 			color: var(--color-text);
