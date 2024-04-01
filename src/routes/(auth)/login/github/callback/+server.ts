@@ -8,8 +8,7 @@ export const GET: RequestHandler = async (event) => {
 	const storedState = event.cookies.get('github_oauth_state') ?? null
 
 	//validate
-	if (!code || !state || !storedState || state !== storedState)
-		return new Response(null, { status: 400 })
+	if (!code || !state || !storedState || state !== storedState) return new Response(null, { status: 400 })
 
 	try {
 		//get the github token token
@@ -47,7 +46,7 @@ export const GET: RequestHandler = async (event) => {
 		return new Response(null, {
 			status: 302,
 			headers: {
-				Location: '/'
+				Location: '/app'
 			}
 		})
 	} catch (error) {

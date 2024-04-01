@@ -31,6 +31,6 @@ export const actions: Actions = {
 		})
 
 		// redirect the user
-		redirect(302, '/login')
+		redirect(302, '/')
 	}
 }
