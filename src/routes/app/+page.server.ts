@@ -28,7 +28,6 @@ export const actions: Actions = {
 		}
 	},
 	removePayment: async ({ request, locals }) => {
-		console.log('removein payment')
 		const formData = await request.formData()
 		const id = Number(formData.get('id'))
 

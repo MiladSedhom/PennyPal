@@ -12,9 +12,7 @@
 	bind:this={dialog}
 	on:close={() => {
 		onClose?.()
-		console.log('before', showModal)
 		showModal = false
-		console.log('after', showModal)
 	}}
 	on:click|self={() => dialog.close()}
 >
