@@ -32,6 +32,7 @@
 	</header>
 
 	<main>
+		<div class="blur"></div>
 		<div>
 			<h1>Expense Tracking Made <span class="primary"> Simple </span></h1>
 			<p>
@@ -128,6 +129,7 @@
 	main {
 		padding: 7rem var(--spacing-48);
 		height: 100vh;
+		position: relative;
 
 		background-color: var(--color-dark);
 		opacity: 0.8;
@@ -137,9 +139,20 @@
 			linear-gradient(to right, var(--c1) 1px, var(--c2) 1px);
 		background-size: 20px 20px;
 
-		animation: bg 150s linear infinite alternate;
+		animation: bg 200s linear infinite alternate;
+
+		& .blur {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			backdrop-filter: blur(0.3px);
+			z-index: -1;
+		}
 
 		& h1 {
+			color: var(--color-text);
 			font-size: 4rem;
 			max-width: 16ch;
 			margin-bottom: 1rem;
@@ -159,7 +172,7 @@
 		}
 
 		100% {
-			background-position: 0 100%;
+			background-position: 10% 100%;
 		}
 	}
 
