@@ -5,7 +5,7 @@
 </script>
 
 <form
-	action="/register?/register"
+	action="/signup?/register"
 	method="post"
 	use:enhance={() => {
 		return async ({ result, update }) => {

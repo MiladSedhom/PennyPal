@@ -22,18 +22,18 @@
 			<button on:click={() => showModal('login')}>Login</button>
 			<button on:click={() => showModal('signup')}>Signup</button>
 		</nav>
+		<div class="border-bot"></div>
 	</header>
 
 	<main>
 		<div>
-			<h1>Expense Tracking Made Easy</h1>
+			<h1>Expense Tracking Made <span class="primary"> Simple </span></h1>
 			<p>
 				A modern expense tracker, With an intuitive interface and powerful features, Take control over how you manage
 				your expenes
 			</p>
 		</div>
 	</main>
-
 	{#if $page.state?.loginModal}
 		<Modal showModal onClose={() => history.back()}>
 			<div class="form-container">
@@ -65,23 +65,19 @@
 	header {
 		grid-area: header;
 		height: 5rem;
-		border-bottom: 1px solid var(--color-primary);
 
 		padding: 0 3rem;
 		background-color: var(--color-dark);
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+		position: relative;
 
 		& .logo {
 			display: inline-block;
 			font-size: 1.5rem;
 			font-family: var(--serif);
 			font-weight: bold;
-
-			& .primary {
-				color: var(--color-primary);
-			}
 		}
 
 		& nav {
@@ -101,23 +97,33 @@
 				text-decoration: underline;
 			}
 		}
+
+		& .border-bot {
+			width: calc(100% - 6rem);
+			position: absolute;
+			bottom: 0;
+			left: 50%;
+			translate: -50%;
+			border-bottom: 1px solid color-mix(in srgb, var(--color-text) 20%, var(--color-dark));
+		}
 	}
 
 	main {
-		padding: var(--spacing-48);
-		display: grid;
-		place-content: center start;
+		padding: 7rem var(--spacing-48);
+
 		background-color: var(--color-dark);
 		height: 100vh;
 
 		& h1 {
 			font-size: 4rem;
 			max-width: 16ch;
+			margin-bottom: 1rem;
 		}
 
 		& p {
 			color: var(--color-grey-70);
-			font-size: var(--fs-base);
+			font-size: 1.1rem;
+			line-height: 120%;
 			max-width: 45ch;
 		}
 	}
@@ -128,5 +134,9 @@
 		padding: 0 3rem;
 		display: grid;
 		place-content: center;
+	}
+
+	.primary {
+		color: var(--color-primary);
 	}
 </style>
