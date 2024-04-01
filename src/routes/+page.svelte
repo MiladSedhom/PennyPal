@@ -23,6 +23,7 @@
 				<button on:click={() => showModal('login')}>Login</button>
 				<button on:click={() => showModal('signup')}>Signup</button>
 			{:else if $page.data.user}
+				<p>{$page.data.user.username}</p>
 				<a href="/app">App</a>
 				<a href="/logout">Logout</a>
 			{/if}
@@ -88,6 +89,15 @@
 		& nav {
 			display: flex;
 			gap: 0.5rem;
+
+			& p {
+				align-self: center;
+				padding: 0.4rem 0;
+				padding-right: 1rem;
+				border-right: 1px solid grey;
+				font-size: var(--fs-base);
+				color: var(--color-grey-70);
+			}
 		}
 
 		& button,
@@ -97,6 +107,7 @@
 			color: var(--color-text);
 			font-size: var(--fs-base);
 			font-weight: 500;
+			text-decoration: none;
 
 			&:hover {
 				color: var(--color-primary);
