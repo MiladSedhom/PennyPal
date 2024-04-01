@@ -6,11 +6,17 @@
 </script>
 
 <aside>
-	<span class="logo">
-		<a href="/">
-			<span class="primary">Penny</span>Pal
-		</a>
-	</span>
+	<div class="header">
+		<span class="logo">
+			<a href="/">
+				<span class="primary">Penny</span>Pal
+			</a>
+		</span>
+		<div>
+			<p>{$page.data.user.username}</p>
+			<a href="logout">logout</a>
+		</div>
+	</div>
 	<div class="forms-container">
 		<Accordion colapse>
 			<AccordionItem open>
@@ -62,12 +68,35 @@
 		position: relative;
 	}
 
+	.header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: var(--spacing-32);
+
+		& div {
+			display: flex;
+			flex-flow: column;
+			align-items: end;
+			padding-top: 0.25rem;
+
+			& p {
+				font-size: var(--fs-small);
+				color: var(--color-grey-90);
+			}
+
+			& a {
+				font-size: var(--fs-small);
+				color: var(--color-grey-70);
+			}
+		}
+	}
+
 	.logo {
 		display: inline-block;
 		font-size: 1.5rem;
 		font-family: var(--serif);
 		font-weight: bold;
-		margin-bottom: var(--spacing-32);
 
 		& a {
 			text-decoration: none;
