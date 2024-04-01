@@ -6,7 +6,11 @@
 </script>
 
 <aside>
-	<span class="logo"><span class="primary">Penny</span>Pal</span>
+	<span class="logo">
+		<a href="/">
+			<span class="primary">Penny</span>Pal
+		</a>
+	</span>
 	<div class="forms-container">
 		<Accordion colapse>
 			<AccordionItem open>
@@ -64,6 +68,10 @@
 		font-family: var(--serif);
 		font-weight: bold;
 		margin-bottom: var(--spacing-32);
+
+		& a {
+			text-decoration: none;
+		}
 
 		& .primary {
 			color: var(--color-primary);
