@@ -127,9 +127,17 @@
 
 	main {
 		padding: 7rem var(--spacing-48);
+		height: 100vh;
 
 		background-color: var(--color-dark);
-		height: 100vh;
+		opacity: 0.8;
+		--c1: color-mix(in srgb, var(--color-text) 25%, var(--color-dark));
+		--c2: var(--color-dark);
+		background-image: linear-gradient(var(--c1) 1px, transparent 1px),
+			linear-gradient(to right, var(--c1) 1px, var(--c2) 1px);
+		background-size: 20px 20px;
+
+		animation: bg 150s linear infinite alternate;
 
 		& h1 {
 			font-size: 4rem;
@@ -142,6 +150,16 @@
 			font-size: 1.1rem;
 			line-height: 120%;
 			max-width: 45ch;
+		}
+	}
+
+	@keyframes bg {
+		0% {
+			background-position: 0 0;
+		}
+
+		100% {
+			background-position: 0 100%;
 		}
 	}
 
