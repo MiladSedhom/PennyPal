@@ -67,6 +67,7 @@
 			'header'
 			'main';
 		grid-template-rows: auto auto;
+		background-color: var(--color-dark);
 	}
 
 	header {
@@ -130,6 +131,7 @@
 		padding: 7rem var(--spacing-48);
 		height: 100vh;
 		position: relative;
+		margin-inline: 2rem;
 
 		background-color: var(--color-dark);
 		opacity: 0.8;
