@@ -8,7 +8,10 @@ declare global {
 			session: import('lucia').Session | null
 		}
 		// interface PageData {}
-		// interface PageState {}
+		interface PageState {
+			loginModal?: boolean
+			signupModal?: boolean
+		}
 		// interface Platform {}
 	}
 
