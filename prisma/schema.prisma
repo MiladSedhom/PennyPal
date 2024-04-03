@@ -19,29 +19,20 @@ model User {
 }
 
 model Payment {
-  id         Int          @id @default(autoincrement())
-  amount     Int
-  note       String?
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  userId     String
-  User       User         @relation(fields: [userId], references: [id])
-  paymentTag PaymentTag[]
-}
-
-model PaymentTag {
-  paymentId Int
-  tagId     Int
-  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
-  payment   Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
-
-  @@id([paymentId, tagId])
+  id        Int      @id @default(autoincrement())
+  amount    Int
+  note      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  User      User     @relation(fields: [userId], references: [id])
+  tags      Tag[]
 }
 
 model Tag {
-  id         Int          @id @default(autoincrement())
-  name       String       @unique
-  paymentTag PaymentTag[]
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  payments Payment[]
 }
 
 model Oauth_account {

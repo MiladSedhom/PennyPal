@@ -1,22 +1,20 @@
 import prisma from '@prisma/client'
-import type { payment, PaymentFilters } from '../zodSchemas'
+import type { Payment, PaymentFilters } from '../zodSchemas'
 
 export const db = new prisma.PrismaClient()
 
-export const addPayment = async ({ amount, tags, date, note }: payment, userId: string) => {
+export const addPayment = async ({ amount, tags, date, note }: Payment, userId: string) => {
 	const storedTags = await db.tag.findMany({
 		where: {
-			OR: tags.map((n) => ({
+			OR: tags.map((n: any) => ({
 				name: n
 			}))
 		}
 	})
-	const newTagsNames = tags.filter((name) => !storedTags.some((tag) => tag.name === name))
+	const newTagsNames = tags.filter((name: any) => !storedTags.some((tag) => tag.name === name))
 
-	const tagsCreate = [
-		...storedTags.map((t) => ({ tag: { connect: { id: t.id } } })),
-		...newTagsNames.map((t) => ({ tag: { create: { name: t } } }))
-	]
+	const create = newTagsNames.map((t) => ({ name: t }))
+	const connect = storedTags.map((t) => ({ id: t.id }))
 
 	const payment = await db.payment.create({
 		data: {
@@ -24,11 +22,12 @@ export const addPayment = async ({ amount, tags, date, note }: payment, userId: 
 			note,
 			createdAt: new Date(date),
 			userId,
-			paymentTag: {
-				create: tagsCreate
+			tags: {
+				create,
+				connect
 			}
 		},
-		include: { paymentTag: { select: { tag: { select: { name: true } } } } }
+		include: { tags: true }
 	})
 
 	return payment
@@ -39,9 +38,7 @@ export const getPayments = async (filters: PaymentFilters, userId: string) => {
 		filters.tags.length != 0 && filters.tags[0]?.length != 0
 			? {
 					some: {
-						tag: {
-							name: { in: filters.tags }
-						}
+						name: { in: filters.tags }
 					}
 				}
 			: {}
@@ -50,9 +47,9 @@ export const getPayments = async (filters: PaymentFilters, userId: string) => {
 		where: {
 			userId,
 			createdAt: { gte: filters.startDate, lte: filters.endDate },
-			paymentTag: tagsFilters
+			tags: tagsFilters
 		},
-		include: { paymentTag: { include: { tag: { select: { name: true } } } } },
+		include: { tags: { select: { name: true } } },
 		orderBy: [
 			filters.sortBy === 'amount'
 				? {
@@ -64,19 +61,17 @@ export const getPayments = async (filters: PaymentFilters, userId: string) => {
 		]
 	})
 
-	const formatedPayments = payments.map((p) => ({ ...p, tags: p.paymentTag.map((o) => o.tag?.name) }))
+	const filteredPaymenst = payments.map((p) => ({ ...p, tags: p.tags.map((t) => t.name) }))
 
-	return formatedPayments
+	return filteredPaymenst
 }
 
 export const getUserTags = async (userId: string) => {
 	const tags = await db.tag.findMany({
 		select: { name: true },
 		where: {
-			paymentTag: {
-				some: {
-					payment: { userId: userId }
-				}
+			payments: {
+				some: { userId: userId }
 			}
 		}
 	})
@@ -86,4 +81,13 @@ export const getUserTags = async (userId: string) => {
 
 export const removePayment = async (id: number, userId: string) => {
 	await db.payment.delete({ where: { id, userId } })
+}
+
+export const getPayment = async (id: number) => {
+	const payment = await db.payment.findUnique({
+		where: { id },
+		include: { tags: true }
+	})
+
+	return payment
 }
