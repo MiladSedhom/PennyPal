@@ -38,7 +38,7 @@
 			<h1>Expense Tracking Made <span class="primary"> Simple </span></h1>
 			<p>
 				A modern expense tracker, With an intuitive interface and powerful features, Take control over how you manage
-				your expenes
+				your expenses
 			</p>
 		</div>
 		<div class="hero-container">
