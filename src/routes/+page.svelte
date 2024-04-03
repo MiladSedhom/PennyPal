@@ -40,6 +40,11 @@
 				A modern expense tracker, With an intuitive interface and powerful features, Take control over how you manage
 				your expenses
 			</p>
+			{#if !$page.data?.user}
+				<button on:click={() => showModal('signup')}>Get Started</button>
+			{:else}
+				<a href="/app">Go To App</a>
+			{/if}
 		</div>
 		<div class="hero-container">
 			<DollarNotoEmoji />
@@ -149,6 +154,20 @@
 
 		& .hero-title-container {
 			padding: 7rem 3rem;
+
+			& button,
+			a {
+				background-color: var(--color-primary);
+				color: var(--color-text-on-primary);
+				display: inline-block;
+				margin-top: 1rem;
+				padding: 0.4rem 0.8rem;
+				text-decoration: none;
+
+				&:hover {
+					filter: brightness(0.9);
+				}
+			}
 		}
 
 		& .blur {
