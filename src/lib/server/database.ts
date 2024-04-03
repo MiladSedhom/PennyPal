@@ -33,6 +33,39 @@ export const addPayment = async ({ amount, tags, date, note }: Payment, userId: 
 	return payment
 }
 
+export const updatePayment = async ({ id, amount, tags, date, note }: Payment & { id: number }, userId: string) => {
+	const storedTags = await db.tag.findMany({
+		where: {
+			OR: tags.map((n: any) => ({
+				name: n
+			}))
+		}
+	})
+	const newTagsNames = tags.filter((name: any) => !storedTags.some((tag) => tag.name === name))
+
+	const create = newTagsNames.map((t) => ({ name: t }))
+	const connect = storedTags.map((t) => ({ id: t.id }))
+
+	const payment = await db.payment.update({
+		where: {
+			id
+		},
+		data: {
+			amount,
+			note,
+			userId,
+			tags: {
+				set: [],
+				create,
+				connect
+			}
+		},
+		include: { tags: true }
+	})
+
+	return payment
+}
+
 export const getPayments = async (filters: PaymentFilters, userId: string) => {
 	const tagsFilters =
 		filters.tags.length != 0 && filters.tags[0]?.length != 0
