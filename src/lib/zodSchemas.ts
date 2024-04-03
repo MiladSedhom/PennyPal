@@ -2,6 +2,7 @@ import { zfd } from 'zod-form-data'
 import { z } from 'zod'
 
 export const paymentSchema = zfd.formData({
+	id: zfd.numeric().optional(),
 	amount: zfd.numeric(z.number({ required_error: 'Amount is required.' })),
 
 	tags: z
