@@ -83,11 +83,12 @@ export const removePayment = async (id: number, userId: string) => {
 	await db.payment.delete({ where: { id, userId } })
 }
 
-export const getPayment = async (id: number) => {
+export const getPayment = async (id: number, userId: string) => {
 	const payment = await db.payment.findUnique({
-		where: { id },
+		where: { id, userId },
 		include: { tags: true }
 	})
 
-	return payment
+	if (!payment) return null
+	return { ...payment, tags: payment?.tags.map((t) => t.name) }
 }
