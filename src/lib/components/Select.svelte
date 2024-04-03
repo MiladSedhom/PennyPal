@@ -215,11 +215,14 @@
 	</ul>
 </div>
 
-<select hidden {multiple} {name} {id}>
-	{#each options as o}
-		<option value={o.value} selected={Array.isArray(value) ? value.includes(o.value) : value == o.value}></option>
-	{/each}
-</select>
+<!-- this key block ensures the matching between this select's value and the state value -->
+{#key value}
+	<select hidden {multiple} {name} {id}>
+		{#each options as o}
+			<option value={o.value} selected={Array.isArray(value) ? value.includes(o.value) : value == o.value}></option>
+		{/each}
+	</select>
+{/key}
 
 <style>
 	.container {
