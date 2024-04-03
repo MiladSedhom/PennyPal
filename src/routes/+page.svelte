@@ -4,6 +4,7 @@
 	import SignupForm from '$lib/components/SignupForm.svelte'
 	import { pushState } from '$app/navigation'
 	import { page } from '$app/stores'
+	import DollarNotoEmoji from '$lib/components/svgs/DollarNotoEmoji.svelte'
 
 	export let form
 	// let showModal = true
@@ -33,12 +34,15 @@
 
 	<main>
 		<div class="blur"></div>
-		<div>
+		<div class="hero-title-container">
 			<h1>Expense Tracking Made <span class="primary"> Simple </span></h1>
 			<p>
 				A modern expense tracker, With an intuitive interface and powerful features, Take control over how you manage
 				your expenes
 			</p>
+		</div>
+		<div class="hero-container">
+			<DollarNotoEmoji />
 		</div>
 	</main>
 	{#if $page.state?.loginModal}
@@ -56,8 +60,6 @@
 			</div>
 		</Modal>
 	{/if}
-
-	<pre>{JSON.stringify($page, null, 2)}</pre>
 </section>
 
 <style>
@@ -66,8 +68,9 @@
 		grid-template-areas:
 			'header'
 			'main';
-		grid-template-rows: auto auto;
+		grid-template-rows: auto 1fr;
 		background-color: var(--color-dark);
+		min-height: 100vh;
 	}
 
 	header {
@@ -123,18 +126,19 @@
 			bottom: 0;
 			left: 50%;
 			translate: -50%;
-			border-bottom: 1px solid color-mix(in srgb, var(--color-text) 20%, var(--color-dark));
+			border-bottom: 1px solid color-mix(in srgb, var(--color-text) 30%, var(--color-dark));
 		}
 	}
 
 	main {
-		padding: 7rem var(--spacing-48);
-		height: 100vh;
-		position: relative;
+		display: flex;
+		justify-content: space-between;
+
 		margin-inline: 2rem;
+		position: relative;
+		overflow: hidden;
 
 		background-color: var(--color-dark);
-		opacity: 0.8;
 		--c1: color-mix(in srgb, var(--color-text) 25%, var(--color-dark));
 		--c2: var(--color-dark);
 		background-image: linear-gradient(var(--c1) 1px, transparent 1px),
@@ -142,6 +146,10 @@
 		background-size: 20px 20px;
 
 		animation: bg 200s linear infinite alternate;
+
+		& .hero-title-container {
+			padding: 7rem 3rem;
+		}
 
 		& .blur {
 			position: absolute;
@@ -168,13 +176,13 @@
 		}
 	}
 
-	@keyframes bg {
-		0% {
-			background-position: 0 0;
-		}
+	.hero-container {
+		padding: 1rem 3rem;
 
-		100% {
-			background-position: 10% 100%;
+		animation: hero 20s linear infinite alternate;
+		& svg {
+			rotate: -10deg;
+			filter: brightness(0.8);
 		}
 	}
 
@@ -188,5 +196,26 @@
 
 	.primary {
 		color: var(--color-primary);
+	}
+
+	@keyframes bg {
+		0% {
+			background-position: 0 0;
+		}
+
+		100% {
+			background-position: 10% 100%;
+		}
+	}
+
+	@keyframes hero {
+		0% {
+			rotate: -4deg;
+		}
+
+		100% {
+			rotate: -11deg;
+			translate: -1% 2%;
+		}
 	}
 </style>
