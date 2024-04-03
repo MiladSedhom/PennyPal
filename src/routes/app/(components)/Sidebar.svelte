@@ -14,7 +14,7 @@
 		</span>
 		<div>
 			<p>{$page.data.user.username}</p>
-			<a href="logout">logout</a>
+			<a href="/logout">logout</a>
 		</div>
 	</div>
 	<div class="forms-container">
