@@ -4,7 +4,7 @@
 	import type { Payment } from '@prisma/client'
 
 	export let payment: Payment & { tags: string[] }
-	export let selected: boolean
+	export let selected: boolean = false
 </script>
 
 <div class="card" class:selected on:click on:keydown role="button" tabindex="0">
