@@ -198,7 +198,7 @@
 	.hero-container {
 		padding: 1rem 3rem;
 
-		animation: hero 20s linear infinite alternate;
+		animation: hero 15s linear infinite alternate;
 		& svg {
 			rotate: -10deg;
 			filter: brightness(0.8);
