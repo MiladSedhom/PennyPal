@@ -12,7 +12,6 @@
 
 	let selectedTags = payment?.tags || []
 
-	console.log($page?.data?.tags)
 	let options = $page?.data?.tags.map((t: string) => ({ value: t, label: t }))
 
 	const submitter: SubmitFunction = async () => {
