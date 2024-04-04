@@ -4,13 +4,24 @@
 	import type { Payment } from '@prisma/client'
 	import IcRoundEdit from '$lib/components/svgs/IcRoundEdit.svelte'
 	import IcRoundDelete from '$lib/components/svgs/IcRoundDelete.svelte'
+	import { goto } from '$app/navigation'
 
 	export let payment: Payment & { tags: string[] }
 	export let selected: boolean = false
 	export let showButtons: boolean = true
 </script>
 
-<div class="card" class:selected on:click on:keydown role="button" tabindex="0">
+<div
+	class="card"
+	class:selected
+	on:click
+	on:dblclick={() => {
+		goto(`/app/payment/${payment.id}`)
+	}}
+	on:keydown
+	role="button"
+	tabindex="0"
+>
 	<span class="amount">{payment.amount}</span>
 	<div class="details-container">
 		<span class="note" title={payment.note}>{payment.note ? payment.note : ''}</span>
