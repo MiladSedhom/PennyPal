@@ -2,9 +2,12 @@
 	import { enhance } from '$app/forms'
 	import { makeHorizontalScrollableWithWheel } from '$lib/actions/makeHorizontalScrollableWithWheel'
 	import type { Payment } from '@prisma/client'
+	import IcRoundEdit from '$lib/components/svgs/IcRoundEdit.svelte'
+	import IcRoundDelete from '$lib/components/svgs/IcRoundDelete.svelte'
 
 	export let payment: Payment & { tags: string[] }
 	export let selected: boolean = false
+	export let showButtons: boolean = true
 </script>
 
 <div class="card" class:selected on:click on:keydown role="button" tabindex="0">
@@ -18,17 +21,21 @@
 		</div>
 		<span class="date">{new Date(payment.createdAt).toLocaleDateString()}</span>
 	</div>
-	<form action="?/removePayment" method="post" use:enhance>
-		<input type="hidden" name="id" value={payment.id} />
-		<button class="remove-btn" on:click|stopPropagation={() => {}}>
-			<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
-				<path
-					fill="currentColor"
-					d="M20 6.91L17.09 4L12 9.09L6.91 4L4 6.91L9.09 12L4 17.09L6.91 20L12 14.91L17.09 20L20 17.09L14.91 12L20 6.91Z"
-				/></svg
-			></button
-		>
-	</form>
+	{#if showButtons}
+		<div class="buttons-container">
+			<form action="?/removePayment" method="post" use:enhance>
+				<input type="hidden" name="id" value={payment.id} />
+				<button class="remove-btn" on:click|stopPropagation={() => {}}>
+					<IcRoundDelete width="20" height="20" />
+				</button>
+			</form>
+			<button class="edit-btn">
+				<a href={`/app/payment/${payment.id}`}>
+					<IcRoundEdit width="20" height="20" />
+				</a>
+			</button>
+		</div>
+	{/if}
 </div>
 
 <style>
@@ -113,25 +120,29 @@
 		max-width: 30%;
 	}
 
-	.remove-btn {
-		width: 24px;
-		height: 24px;
-		position: absolute;
-		top: 0;
-		right: 0;
-		translate: 100%;
+	.buttons-container {
+		display: flex;
+		gap: 2px;
+	}
+
+	button {
+		width: 2rem;
+		height: 2rem;
 		border-radius: 2px;
-		background-color: var(--color-semantic-red);
-		display: none;
+		background-color: transparent;
+		color: var(--color-grey-60);
+
+		& a {
+			color: var(--color-grey-60);
+		}
 	}
 
-	svg {
-		color: white;
-		margin: 0;
+	.remove-btn:hover {
+		color: var(--color-semantic-red);
+		background-color: color-mix(in srgb, var(--color-dark) 90%, white);
 	}
 
-	.card:hover .remove-btn {
-		display: grid;
-		place-content: center;
+	.edit-btn:hover {
+		background-color: color-mix(in srgb, var(--color-dark) 90%, white);
 	}
 </style>
