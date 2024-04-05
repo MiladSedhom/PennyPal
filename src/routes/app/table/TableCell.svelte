@@ -59,6 +59,6 @@
 		border: 1px solid var(--color-background-1);
 
 		background-color: color-mix(in srgb, var(--color-background), var(--color-primary) var(--_color-percentage, 0));
-		color: color-mix(in srgb, var(--color-text-alt) 90%, var(--color-text-on-primary));
+		color: color-mix(in srgb, var(color-text) 90%, var(--color-text-on-primary));
 	}
 </style>

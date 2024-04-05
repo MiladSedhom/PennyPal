@@ -236,7 +236,7 @@
 		position: relative;
 
 		&:focus-within {
-			outline: 1px solid color-mix(in srgb, var(--color-fields) 80%, var(--color-text-alt));
+			outline: 1px solid color-mix(in srgb, var(--color-fields) 80%, var(color-text));
 		}
 	}
 
@@ -259,13 +259,13 @@
 
 		&:hover {
 			background-color: var(--color-semantic-red);
-			color: var(--color-text-alt);
+			color: var(color-text);
 		}
 	}
 
 	.hoverd-tag {
 		background-color: var(--color-semantic-red);
-		color: var(--color-text-alt);
+		color: var(color-text);
 	}
 
 	.input-caret-container {
@@ -299,7 +299,7 @@
 		position: absolute;
 		z-index: 1;
 
-		outline: 1px solid color-mix(in srgb, var(--color-fields) 80%, var(--color-text-alt));
+		outline: 1px solid color-mix(in srgb, var(--color-fields) 80%, var(color-text));
 	}
 
 	ul::-webkit-scrollbar {
@@ -320,7 +320,7 @@
 		border-radius: 0;
 
 		background-color: var(--color-fields);
-		color: var(--color-text-alt);
+		color: var(color-text);
 
 		&:focus {
 			outline: none;

@@ -17,6 +17,6 @@
 	.accordion {
 		width: var(--accordion-width, 100%);
 		background-color: var(--accordion-background, --color-background);
-		color: var(--accordion-color, --color-text-alt);
+		color: var(--accordion-color, color-text);
 	}
 </style>

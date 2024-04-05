@@ -132,7 +132,7 @@
 
 		& .toggle-sort-type {
 			background-color: var(--color-fields);
-			color: var(--color-text-alt);
+			color: var(color-text);
 			min-width: 40px;
 			width: 40px;
 			height: 40px;

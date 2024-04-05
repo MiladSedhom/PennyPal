@@ -89,7 +89,7 @@
 	.container {
 		min-height: 100%;
 		width: 100%;
-		color: var(--color-text-alt);
+		color: var(color-text);
 		padding: 2rem;
 		display: flex;
 		justify-content: start;
@@ -128,6 +128,6 @@
 	th {
 		font-weight: 500;
 		background-color: var(--color-background-1);
-		color: color-mix(in srgb, var(--color-text-alt) 90, transparent);
+		color: color-mix(in srgb, var(color-text) 90, transparent);
 	}
 </style>

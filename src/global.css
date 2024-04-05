@@ -35,7 +35,6 @@ html {
 	--color-primary: hsl(var(--h), var(--s), var(--l));
 	--color-semantic-red: hsl(0, 76%, 52%);
 	--color-text: #000;
-	--color-text-alt: #000;
 	--color-text-on-primary: #fff;
 	--color-fields: hsl(var(--h), 31%, 88%);
 
@@ -70,7 +69,6 @@ html {
 
 	--color-body: hsl(var(--h), 3%, 25%);
 	--color-text: #fff;
-	--color-text-alt: #fff;
 	--color-text-on-primary: #000000;
 	--color-fields: hsl(var(--h), 2%, 28%);
 
@@ -144,11 +142,11 @@ select {
 	padding: 0 var(--spacing-16);
 	font-size: var(--fs-base);
 	background-color: var(--color-fields);
-	color: var(--color-text-alt);
+	color: var(color-text);
 	border-radius: 2px;
 
 	&:focus {
-		outline: 1px solid color-mix(in srgb, var(--color-fields) 80%, var(--color-text-alt));
+		outline: 1px solid color-mix(in srgb, var(--color-fields) 80%, var(color-text));
 	}
 
 	&::placeholder {

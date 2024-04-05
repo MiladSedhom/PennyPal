@@ -80,7 +80,7 @@
 		padding: calc(var(--spacing-32) - var(--scrollbar-width));
 		scrollbar-gutter: stable both-edges;
 		background-color: var(--color-background);
-		color: var(--color-text-alt);
+		color: var(color-text);
 		overflow: auto;
 		/* scrollbar-gutter: stable both-edges; */
 	}
@@ -167,7 +167,7 @@
 
 		& a.active-tab {
 			background-color: var(--color-background-2);
-			color: var(--color-text-alt);
+			color: var(color-text);
 			border-bottom: 2px solid var(--color-primary);
 		}
 	}

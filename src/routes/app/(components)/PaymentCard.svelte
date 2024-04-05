@@ -81,12 +81,12 @@
 		gap: 1rem;
 
 		background-color: var(--color-background);
-		color: var(--color-text-alt);
+		color: var(color-text);
 		border-radius: 2px;
 		/* box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25); */
 
 		&:hover {
-			background-color: color-mix(in srgb, var(--color-background) 97%, var(--color-text-alt));
+			background-color: color-mix(in srgb, var(--color-background) 97%, var(color-text));
 		}
 	}
 
@@ -153,7 +153,7 @@
 	.note {
 		font-size: 12px;
 		font-weight: 400;
-		color: color-mix(in srgb, var(--color-text-alt) 80%, transparent);
+		color: color-mix(in srgb, var(color-text) 80%, transparent);
 		max-width: 46ch;
 		flex-grow: 1;
 	}
