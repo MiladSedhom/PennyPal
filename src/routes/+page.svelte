@@ -5,6 +5,7 @@
 	import { pushState } from '$app/navigation'
 	import { page } from '$app/stores'
 	import DollarNotoEmoji from '$lib/components/svgs/DollarNotoEmoji.svelte'
+	import ThemeSwitchers from '$lib/components/ThemeSwitchers.svelte'
 
 	export let form
 	// let showModal = true
@@ -24,6 +25,7 @@
 				<button on:click={() => showModal('login')}>Login</button>
 				<button on:click={() => showModal('signup')}>Signup</button>
 			{:else if $page.data.user}
+				<ThemeSwitchers />
 				<p>{$page.data.user.username}</p>
 				<a href="/app">App</a>
 				<a href="/logout">Logout</a>
@@ -110,21 +112,6 @@
 			}
 		}
 
-		& button,
-		a {
-			padding: 0.4rem 0.5rem;
-			background-color: transparent;
-			color: var(--color-text);
-			font-size: var(--fs-base);
-			font-weight: 500;
-			text-decoration: none;
-
-			&:hover {
-				color: var(--color-primary);
-				text-decoration: underline;
-			}
-		}
-
 		& .border-bot {
 			width: calc(100% - 6rem);
 			position: absolute;
@@ -132,6 +119,21 @@
 			left: 50%;
 			translate: -50%;
 			border-bottom: 1px solid color-mix(in srgb, var(--color-text) 30%, var(--color-background));
+		}
+	}
+
+	header button,
+	a {
+		padding: 0.4rem 0.5rem;
+		background-color: transparent;
+		color: var(--color-text);
+		font-size: var(--fs-base);
+		font-weight: 500;
+		text-decoration: none;
+
+		&:hover {
+			color: var(--color-primary);
+			text-decoration: underline;
 		}
 	}
 
