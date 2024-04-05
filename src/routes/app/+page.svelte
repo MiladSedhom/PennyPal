@@ -41,11 +41,14 @@
 		width: 100%;
 		min-height: 100%;
 		padding: var(--spacing-32);
-		display: flex;
-		flex-flow: column nowrap;
-		justify-content: flex-start;
-		align-items: center;
-		gap: var(--spacing-16);
+		margin-bottom: 2rem;
+
+		display: grid;
+		place-content: center;
+		grid-template-columns: repeat(auto-fill, 320px);
+		grid-template-rows: repeat(auto-fill, minmax(16px, auto));
+		/* grid-auto-rows: 16px; */
+		gap: 1rem;
 	}
 
 	.bot {

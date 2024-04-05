@@ -5,15 +5,31 @@
 	import IcRoundEdit from '$lib/components/svgs/IcRoundEdit.svelte'
 	import IcRoundDelete from '$lib/components/svgs/IcRoundDelete.svelte'
 	import { goto } from '$app/navigation'
+	import { fade, slide } from 'svelte/transition'
 
 	export let payment: Payment & { tags: string[] }
 	export let selected: boolean = false
 	export let showButtons: boolean = true
+
+	let tagsHeight: number = 0
+	let noteHeight: number = 0
+
+	// cardPreferredheight = padding + head + internal gaps + tagsHeight + noteHeight + potential extra row if date wraps
+	$: cardPreferredheight = 32 + 32 + 32 + tagsHeight + noteHeight + 16
+
+	// s = h / ( r + g )
+	$: rowsSpan = Math.ceil(cardPreferredheight / (16 + 16))
+
+	$: {
+		rowsSpan && console.log(payment.amount, cardPreferredheight, rowsSpan)
+	}
 </script>
 
 <div
 	class="card"
 	class:selected
+	style="--rows-span: {rowsSpan}"
+	class:card-spanned={rowsSpan}
 	on:click
 	on:dblclick={() => {
 		goto(`/app/payment/${payment.id}`)
@@ -21,43 +37,47 @@
 	on:keydown
 	role="button"
 	tabindex="0"
+	transition:fade={{ duration: 3000 }}
 >
-	<span class="amount">{payment.amount}</span>
+	<div class="head">
+		<span class="amount">{payment.amount}</span>
+		{#if showButtons}
+			<div class="buttons-container">
+				<form action="?/removePayment" method="post" use:enhance>
+					<input type="hidden" name="id" value={payment.id} />
+					<button class="remove-btn" on:click|stopPropagation={() => {}}>
+						<IcRoundDelete width="20" height="20" />
+					</button>
+				</form>
+				<button class="edit-btn">
+					<a href={`/app/payment/${payment.id}`}>
+						<IcRoundEdit width="20" height="20" />
+					</a>
+				</button>
+			</div>
+		{/if}
+	</div>
 	<div class="details-container">
-		<span class="note" title={payment.note}>{payment.note ? payment.note : ''}</span>
-		<div class="tags-container" use:makeHorizontalScrollableWithWheel>
+		<div class="tags-container" bind:clientHeight={tagsHeight}>
 			{#each payment.tags as tag}
 				<span class="tag"> {tag} </span>
 			{/each}
 		</div>
+		{#if payment.note}
+			<span class="note" bind:clientHeight={noteHeight} title={payment.note}>{payment.note ? payment.note : ''}</span>
+		{/if}
 		<span class="date">{new Date(payment.createdAt).toLocaleDateString()}</span>
 	</div>
-	{#if showButtons}
-		<div class="buttons-container">
-			<form action="?/removePayment" method="post" use:enhance>
-				<input type="hidden" name="id" value={payment.id} />
-				<button class="remove-btn" on:click|stopPropagation={() => {}}>
-					<IcRoundDelete width="20" height="20" />
-				</button>
-			</form>
-			<button class="edit-btn">
-				<a href={`/app/payment/${payment.id}`}>
-					<IcRoundEdit width="20" height="20" />
-				</a>
-			</button>
-		</div>
-	{/if}
 </div>
 
 <style>
 	.card {
-		width: clamp(320px, 90%, 909px);
-		max-width: 909px;
-		min-height: 4rem;
-		padding-inline: var(--spacing-32);
+		width: 320px;
+		padding: 1rem var(--spacing-32);
 		display: flex;
-		align-items: center;
-		gap: 3rem;
+		flex-wrap: wrap;
+		gap: 1rem;
+
 		background-color: var(--color-dark);
 		color: var(--color-text-alt);
 		border-radius: 2px;
@@ -71,17 +91,29 @@
 		}
 	}
 
-	.card.selected {
-		outline: 2px solid var(--color-primary);
+	.card-spanned {
+		grid-row-end: span var(--rows-span, 10);
+	}
+
+	.head {
+		flex-basis: 100%;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
 	}
 
 	.details-container {
 		display: flex;
+		flex-flow: wrap;
+		justify-content: space-between;
 		align-items: center;
 		flex-grow: 1;
-		justify-content: end;
-		gap: 2rem;
+		gap: 0.5rem;
 		overflow: hidden;
+	}
+
+	.card.selected {
+		outline: 2px solid var(--color-primary);
 	}
 
 	.amount {
@@ -94,13 +126,12 @@
 	}
 
 	.tags-container {
+		flex-grow: 1;
 		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
 		gap: var(--spacing-8);
-		flex-shrink: 1;
-		overflow: auto;
 		padding: 0.4rem 0;
-		scrollbar-gutter: stable both-edges;
 		background-color: transparent;
 
 		&::-webkit-scrollbar-thumb {
@@ -125,10 +156,8 @@
 		font-size: 12px;
 		font-weight: 400;
 		color: color-mix(in srgb, var(--color-text-alt) 80%, transparent);
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		overflow: hidden;
-		max-width: 30%;
+		max-width: 46ch;
+		flex-grow: 1;
 	}
 
 	.buttons-container {
