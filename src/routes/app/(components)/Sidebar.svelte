@@ -3,37 +3,53 @@
 	import { Accordion, AccordionItem } from '$lib/components/Accordion'
 	import AddPaymentForm from './AddPaymentForm.svelte'
 	import FiltersForm from './FiltersForm.svelte'
+	import More from '$lib/components/svgs/More.svelte'
+	import { slide } from 'svelte/transition'
+
+	let isForms = false
 </script>
 
-<aside>
-	<div class="header">
-		<span class="logo">
-			<a href="/">
-				<span class="primary">Penny</span>Pal
-			</a>
-		</span>
-		<div>
-			<p>{$page.data.user.username}</p>
-			<a href="/logout">logout</a>
+<div class="wrapper">
+	<aside>
+		<div class="header">
+			<span class="logo">
+				<a href="/">
+					<span class="primary">Penny</span>Pal
+				</a>
+			</span>
+			<button
+				class="small-only"
+				on:click={() => {
+					isForms = !isForms
+				}}
+			>
+				<More width="1.5rem" height="1.5rem" />
+			</button>
+			<div>
+				<p>{$page.data.user.username}</p>
+				<a href="/logout">logout</a>
+			</div>
 		</div>
-	</div>
-	<div class="forms-container">
-		<Accordion colapse>
-			<AccordionItem open>
-				<h3 slot="header">Choose Your Filters</h3>
-				<div slot="content">
-					<FiltersForm />
-				</div>
-			</AccordionItem>
+		{#key isForms}
+			<div class="forms-container" class:large-only={!isForms} transition:slide={{ duration: 300 }}>
+				<Accordion colapse>
+					<AccordionItem open>
+						<h3 slot="header">Choose Your Filters</h3>
+						<div slot="content">
+							<FiltersForm />
+						</div>
+					</AccordionItem>
 
-			<AccordionItem>
-				<h3 slot="header">Add A New Payment</h3>
-				<div slot="content">
-					<AddPaymentForm />
-				</div>
-			</AccordionItem>
-		</Accordion>
-	</div>
+					<AccordionItem>
+						<h3 slot="header">Add A New Payment</h3>
+						<div slot="content">
+							<AddPaymentForm />
+						</div>
+					</AccordionItem>
+				</Accordion>
+			</div>
+		{/key}
+	</aside>
 
 	<nav class="tabs-container">
 		<ul>
@@ -48,31 +64,31 @@
 			</li>
 		</ul>
 	</nav>
-</aside>
+</div>
 
 <style>
+	.wrapper {
+		height: 100vh;
+	}
+
 	aside {
 		display: flex;
 		flex-direction: column;
-		width: 20rem;
-		min-width: 20rem;
-		height: 100vh;
+		width: 100%;
+		height: calc(100vh - 40px);
 		flex-grow: 1;
 		padding: calc(var(--spacing-32) - var(--scrollbar-width));
 		scrollbar-gutter: stable both-edges;
 		background-color: var(--color-dark);
 		color: var(--color-text-alt);
-		color-scheme: dark;
 		overflow: auto;
 		/* scrollbar-gutter: stable both-edges; */
-		position: relative;
 	}
 
 	.header {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		margin-bottom: var(--spacing-32);
 
 		& div {
 			display: flex;
@@ -89,6 +105,10 @@
 				font-size: var(--fs-small);
 				color: var(--color-grey-70);
 			}
+		}
+
+		& button {
+			background-color: transparent;
 		}
 	}
 
@@ -112,12 +132,14 @@
 		font-weight: 400;
 	}
 
+	.forms-container {
+		margin-top: var(--spacing-32);
+	}
+
 	nav {
 		width: 100%;
 		margin-inline: auto;
-		position: absolute;
-		bottom: 0;
-		left: 0;
+		background-color: var(--color-dark);
 
 		& ul {
 			width: 100%;
@@ -147,6 +169,28 @@
 			background-color: var(--color-dark-2);
 			color: var(--color-text-alt);
 			border-bottom: 2px solid var(--color-primary);
+		}
+	}
+
+	.small-only {
+		display: none;
+	}
+
+	@media (max-width: 640px) {
+		.wrapper {
+			height: auto;
+		}
+
+		aside {
+			height: auto;
+		}
+
+		.large-only {
+			display: none;
+		}
+
+		.small-only {
+			display: block;
 		}
 	}
 </style>
