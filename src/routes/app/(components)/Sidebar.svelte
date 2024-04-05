@@ -119,6 +119,7 @@
 		font-weight: bold;
 
 		& a {
+			color: var(--color-text);
 			text-decoration: none;
 		}
 
