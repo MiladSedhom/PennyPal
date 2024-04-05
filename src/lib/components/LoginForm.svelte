@@ -79,11 +79,11 @@
 		& input {
 			background-color: color-mix(in srgb, var(--color-fields) 20%, var(--color-primary));
 			padding: 1.3rem 1rem;
-			border: 2px solid var(--color-dark);
+			border: 2px solid var(--color-background);
 			color: black;
 
 			&::placeholder {
-				color: var(--color-dark);
+				color: var(--color-background);
 			}
 		}
 
@@ -92,7 +92,7 @@
 			height: 40px;
 			background-color: var(--color-primary);
 			color: var(--color-fields);
-			border: 2px solid var(--color-dark);
+			border: 2px solid var(--color-background);
 			box-shadow: 0 5px #1a010133;
 			margin-bottom: 0.5rem;
 		}
@@ -103,7 +103,7 @@
 
 		& span {
 			font-size: 0.75rem;
-			color: color-mix(in srgb, var(--color-dark) 80%, var(--color-primary));
+			color: color-mix(in srgb, var(--color-background) 80%, var(--color-primary));
 		}
 
 		& a {

@@ -77,7 +77,7 @@
 	form {
 		/* not using margin cuz it doesnt work with the transition */
 		padding-bottom: var(--spacing-48);
-		background-color: var(--color-dark);
+		background-color: var(--color-background);
 		width: clamp(320px, 90%, 909px);
 		padding: 2rem;
 	}

@@ -80,13 +80,13 @@
 		flex-wrap: wrap;
 		gap: 1rem;
 
-		background-color: var(--color-dark);
+		background-color: var(--color-background);
 		color: var(--color-text-alt);
 		border-radius: 2px;
 		/* box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25); */
 
 		&:hover {
-			background-color: color-mix(in srgb, var(--color-dark) 97%, var(--color-text-alt));
+			background-color: color-mix(in srgb, var(--color-background) 97%, var(--color-text-alt));
 		}
 	}
 
@@ -168,19 +168,19 @@
 		height: 2rem;
 		border-radius: 2px;
 		background-color: transparent;
-		color: var(--color-grey-60);
+		color: var(--color-text-60);
 
 		& a {
-			color: var(--color-grey-60);
+			color: var(--color-text-60);
 		}
 	}
 
 	.remove-btn:hover {
 		color: var(--color-semantic-red);
-		background-color: color-mix(in srgb, var(--color-dark) 90%, white);
+		background-color: color-mix(in srgb, var(--color-background) 90%, white);
 	}
 
 	.edit-btn:hover {
-		background-color: color-mix(in srgb, var(--color-dark) 90%, white);
+		background-color: color-mix(in srgb, var(--color-background) 90%, white);
 	}
 </style>

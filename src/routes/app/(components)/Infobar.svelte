@@ -53,8 +53,8 @@
 		line-height: 2rem;
 		font-size: var(--fs-base);
 
-		background-color: hsl(160, 3%, 11%);
-		color: var(--color-grey-70);
+		background-color: var(--color-background);
+		color: var(--color-text-70);
 	}
 
 	span {

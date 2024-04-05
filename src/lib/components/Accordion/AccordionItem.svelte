@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { getContext } from "svelte"
-	import type { Writable } from "svelte/store"
-	import { slide } from "svelte/transition"
+	import { getContext } from 'svelte'
+	import type { Writable } from 'svelte/store'
+	import { slide } from 'svelte/transition'
 
 	export let open = false
 	const id = crypto.randomUUID()
 
-	const colapse = getContext("colapse")
-	const activeItemId: Writable<string | null> = getContext("activeItemId")
+	const colapse = getContext('colapse')
+	const activeItemId: Writable<string | null> = getContext('activeItemId')
 
 	colapse && open && ($activeItemId = id)
 	$: isActive = $activeItemId === id
@@ -68,7 +68,7 @@
 
 	.accordion-item {
 		width: var(--accordion-width, 100%);
-		background-color: var(--accordion-background, var(--color-dark));
+		background-color: var(--accordion-background, var(--color-background));
 		color: var(--accordion-color, var(--color-text-alt));
 	}
 
@@ -79,7 +79,7 @@
 	}
 
 	.caret {
-		color: var(--caret-color, var(--color-grey-70));
+		color: var(--caret-color, var(--color-text-70));
 		transition: transform 300ms ease-in;
 	}
 	.caret-closed {

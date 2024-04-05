@@ -30,7 +30,7 @@
 		width: 28rem;
 		border-radius: 0.2rem;
 		border: none;
-		background-color: var(--color-dark);
+		background-color: var(--color-background);
 
 		top: 50%;
 		left: 50%;

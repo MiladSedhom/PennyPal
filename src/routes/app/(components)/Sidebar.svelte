@@ -79,7 +79,7 @@
 		flex-grow: 1;
 		padding: calc(var(--spacing-32) - var(--scrollbar-width));
 		scrollbar-gutter: stable both-edges;
-		background-color: var(--color-dark);
+		background-color: var(--color-background);
 		color: var(--color-text-alt);
 		overflow: auto;
 		/* scrollbar-gutter: stable both-edges; */
@@ -98,12 +98,12 @@
 
 			& p {
 				font-size: var(--fs-small);
-				color: var(--color-grey-90);
+				color: var(--color-text-90);
 			}
 
 			& a {
 				font-size: var(--fs-small);
-				color: var(--color-grey-70);
+				color: var(--color-text-70);
 			}
 		}
 
@@ -139,7 +139,7 @@
 	nav {
 		width: 100%;
 		margin-inline: auto;
-		background-color: var(--color-dark);
+		background-color: var(--color-background);
 
 		& ul {
 			width: 100%;
@@ -158,15 +158,15 @@
 			width: 100%;
 			height: 40px;
 			padding: 4px;
-			background-color: var(--color-dark-1);
-			color: var(--color-grey-60);
+			background-color: var(--color-background-1);
+			color: var(--color-text-60);
 			font-size: var(--fs-small);
 			font-weight: 500;
 			text-decoration: none;
 		}
 
 		& a.active-tab {
-			background-color: var(--color-dark-2);
+			background-color: var(--color-background-2);
 			color: var(--color-text-alt);
 			border-bottom: 2px solid var(--color-primary);
 		}

@@ -283,7 +283,7 @@
 
 	svg {
 		margin-right: var(--spacing-16);
-		color: var(--caret-color, var(--color-grey-70));
+		color: var(--caret-color, var(--color-text-70));
 	}
 
 	input:focus {

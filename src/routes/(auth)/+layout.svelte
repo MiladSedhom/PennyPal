@@ -18,11 +18,11 @@
 		display: grid;
 		place-content: center left;
 		padding: 3rem;
-		background-color: var(--color-dark);
+		background-color: var(--color-background);
 
 		--s: 100px; /* control the size */
 		--c1: #484c4b;
-		--c2: var(--color-dark);
+		--c2: var(--color-background);
 
 		background: linear-gradient(-26.56deg, var(--c1) 33%, var(--c2) 33.3% 66.6%, var(--c1) 67%) 0 / var(--s) var(--s);
 		/* 26.56deg = arctan(0.5) */

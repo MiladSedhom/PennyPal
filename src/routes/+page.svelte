@@ -74,7 +74,7 @@
 			'header'
 			'main';
 		grid-template-rows: auto 1fr;
-		background-color: var(--color-dark);
+		background-color: var(--color-background);
 		min-height: 100vh;
 	}
 
@@ -83,7 +83,7 @@
 		height: 5rem;
 
 		padding: 0 3rem;
-		background-color: var(--color-dark);
+		background-color: var(--color-background);
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
@@ -106,7 +106,7 @@
 				padding-right: 1rem;
 				border-right: 1px solid grey;
 				font-size: var(--fs-base);
-				color: var(--color-grey-70);
+				color: var(--color-text-70);
 			}
 		}
 
@@ -131,7 +131,7 @@
 			bottom: 0;
 			left: 50%;
 			translate: -50%;
-			border-bottom: 1px solid color-mix(in srgb, var(--color-text) 30%, var(--color-dark));
+			border-bottom: 1px solid color-mix(in srgb, var(--color-text) 30%, var(--color-background));
 		}
 	}
 
@@ -143,9 +143,9 @@
 		position: relative;
 		overflow: hidden;
 
-		background-color: var(--color-dark);
-		--c1: color-mix(in srgb, var(--color-text) 25%, var(--color-dark));
-		--c2: var(--color-dark);
+		background-color: var(--color-background);
+		--c1: color-mix(in srgb, var(--color-text) 25%, var(--color-background));
+		--c2: var(--color-background);
 		background-image: linear-gradient(var(--c1) 1px, transparent 1px),
 			linear-gradient(to right, var(--c1) 1px, var(--c2) 1px);
 		background-size: 20px 20px;
@@ -188,7 +188,7 @@
 		}
 
 		& p {
-			color: var(--color-grey-70);
+			color: var(--color-text-70);
 			font-size: 1.1rem;
 			line-height: 120%;
 			max-width: 45ch;

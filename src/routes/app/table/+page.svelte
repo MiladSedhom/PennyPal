@@ -106,9 +106,9 @@
 		width: 5rem;
 		padding: 0.4rem 1rem;
 		white-space: nowrap;
-		/* border: solid 1px var(--color-grey-60); */
+		/* border: solid 1px var(--color-text-60); */
 		text-align: center;
-		border: 1px solid var(--color-dark-1);
+		border: 1px solid var(--color-background-1);
 	}
 
 	.title-row {
@@ -127,7 +127,7 @@
 
 	th {
 		font-weight: 500;
-		background-color: var(--color-dark-1);
+		background-color: var(--color-background-1);
 		color: color-mix(in srgb, var(--color-text-alt) 90, transparent);
 	}
 </style>
