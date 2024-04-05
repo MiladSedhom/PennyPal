@@ -28,16 +28,18 @@ html {
 	color-scheme: light;
 
 	/* colors */
-	--color-white: #fff;
-	--color-body: #e6e6e6;
-	--color-background: hsl(0, 0%, 100%);
-	--color-primary: hsl(151, 94%, 35%);
+	--h: 151;
+	--s: 94%;
+	--l: 35%;
+	--color-body: hsl(var(--h), 0%, 90%);
+	--color-primary: hsl(var(--h), var(--s), var(--l));
 	--color-semantic-red: hsl(0, 76%, 52%);
-	--color-text: #000000;
-	--color-text-on-primary: #000000;
-	--color-text-alt: #000000;
-	--color-fields: hsl(148, 31%, 88%);
+	--color-text: #000;
+	--color-text-alt: #000;
+	--color-text-on-primary: #fff;
+	--color-fields: hsl(var(--h), 31%, 88%);
 
+	--color-background: hsl(0, 0%, 100%);
 	--color-background-1: hsl(0, 0%, 85%);
 	--color-background-2: hsl(151, 30%, 70%);
 
@@ -63,30 +65,44 @@ html {
 	--scrollbar-height: 0.2rem;
 }
 
-@media (prefers-color-scheme: dark) {
-	html {
-		color-scheme: dark;
-	}
+:root[data-theme='dark'] {
+	color-scheme: dark;
 
-	:root {
-		--color-white: #fff;
-		--color-body: #e6e6e6;
-		--color-body: #3e4240;
-		--color-background: hsl(160, 3%, 19%);
-		--color-primary: hsl(151, 94%, 35%);
-		--color-semantic-red: hsl(0, 76%, 52%);
-		--color-text: #fff;
-		--color-text-on-primary: #000000;
-		--color-text-alt: #fff;
-		--color-fields: hsl(140, 2%, 28%);
+	--color-body: hsl(var(--h), 3%, 25%);
+	--color-text: #fff;
+	--color-text-alt: #fff;
+	--color-text-on-primary: #000000;
+	--color-fields: hsl(var(--h), 2%, 28%);
 
-		--color-background-1: hsl(160, 3%, 13%);
-		--color-background-2: hsl(160, 3%, 9%);
+	--color-background: hsl(var(--h), 3%, 19%);
+	--color-background-1: hsl(var(--h), 3%, 13%);
+	--color-background-2: hsl(var(--h), 3%, 9%);
 
-		--color-text-90: hsl(0, 0%, 90%);
-		--color-text-70: hsl(0, 0%, 70%);
-		--color-text-60: hsl(0, 0%, 60%);
-	}
+	--color-text-90: hsl(0, 0%, 90%);
+	--color-text-70: hsl(0, 0%, 70%);
+	--color-text-60: hsl(0, 0%, 60%);
+}
+
+/* themes */
+:root[data-theme-color='pink'] {
+	--h: 3;
+	--s: 74%;
+	--l: 76%;
+	--color-text-on-primary: #000;
+}
+:root[data-theme-color='red'] {
+	--color-primary: hsl(34, 87%, 44%);
+}
+:root[data-theme-color='blue'] {
+	--h: 219;
+	--s: 89%;
+	--l: 52%;
+}
+:root[data-theme-color='blue'][data-theme='dark'] {
+	--h: 219;
+	--s: 89%;
+	--l: 65%;
+	--color-text-on-primary: black;
 }
 
 /* resest */
