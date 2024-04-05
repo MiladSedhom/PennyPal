@@ -6,6 +6,7 @@
 	import IcRoundDelete from '$lib/components/svgs/IcRoundDelete.svelte'
 	import { goto } from '$app/navigation'
 	import { fade, slide } from 'svelte/transition'
+	import { onMount } from 'svelte'
 
 	export let payment: Payment & { tags: string[] }
 	export let selected: boolean = false
@@ -13,10 +14,11 @@
 
 	let tagsHeight: number = 0
 	let noteHeight: number = 0
+	let cardPreferredheight: number = 0
 
+	// TODO?: this masnory logic can be abstracted
 	// cardPreferredheight = padding + head + internal gaps + tagsHeight + noteHeight + potential extra row if date wraps
-	$: cardPreferredheight = 32 + 32 + 32 + tagsHeight + noteHeight + 16
-
+	onMount(() => (cardPreferredheight = 32 + 32 + 32 + tagsHeight + noteHeight + 16))
 	// s = h / ( r + g )
 	$: rowsSpan = Math.ceil(cardPreferredheight / (16 + 16))
 
@@ -81,9 +83,6 @@
 		background-color: var(--color-dark);
 		color: var(--color-text-alt);
 		border-radius: 2px;
-
-		position: relative;
-
 		/* box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25); */
 
 		&:hover {
@@ -131,7 +130,6 @@
 		flex-wrap: wrap;
 		align-items: center;
 		gap: var(--spacing-8);
-		padding: 0.4rem 0;
 		background-color: transparent;
 
 		&::-webkit-scrollbar-thumb {
@@ -144,7 +142,7 @@
 		background-color: var(--color-primary);
 		color: var(--color-text-on-primary);
 		padding: 4px var(--spacing-16);
-		border-radius: 1rem;
+		border-radius: 4px;
 		text-align: center;
 		white-space: nowrap;
 
