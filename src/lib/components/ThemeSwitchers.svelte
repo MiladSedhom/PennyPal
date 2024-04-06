@@ -1,42 +1,40 @@
 <script lang="ts">
-	import { browser } from '$app/environment'
 	import DarkMode from '$lib/components/svgs/DarkMode.svelte'
 	import LightMode from '$lib/components/svgs/LightMode.svelte'
 	import Color from '$lib/components/svgs/Color.svelte'
+	import { page } from '$app/stores'
+	import { enhance } from '$app/forms'
 
-	let isDark: boolean
+	$: theme = $page.data.theme
+	$: color = $page.data.color
+
+	const colors = ['green', 'pink', 'yellow', 'blue']
 
 	const changeTheme = () => {
-		if (browser) {
-			let currentTheme = document.documentElement.getAttribute('data-theme')
-			let newTheme = currentTheme === 'dark' ? 'light' : 'dark'
-			document.documentElement.setAttribute('data-theme', newTheme)
-			isDark = currentTheme === 'dark'
-			localStorage.setItem('theme-is-dark', JSON.stringify(isDark))
-		}
+		theme = theme === 'dark' ? 'light' : 'dark'
 	}
-	const changeThemeColor = () => {
-		if (browser) {
-			const themes = ['pink', 'red', 'blue', 'green']
-			let currentThemeColor = document.documentElement.getAttribute('data-theme-color') || 'green'
-			let newThemeColor = themes[(themes.indexOf(currentThemeColor) + 1) % themes.length]
-			document.documentElement.setAttribute('data-theme-color', newThemeColor)
-			localStorage.setItem('theme-color', newThemeColor)
-		}
+
+	const changeColor = () => {
+		let nextColor = colors[(colors.indexOf(color) + 1) % colors.length]
+		color = nextColor
 	}
 </script>
 
 <div>
-	<button class="color" on:click={changeThemeColor}>
-		<Color width="18" height="18" />
-	</button>
-	<button on:click={changeTheme}>
-		{#if !isDark}
-			<LightMode width="18" height="18" />
-		{:else}
-			<DarkMode width="18" height="18" />
-		{/if}
-	</button>
+	<form action="?/changeTheme" method="post" use:enhance>
+		<input type="hidden" name="theme" bind:value={theme} />
+		<input type="hidden" name="color" bind:value={color} />
+		<button class="color" on:click={changeColor}>
+			<Color width="18" height="18" />
+		</button>
+		<button on:click={changeTheme}>
+			{#if theme === 'dark'}
+				<LightMode width="18" height="18" />
+			{:else}
+				<DarkMode width="18" height="18" />
+			{/if}
+		</button>
+	</form>
 </div>
 
 <style>

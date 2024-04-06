@@ -25,27 +25,6 @@ html {
 }
 
 :root {
-	color-scheme: light;
-
-	/* colors */
-	--h: 151;
-	--s: 94%;
-	--l: 35%;
-	--color-body: hsl(var(--h), 0%, 90%);
-	--color-primary: hsl(var(--h), var(--s), var(--l));
-	--color-semantic-red: hsl(0, 76%, 52%);
-	--color-text: #000;
-	--color-text-on-primary: #fff;
-	--color-fields: hsl(var(--h), 31%, 88%);
-
-	--color-background: hsl(0, 0%, 100%);
-	--color-background-1: hsl(0, 0%, 85%);
-	--color-background-2: hsl(var(--h), 30%, 70%);
-
-	--color-text-90: hsl(0, 0%, 10%);
-	--color-text-70: hsl(0, 0%, 30%);
-	--color-text-60: hsl(0, 0%, 40%);
-
 	/* type */
 	--sans-serif: 'Cairo', 'Roboto', sans-serif;
 	--serif: 'Bricolage Grotesque', serif;
@@ -63,8 +42,30 @@ html {
 	--scrollbar-width: 0.2rem;
 	--scrollbar-height: 0.2rem;
 }
+/* themes */
+.theme {
+	color-scheme: light;
 
-:root[data-theme='dark'] {
+	/* colors */
+	--h: 151;
+	--s: 94%;
+	--l: 35%;
+	--color-body: hsl(var(--h), 10%, 85%);
+	--color-primary: hsl(var(--h), var(--s), var(--l));
+	--color-semantic-red: hsl(0, 76%, 52%);
+	--color-text: #000;
+	--color-text-on-primary: #fff;
+	--color-fields: hsl(var(--h), 25%, 86%);
+
+	--color-background: hsl(var(--h), 10%, 95%);
+	--color-background-1: hsl(var(--h), 10%, 85%);
+	--color-background-2: hsl(var(--h), 10%, 70%);
+
+	--color-text-90: hsl(0, 0%, 10%);
+	--color-text-70: hsl(0, 0%, 30%);
+	--color-text-60: hsl(0, 0%, 40%);
+}
+.theme.dark {
 	color-scheme: dark;
 
 	--color-body: hsl(var(--h), 3%, 25%);
@@ -81,26 +82,33 @@ html {
 	--color-text-60: hsl(0, 0%, 60%);
 }
 
-/* themes */
-:root[data-theme-color='pink'] {
+.theme.pink {
 	--h: 3;
 	--s: 74%;
 	--l: 76%;
 	--color-text-on-primary: #000;
 }
-:root[data-theme-color='red'] {
-	--color-primary: hsl(34, 87%, 44%);
+.theme.yellow {
+	--h: 200;
+	--s: 80%;
+	--l: 60%;
+	--color-text-on-primary: #000;
 }
-:root[data-theme-color='blue'] {
+.theme.yellow.dark {
+	--h: 54;
+	--s: 80%;
+	--l: 60%;
+	--color-text-on-primary: #000;
+}
+.theme.blue {
 	--h: 219;
 	--s: 89%;
 	--l: 52%;
 }
-:root[data-theme-color='blue'][data-theme='dark'] {
+.theme.blue.dark {
 	--h: 219;
 	--s: 89%;
 	--l: 65%;
-	--color-text-on-primary: black;
 }
 
 /* resest */
@@ -122,9 +130,6 @@ select {
 body {
 	font-family: var(--sans-serif);
 	line-height: 1.2;
-
-	background-color: var(--color-body);
-	color: var(--color-text);
 }
 
 label {
