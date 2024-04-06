@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms'
+	import LogosGithubIcon from '~icons/logos/github-icon'
 
 	export let form: any
 </script>
@@ -30,7 +31,12 @@
 		</div>
 	</div>
 	<button type="submit">Sign up</button>
-
+	<span class="github">
+		<a href="/login/github">
+			<LogosGithubIcon width="1rem" height="1rem" />
+			Signin with github</a
+		>
+	</span>
 	<span>
 		Already have an account?
 		<a href="/login">Log in</a>
@@ -101,6 +107,13 @@
 
 		& a {
 			color: var(--color-text-on-primary);
+		}
+
+		& .github a {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			margin-block: 0.6rem;
 		}
 
 		& .error {
