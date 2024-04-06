@@ -96,6 +96,7 @@
 			font-size: 1.5rem;
 			font-family: var(--serif);
 			font-weight: bold;
+			color: var(--color-text);
 		}
 
 		& nav {

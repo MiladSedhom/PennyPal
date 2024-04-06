@@ -69,7 +69,7 @@
 	.accordion-item {
 		width: var(--accordion-width, 100%);
 		background-color: var(--accordion-background, var(--color-background));
-		color: var(--accordion-color, var(color-text));
+		color: var(--accordion-color, var(--color-text));
 	}
 
 	.accordion-header {
