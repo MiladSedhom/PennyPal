@@ -4,7 +4,7 @@ export const actions = {
 		cookies.set('theme', nextTheme, { path: '/' })
 	},
 	changeColor: async ({ locals, cookies }) => {
-		const colors = ['green', 'pink', 'yellow', 'blue']
+		const colors = ['green', 'pink', 'orange', 'blue']
 		let nextColor = colors[(colors.indexOf(locals.color) + 1) % colors.length]
 		cookies.set('color', nextColor, { path: '/' })
 	}

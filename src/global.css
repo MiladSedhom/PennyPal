@@ -88,16 +88,16 @@ html {
 	--l: 76%;
 	--color-text-on-primary: #000;
 }
-.theme.yellow {
-	--h: 200;
-	--s: 80%;
-	--l: 60%;
+.theme.orange {
+	--h: 34;
+	--s: 90%;
+	--l: 55%;
 	--color-text-on-primary: #000;
 }
-.theme.yellow.dark {
-	--h: 54;
-	--s: 80%;
-	--l: 60%;
+.theme.orange.dark {
+	--h: 34;
+	--s: 90%;
+	--l: 55%;
 	--color-text-on-primary: #000;
 }
 .theme.blue {
