@@ -21,10 +21,6 @@
 	onMount(() => (cardPreferredheight = 32 + 32 + 32 + tagsHeight + noteHeight + 16))
 	// s = h / ( r + g )
 	$: rowsSpan = Math.ceil(cardPreferredheight / (16 + 16))
-
-	$: {
-		rowsSpan && console.log(payment.amount, cardPreferredheight, rowsSpan)
-	}
 </script>
 
 <div
