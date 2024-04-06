@@ -118,6 +118,7 @@
 
 	const handleBlur = () => {
 		if (inputValue !== '') select(inputValue)
+		inputValue = ''
 	}
 </script>
 
@@ -172,11 +173,11 @@
 			class:hidden={!isInput}
 			bind:value={inputValue}
 			bind:this={inputRef}
+			on:blur={handleBlur}
 			on:focus={handleInputFocus}
 			on:input|preventDefault={() => {
 				hoverdOption = undefined
 			}}
-			on:blur={handleBlur}
 			type="text"
 			{placeholder}
 		/>
