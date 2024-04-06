@@ -79,11 +79,11 @@
 		& input {
 			background-color: color-mix(in srgb, var(--color-fields) 20%, var(--color-primary));
 			padding: 1.3rem 1rem;
-			border: 2px solid var(--color-background);
-			color: black;
+			border: 2px solid var(--color-text-on-primary);
+			color: var(--color-text-on-primary);
 
 			&::placeholder {
-				color: var(--color-background);
+				color: color-mix(in srgb, var(--color-text-on-primary) 60%, var(--color-primary));
 			}
 		}
 
@@ -91,8 +91,8 @@
 			width: 90%;
 			height: 40px;
 			background-color: var(--color-primary);
-			color: var(--color-fields);
-			border: 2px solid var(--color-background);
+			color: var(--color-text-on-primary);
+			border: 2px solid var(--color-text-on-primary);
 			box-shadow: 0 5px #1a010133;
 			margin-bottom: 0.5rem;
 		}
@@ -103,7 +103,7 @@
 
 		& span {
 			font-size: 0.75rem;
-			color: color-mix(in srgb, var(--color-background) 80%, var(--color-primary));
+			color: color-mix(in srgb, var(--color-text-on-primary) 80%, var(--color-primary));
 		}
 
 		& a {
