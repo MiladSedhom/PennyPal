@@ -21,11 +21,11 @@
 	<header>
 		<span class="logo"><span class="primary">Penny</span>Pal</span>
 		<nav>
+			<ThemeSwitchers />
 			{#if !$page.data.user}
 				<button on:click={() => showModal('login')}>Login</button>
 				<button on:click={() => showModal('signup')}>Signup</button>
 			{:else if $page.data.user}
-				<ThemeSwitchers />
 				<p>{$page.data.user.username}</p>
 				<a href="/app">App</a>
 				<a href="/logout">Logout</a>
