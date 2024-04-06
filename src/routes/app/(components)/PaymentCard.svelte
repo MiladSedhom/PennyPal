@@ -39,7 +39,7 @@
 	on:keydown
 	role="button"
 	tabindex="0"
-	transition:fade={{ duration: 3000 }}
+	transition:fade={{ duration: 200 }}
 >
 	<div class="head">
 		<span class="amount">{payment.amount}</span>
