@@ -115,6 +115,10 @@
 	const closeDropDown = () => {
 		isOpen = false
 	}
+
+	const handleBlur = () => {
+		if (inputValue !== '') select(inputValue)
+	}
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -172,6 +176,7 @@
 			on:input|preventDefault={() => {
 				hoverdOption = undefined
 			}}
+			on:blur={handleBlur}
 			type="text"
 			{placeholder}
 		/>
