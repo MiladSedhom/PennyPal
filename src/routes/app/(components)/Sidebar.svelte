@@ -168,7 +168,7 @@
 
 		& a.active-tab {
 			background-color: var(--color-background-2);
-			color: var(color-text);
+			color: var(--color-text);
 			border-bottom: 2px solid var(--color-primary);
 		}
 	}
