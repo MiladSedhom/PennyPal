@@ -231,7 +231,7 @@
 
 	@keyframes hero {
 		0% {
-			rotate: 21deg;
+			rotate: -21deg;
 			translate: -1% 2%;
 		}
 		50% {
@@ -239,7 +239,7 @@
 		}
 
 		100% {
-			rotate: -21deg;
+			rotate: 15deg;
 			translate: 1% -2%;
 		}
 	}
