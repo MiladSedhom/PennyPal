@@ -2,33 +2,17 @@
 	import DarkMode from '$lib/components/svgs/DarkMode.svelte'
 	import LightMode from '$lib/components/svgs/LightMode.svelte'
 	import Color from '$lib/components/svgs/Color.svelte'
-	import { page } from '$app/stores'
 	import { enhance } from '$app/forms'
-
-	$: theme = $page.data.theme
-	$: color = $page.data.color
-
-	const colors = ['green', 'pink', 'yellow', 'blue']
-
-	const changeTheme = () => {
-		theme = theme === 'dark' ? 'light' : 'dark'
-	}
-
-	const changeColor = () => {
-		let nextColor = colors[(colors.indexOf(color) + 1) % colors.length]
-		color = nextColor
-	}
+	import { page } from '$app/stores'
 </script>
 
 <div>
-	<form action="?/changeTheme" method="post" use:enhance>
-		<input type="hidden" name="theme" bind:value={theme} />
-		<input type="hidden" name="color" bind:value={color} />
-		<button class="color" on:click={changeColor}>
+	<form method="post" use:enhance>
+		<button formaction="/?/changeColor" class="color">
 			<Color width="18" height="18" />
 		</button>
-		<button on:click={changeTheme}>
-			{#if theme === 'dark'}
+		<button formaction="/?/changeTheme">
+			{#if $page.data.theme === 'dark'}
 				<LightMode width="18" height="18" />
 			{:else}
 				<DarkMode width="18" height="18" />
