@@ -4,10 +4,27 @@
 	import Color from '$lib/components/svgs/Color.svelte'
 	import { enhance } from '$app/forms'
 	import { page } from '$app/stores'
+	import type { SubmitFunction } from '@sveltejs/kit'
+	import { colors } from '$lib/theme'
+
+	const submitter: SubmitFunction = ({ action }) => {
+		const themeProvider = document.querySelector('.theme')
+		if (action.search === '?/changeColor') {
+			const currentColor = themeProvider?.classList[2]
+			if (currentColor) {
+				let nextColor = colors[(colors.indexOf(currentColor) + 1) % colors.length]
+				themeProvider?.classList.replace(currentColor, nextColor)
+			}
+		}
+		if (action.search === '?/changeTheme') {
+			const currentTheme = themeProvider?.classList[1]
+			if (currentTheme) themeProvider?.classList.replace(currentTheme, currentTheme === 'dark' ? 'light' : 'dark')
+		}
+	}
 </script>
 
 <div>
-	<form method="post" use:enhance>
+	<form method="post" use:enhance={submitter}>
 		<button formaction="/?/changeColor" class="color">
 			<Color width="18" height="18" />
 		</button>
