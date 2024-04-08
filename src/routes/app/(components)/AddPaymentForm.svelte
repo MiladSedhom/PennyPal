@@ -18,7 +18,8 @@
 			if (result.type === 'success') {
 				onSubmit?.()
 			}
-			await update({ reset: false })
+			await update()
+			$page.form = {}
 		}
 	}
 </script>
