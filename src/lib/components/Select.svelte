@@ -32,13 +32,16 @@
 	const [floatingRef, floatingContent] = createFloatingActions(_floatingConfig)
 
 	//functions
-	const addOrRemoveFromSelectedValues = (v: any) => {
+	const addOrRemoveFromSelectedValues = (v: string) => {
 		if (!Array.isArray(value)) return
 		value.includes(v) ? value.splice(value.indexOf(v), 1) : value.push(v)
+		// add option if it doesnt exit
+		if (!options.some((options) => options.value === inputValue))
+			options = [...options, { label: inputValue, value: inputValue }]
 		value = value
 	}
 
-	const select = async (v: string) => {
+	const select = (v: string) => {
 		multiple ? addOrRemoveFromSelectedValues(v) : (value = v)
 		onSelect?.(value)
 		!multiple && (isOpen = false)
@@ -55,9 +58,6 @@
 				select(hoverdOption.value)
 			} else if (inputValue.length != 0 && multiple) {
 				select(inputValue)
-				// add option if it doesnt exit
-				if (!options.some((options) => options.value === inputValue))
-					options = [...options, { label: inputValue, value: inputValue }]
 				//reset input
 				inputValue = ''
 			}
