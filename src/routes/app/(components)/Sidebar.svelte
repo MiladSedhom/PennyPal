@@ -86,6 +86,7 @@
 <style>
 	.wrapper {
 		height: 100vh;
+		border-right: 2px solid var(--color-background);
 	}
 
 	aside {
