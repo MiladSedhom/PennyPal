@@ -1,10 +1,8 @@
 <script lang="ts">
-	import tinycolor from 'tinycolor2'
 	import { afterUpdate, onMount } from 'svelte'
 	import Chart from 'chart.js/auto'
 	import Select from '$lib/components/Select.svelte'
 	import { page } from '$app/stores'
-	import { browser } from '$app/environment'
 
 	let chartCanvasRef: any
 	let graphType = 'doughnut'
@@ -25,26 +23,18 @@
 	let chartConfig: any
 	$: chartConfig = {
 		type: graphType,
-		// pie doughnut polarArea radar bar
 		data: {
 			labels: chartLabels,
 			datasets: [
 				{
 					label: 'Amount',
-					// backgroundColor: ["#19C873", "#14a05c", "#0f7845", "#0a502e", "#052817"],
-					// backgroundColor: ["#19C873", "#E67433", "#199CC8", "#EE777F", "#FCD303"],
-					backgroundColor: tinycolor(
-						browser ? getComputedStyle(document.body).getPropertyValue('--color-primary') : '#19C873'
-					)
-						.monochromatic(3)
-						.flatMap((c: any) => c.splitcomplement())
-						.map((c: any) => c.toHexString()),
+					backgroundColor: ['#05ad5c', '#ef9995', '#f49a25', '#1864f2'],
 					data: chartData
 				}
 			]
 		},
 		options:
-			graphType != 'radar' && graphType != 'polarArea'
+			graphType != 'polarArea'
 				? {}
 				: {
 						scales: {
@@ -61,7 +51,7 @@
 					}
 	}
 
-	Chart.defaults.color = 'white'
+	Chart.defaults.color = $page.data.theme === 'dark' ? 'white' : 'black'
 	Chart.defaults.borderColor = 'hsla(0,0%,100%,.4)'
 
 	let chart: any
