@@ -19,7 +19,6 @@
 		if (action.search === '?/changeTheme') {
 			const currentTheme = themeProvider?.classList[1]
 			if (currentTheme) themeProvider?.classList.replace(currentTheme, currentTheme === 'dark' ? 'light' : 'dark')
-			$page.data.theme = currentTheme
 		}
 	}
 </script>
