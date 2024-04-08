@@ -79,7 +79,7 @@
 
 	<Select
 		bind:value={graphType}
-		options={['pie', 'doughnut', 'polarArea', 'radar', 'bar'].map((e) => {
+		options={['pie', 'doughnut', 'polarArea', 'bar'].map((e) => {
 			return { label: e[0].toUpperCase() + e.slice(1) + ' Graph', value: e }
 		})}
 		placeholder="Select Graph Type"
