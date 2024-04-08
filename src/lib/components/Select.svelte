@@ -42,7 +42,8 @@
 	}
 
 	const select = (v: string) => {
-		multiple ? addOrRemoveFromSelectedValues(v) : (value = v)
+		if (multiple) addOrRemoveFromSelectedValues(v)
+		else if (options.map((o) => o.value).includes(v)) value = v
 		onSelect?.(value)
 		!multiple && (isOpen = false)
 	}
