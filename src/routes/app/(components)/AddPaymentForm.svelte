@@ -1,26 +1,29 @@
 <script lang="ts">
-	import { enhance } from '$app/forms'
+	import { applyAction, enhance } from '$app/forms'
 	import type { SubmitFunction } from '../$types'
 	import { page } from '$app/stores'
 	import Select from '$lib/components/Select.svelte'
 
+	export let onSubmit: Function | null = null
+
 	let selectedTags: string[]
+	let loading: boolean = false
 	const options = $page.data.tags.map((o: string) => ({ label: o, value: o }))
 
-	let dateInput: HTMLDataElement
 	const submitter: SubmitFunction = () => {
-		const dateValue = dateInput.value
-		return async ({ update }) => {
-			await update()
-			// keeping the date, cuz the enchace action resest is
-			dateInput.value = dateValue
-			// when the form is reset it does not show on the select element so i have to do it myself, can also alterntivly keep its state
-			selectedTags = []
+		loading = true
+		return async ({ update, result }) => {
+			applyAction(result)
+			loading = false
+			if (result.type === 'success') {
+				onSubmit?.()
+			}
+			await update({ reset: false })
 		}
 	}
 </script>
 
-<form action="/app?/addPayment" method="post" use:enhance={submitter}>
+<form action={`/app/?/addPayment`} method="post" use:enhance={submitter}>
 	<div class="field">
 		<label for="amount">Amount</label>
 		<input type="number" name="amount" id="amount" placeholder="amount" />
@@ -39,7 +42,7 @@
 
 	<div class="field">
 		<label for="date">Date</label>
-		<input bind:this={dateInput} type="date" name="date" id="date" value={new Date().toISOString().substring(0, 10)} />
+		<input type="date" name="date" id="date" value={new Date().toISOString().substring(0, 10)} />
 		{#if $page.form?.errors?.date}
 			<div class="error">{$page.form.errors.date}</div>
 		{/if}
@@ -53,13 +56,20 @@
 		{/if}
 	</div>
 
-	<button type="submit">Add Payment</button>
+	<button type="submit" class:loading disabled={loading}>
+		{#if !loading}
+			Add Payment
+		{:else}
+			Loading
+		{/if}
+	</button>
 </form>
 
 <style>
 	form {
 		/* not using margin cuz it doesnt work with the transition */
-		padding-bottom: var(--spacing-48);
+		padding: var(--spacing-48);
+		border: 2px solid var(--color-primary);
 	}
 
 	.field {
@@ -69,10 +79,19 @@
 	button {
 		height: 2rem;
 		padding: 0 1rem;
+		min-width: 16ch;
 		background-color: var(--color-primary);
-		color: var(--color-text);
+		color: var(--color-text-on-primary);
 		font-size: var(--fs-base);
 		font-weight: normal;
 		float: right;
+	}
+
+	.loading {
+		filter: saturate(0.3);
+	}
+
+	.error {
+		margin-top: 4px;
 	}
 </style>

@@ -101,11 +101,6 @@
 </form>
 
 <style>
-	form {
-		/* not using margin cuz it doesnt work with the transition */
-		padding-bottom: var(--spacing-48);
-	}
-
 	.field {
 		margin-bottom: var(--spacing-16);
 	}

@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { page } from '$app/stores'
-	import { Accordion, AccordionItem } from '$lib/components/Accordion'
 	import AddPaymentForm from './AddPaymentForm.svelte'
 	import FiltersForm from './FiltersForm.svelte'
-	import More from '$lib/components/svgs/More.svelte'
-	import { slide } from 'svelte/transition'
+	import Modal from '$lib/components/Modal.svelte'
+	import FiltesIcon from '$lib/components/svgs/filtesIcon.svelte'
+	import AddIcon from '$lib/components/svgs/AddIcon.svelte'
 
-	let isForms = false
+	let isFilters: boolean
+	let isAdd: boolean
 </script>
 
 <div class="wrapper">
@@ -17,38 +18,54 @@
 					<span class="primary">Penny</span>Pal
 				</a>
 			</span>
-			<button
-				class="small-only"
-				on:click={() => {
-					isForms = !isForms
-				}}
-			>
-				<More width="1.5rem" height="1.5rem" />
-			</button>
-			<div>
+			<div class="header-buttons small-only">
+				<button
+					on:click={() => {
+						isFilters = !isFilters
+					}}
+				>
+					<FiltesIcon width="1.5rem" height="1.5rem" />
+				</button>
+				<button
+					on:click={() => {
+						isAdd = true
+					}}
+				>
+					<AddIcon width="1.5rem" height="1.5rem" />
+				</button>
+			</div>
+			<div class="info">
 				<p>{$page.data.user.username}</p>
 				<a href="/logout">logout</a>
 			</div>
 		</div>
-		{#key isForms}
-			<div class="forms-container" class:large-only={!isForms} transition:slide={{ duration: 300 }}>
-				<Accordion colapse>
-					<AccordionItem open>
-						<h3 slot="header">Choose Your Filters</h3>
-						<div slot="content">
-							<FiltersForm />
-						</div>
-					</AccordionItem>
 
-					<AccordionItem>
-						<h3 slot="header">Add A New Payment</h3>
-						<div slot="content">
-							<AddPaymentForm />
-						</div>
-					</AccordionItem>
-				</Accordion>
-			</div>
-		{/key}
+		<div class="form-container" class:large-only={!isFilters}>
+			<h3>Choose Your Filters</h3>
+
+			<FiltersForm />
+		</div>
+		<button
+			class="add-btn large-only"
+			on:click={() => {
+				isAdd = true
+			}}>Add Payment</button
+		>
+
+		{#if isAdd}
+			<Modal
+				showModal
+				onClose={() => {
+					isAdd = false
+				}}
+			>
+				<AddPaymentForm
+					onSubmit={() => {
+						isAdd = false
+					}}
+				/>
+			</Modal>
+		{/if}
 	</aside>
 
 	<nav class="tabs-container">
@@ -75,40 +92,49 @@
 		display: flex;
 		flex-direction: column;
 		width: 100%;
-		height: calc(100vh - 40px);
-		flex-grow: 1;
+		height: calc(100vh - 42px);
 		padding: calc(var(--spacing-32) - var(--scrollbar-width));
 		scrollbar-gutter: stable both-edges;
 		background-color: var(--color-background);
 		color: var(color-text);
 		overflow: auto;
-		/* scrollbar-gutter: stable both-edges; */
 	}
 
 	.header {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+	}
 
-		& div {
-			display: flex;
-			flex-flow: column;
-			align-items: end;
-			padding-top: 0.25rem;
+	.header .info {
+		display: flex;
+		flex-flow: column;
+		align-items: end;
+		padding-top: 0.25rem;
 
-			& p {
-				font-size: var(--fs-small);
-				color: var(--color-text-90);
-			}
-
-			& a {
-				font-size: var(--fs-small);
-				color: var(--color-text-70);
-			}
+		& p {
+			font-size: var(--fs-small);
+			color: var(--color-text-90);
 		}
 
+		& a {
+			font-size: var(--fs-small);
+			color: var(--color-text-70);
+		}
+	}
+
+	.header button {
+		background-color: transparent;
+	}
+
+	.header-buttons {
+		display: flex;
 		& button {
-			background-color: transparent;
+			padding: 0.2rem;
+		}
+
+		& button:hover {
+			outline: 1px solid var(--color-primary);
 		}
 	}
 
@@ -131,10 +157,17 @@
 	h3 {
 		font-size: var(--fs-base);
 		font-weight: 400;
+		margin-block: 1rem 0.5rem;
 	}
 
-	.forms-container {
-		margin-top: var(--spacing-32);
+	.form-container {
+		margin-bottom: 2rem;
+	}
+
+	.add-btn {
+		padding: 0.5rem 1rem;
+		background-color: var(--color-primary);
+		color: var(--color-text-on-primary);
 	}
 
 	nav {
