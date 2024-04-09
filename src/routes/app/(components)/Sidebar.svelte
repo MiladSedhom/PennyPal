@@ -5,6 +5,7 @@
 	import Modal from '$lib/components/Modal.svelte'
 	import FiltesIcon from '$lib/components/svgs/filtesIcon.svelte'
 	import AddIcon from '$lib/components/svgs/AddIcon.svelte'
+	import ThemeSwitchers from '$lib/components/ThemeSwitchers.svelte'
 
 	let isFilters: boolean
 	let isAdd: boolean
@@ -18,6 +19,7 @@
 					<span class="primary">Penny</span>Pal
 				</a>
 			</span>
+			<ThemeSwitchers />
 			<div class="header-buttons small-only">
 				<button
 					on:click={() => {
