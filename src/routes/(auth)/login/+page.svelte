@@ -4,4 +4,16 @@
 	export let form
 </script>
 
-<LoginForm {form} />
+<div class="container">
+	<LoginForm {form} />
+</div>
+
+<style>
+	div {
+		display: grid;
+		place-content: center;
+		background-color: var(--color-primary);
+		width: 100vw;
+		height: 100vh;
+	}
+</style>
