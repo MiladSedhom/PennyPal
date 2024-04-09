@@ -63,25 +63,28 @@
 			{/each}
 			<th>Daily sum</th>
 		</tr>
-		{#each days as day}
-			<tr
-				><th>{day}</th>
-				{#each shownTags as tag}
-					<TableCell --_color-percentage={`${(table[String(day)][tag] * 100) / table.sum}%`}
-						>{table[String(day)][tag]}</TableCell
+		{#key $page.data.theme}
+			{#each days as day}
+				<tr
+					><th>{day}</th>
+					{#each shownTags as tag}
+						<TableCell --_color-percentage={`${(table[String(day)][tag] * 70) / table.sum}%`}
+							>{table[String(day)][tag]}</TableCell
+						>
+					{/each}
+					<TableCell --_color-percentage={`${(table[String(day)]?.dailySum * 70) / table.sum}%`}
+						>{table[String(day)].dailySum}</TableCell
 					>
-				{/each}
-				<TableCell --_color-percentage={`${(table[String(day)]?.dailySum * 100) / table.sum}%`}
-					>{table[String(day)].dailySum}</TableCell
+				</tr>
+			{/each}
+			<th>Tag sum</th>
+			{#each shownTags as tag}
+				<TableCell --_color-percentage={`${(table[tag]?.tagSum * 70) / table.sum}%`}
+					>{table[tag]?.tagSum || 0}</TableCell
 				>
-			</tr>
-		{/each}
-		<th>Tag sum</th>
-		{#each shownTags as tag}
-			<TableCell --_color-percentage={`${(table[tag]?.tagSum * 100) / table.sum}%`}>{table[tag]?.tagSum || 0}</TableCell
-			>
-		{/each}
-		<TableCell --_color-percentage="100%">{table.sum}</TableCell>
+			{/each}
+			<TableCell --_color-percentage="80%">{table.sum}</TableCell>
+		{/key}
 	</table>
 </div>
 
@@ -110,8 +113,6 @@
 		background-color: var(--color-background);
 		border: 1px solid var(--color-background-2);
 		font-weight: 500;
-		background-color: var(--color-background-1);
-		color: color-mix(in srgb, var(--color-text) 90, transparent);
 	}
 
 	.title-row {
