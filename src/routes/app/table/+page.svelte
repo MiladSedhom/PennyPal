@@ -89,7 +89,7 @@
 	.container {
 		min-height: 100%;
 		width: 100%;
-		color: var(color-text);
+		color: var(--color-text);
 		padding: 2rem;
 		display: flex;
 		justify-content: start;
@@ -106,9 +106,12 @@
 		width: 5rem;
 		padding: 0.4rem 1rem;
 		white-space: nowrap;
-		/* border: solid 1px var(--color-text-60); */
 		text-align: center;
-		border: 1px solid var(--color-background-1);
+		background-color: var(--color-background);
+		border: 1px solid var(--color-background-2);
+		font-weight: 500;
+		background-color: var(--color-background-1);
+		color: color-mix(in srgb, var(--color-text) 90, transparent);
 	}
 
 	.title-row {
@@ -121,13 +124,6 @@
 	}
 
 	:global(tr:hover td) {
-		filter: contrast(0.8);
-		/* background-color: color-mix(in srgb, black 50%, transparent); */
-	}
-
-	th {
-		font-weight: 500;
-		background-color: var(--color-background-1);
-		color: color-mix(in srgb, var(color-text) 90, transparent);
+		filter: contrast(1.1);
 	}
 </style>
