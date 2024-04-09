@@ -54,11 +54,9 @@
 		width: 5rem;
 		padding: 0.4rem 1rem;
 		white-space: nowrap;
-		/* border: solid 1px var(--color-text-60); */
 		text-align: center;
-		border: 1px solid var(--color-background-1);
-
 		background-color: color-mix(in srgb, var(--color-background), var(--color-primary) var(--_color-percentage, 0));
-		color: color-mix(in srgb, var(color-text) 90%, var(--color-text-on-primary));
+		color: color-mix(in srgb, var(--color-text) 90%, var(--color-text-on-primary));
+		border: 1px solid var(--color-background-1);
 	}
 </style>
