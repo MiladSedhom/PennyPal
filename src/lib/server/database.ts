@@ -54,6 +54,7 @@ export const updatePayment = async ({ id, amount, tags, date, note }: Payment & 
 			amount,
 			note,
 			userId,
+			createdAt: date,
 			tags: {
 				set: [],
 				create,
