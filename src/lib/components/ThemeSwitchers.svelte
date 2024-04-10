@@ -31,13 +31,13 @@
 <div>
 	<form method="post" use:enhance={submitter}>
 		<button formaction="/?/changeColor" class="color">
-			<Color width="18" height="18" />
+			<Color width="20px" height="20px" />
 		</button>
 		<button formaction="/?/changeTheme">
 			{#if $theme === 'dark'}
-				<LightMode width="18" height="18" />
+				<LightMode width="20px" height="20px" />
 			{:else}
-				<DarkMode width="18" height="18" />
+				<DarkMode width="20px" height="20px" />
 			{/if}
 		</button>
 	</form>
@@ -52,7 +52,7 @@
 	}
 
 	button {
-		padding: 0;
+		padding: 0.25rem;
 		background-color: transparent;
 		& path {
 			fill: var(--color-text);
