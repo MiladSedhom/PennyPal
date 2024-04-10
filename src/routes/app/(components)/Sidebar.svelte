@@ -3,7 +3,7 @@
 	import AddPaymentForm from './AddPaymentForm.svelte'
 	import FiltersForm from './FiltersForm.svelte'
 	import Modal from '$lib/components/Modal.svelte'
-	import FiltesIcon from '$lib/components/svgs/FiltersIcon.svelte'
+	import FiltersIcon from '$lib/components/svgs/FiltersIcon.svelte'
 	import AddIcon from '$lib/components/svgs/AddIcon.svelte'
 	import ThemeSwitchers from '$lib/components/ThemeSwitchers.svelte'
 	import { slide } from 'svelte/transition'
@@ -27,7 +27,7 @@
 						isFilters = !isFilters
 					}}
 				>
-					<FiltesIcon width="20px" height="20px" />
+					<FiltersIcon width="20px" height="20px" />
 				</button>
 				<button
 					on:click={() => {
