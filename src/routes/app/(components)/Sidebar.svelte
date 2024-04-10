@@ -3,9 +3,10 @@
 	import AddPaymentForm from './AddPaymentForm.svelte'
 	import FiltersForm from './FiltersForm.svelte'
 	import Modal from '$lib/components/Modal.svelte'
-	import FiltesIcon from '$lib/components/svgs/filtesIcon.svelte'
+	import FiltesIcon from '$lib/components/svgs/FiltesIcon.svelte'
 	import AddIcon from '$lib/components/svgs/AddIcon.svelte'
 	import ThemeSwitchers from '$lib/components/ThemeSwitchers.svelte'
+	import { slide } from 'svelte/transition'
 
 	let isFilters: boolean
 	let isAdd: boolean
@@ -26,14 +27,14 @@
 						isFilters = !isFilters
 					}}
 				>
-					<FiltesIcon width="1.5rem" height="1.5rem" />
+					<FiltesIcon width="20px" height="20px" />
 				</button>
 				<button
 					on:click={() => {
 						isAdd = true
 					}}
 				>
-					<AddIcon width="1.5rem" height="1.5rem" />
+					<AddIcon width="20px" height="20px" />
 				</button>
 			</div>
 			<div class="info">
@@ -42,11 +43,13 @@
 			</div>
 		</div>
 
-		<div class="form-container" class:large-only={!isFilters}>
-			<h3>Choose Your Filters</h3>
+		{#key isFilters}
+			<div class="form-container" class:large-only={!isFilters} transition:slide={{ duration: 300 }}>
+				<h3>Choose Your Filters</h3>
 
-			<FiltersForm />
-		</div>
+				<FiltersForm />
+			</div>
+		{/key}
 		<button
 			class="add-btn large-only"
 			on:click={() => {
@@ -220,6 +223,7 @@
 
 		aside {
 			height: auto;
+			padding-inline: calc(var(--spacing-16) - var(--scrollbar-width));
 		}
 
 		.large-only {
