@@ -12,7 +12,7 @@
 <style>
 	div {
 		display: grid;
-		grid-template-columns: minmax(300px, 25%) 1fr;
+		grid-template-columns: minmax(320px, 25%) 1fr;
 		height: 100dvh;
 	}
 
