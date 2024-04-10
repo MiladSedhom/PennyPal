@@ -8,15 +8,17 @@
 
 <header>
 	<span class="logo"><span class="primary">Penny</span>Pal</span>
+	<ThemeSwitchers />
 	<nav>
-		<ThemeSwitchers />
 		{#if !$page.data.user}
 			<button on:click={() => showModal('login')}>Login</button>
 			<button on:click={() => showModal('signup')}>Signup</button>
 		{:else if $page.data.user}
 			<p>{$page.data.user.username}</p>
-			<a href="/app">App</a>
-			<a href="/logout">Logout</a>
+			<div class="links">
+				<a href="/app">App</a>
+				<a href="/logout">Logout</a>
+			</div>
 		{/if}
 	</nav>
 	<div class="border-bot"></div>
@@ -41,20 +43,6 @@
 			color: var(--color-text);
 		}
 
-		& nav {
-			display: flex;
-			gap: 0.5rem;
-
-			& p {
-				align-self: center;
-				padding: 0.4rem 0;
-				padding-right: 1rem;
-				border-right: 1px solid grey;
-				font-size: var(--fs-base);
-				color: var(--color-text-70);
-			}
-		}
-
 		& .border-bot {
 			width: calc(100% - 6rem);
 			position: absolute;
@@ -65,6 +53,24 @@
 		}
 	}
 
+	nav {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.links {
+		display: flex;
+	}
+
+	p {
+		align-self: center;
+		padding: 0.4rem 0;
+		padding-right: 0.5rem;
+		border-right: 1px solid grey;
+		font-size: var(--fs-base);
+		color: var(--color-text-70);
+	}
+
 	header button,
 	a {
 		padding: 0.4rem 0.5rem;
@@ -73,6 +79,8 @@
 		font-size: var(--fs-base);
 		font-weight: 500;
 		text-decoration: none;
+		display: grid;
+		place-content: center;
 
 		&:hover {
 			color: var(--color-primary);
@@ -82,5 +90,28 @@
 
 	.primary {
 		color: var(--color-primary);
+	}
+
+	@media (max-width: 640px) {
+		header {
+			padding: 0 1rem;
+		}
+
+		nav {
+			flex-direction: column;
+			align-items: end;
+			gap: 0rem;
+		}
+
+		nav p {
+			border-right: unset;
+			padding: 0;
+			font-size: var(--fs-small);
+		}
+
+		nav a {
+			padding: 0 0 0 0.5rem;
+			font-size: var(--fs-small);
+		}
 	}
 </style>
