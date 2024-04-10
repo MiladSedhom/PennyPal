@@ -3,9 +3,12 @@
 	import LightMode from '$lib/components/svgs/LightMode.svelte'
 	import Color from '$lib/components/svgs/Color.svelte'
 	import { enhance } from '$app/forms'
-	import { page } from '$app/stores'
-	import type { SubmitFunction } from '@sveltejs/kit'
 	import { colors } from '$lib/theme'
+	import { getContext } from 'svelte'
+	import type { SubmitFunction } from '@sveltejs/kit'
+	import type { Writable } from 'svelte/store'
+
+	const theme: Writable<string> = getContext('theme')
 
 	const submitter: SubmitFunction = ({ action }) => {
 		const themeProvider = document.querySelector('.theme')
@@ -18,7 +21,9 @@
 		}
 		if (action.search === '?/changeTheme') {
 			const currentTheme = themeProvider?.classList[1]
-			if (currentTheme) themeProvider?.classList.replace(currentTheme, currentTheme === 'dark' ? 'light' : 'dark')
+			const nextTheme = currentTheme === 'dark' ? 'light' : 'dark'
+			$theme = nextTheme
+			if (currentTheme) themeProvider?.classList.replace(currentTheme, nextTheme)
 		}
 	}
 </script>
@@ -29,7 +34,7 @@
 			<Color width="18" height="18" />
 		</button>
 		<button formaction="/?/changeTheme">
-			{#if $page.data.theme === 'dark'}
+			{#if $theme === 'dark'}
 				<LightMode width="18" height="18" />
 			{:else}
 				<DarkMode width="18" height="18" />
