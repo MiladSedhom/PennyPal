@@ -187,7 +187,7 @@
 		}
 
 		.hero-container {
-			transform: scale(60%);
+			transform: scale(60%) translateY(-8rem);
 		}
 	}
 </style>
