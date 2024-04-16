@@ -126,6 +126,7 @@
 
 	.hero-container {
 		padding: 1rem 3rem;
+		width: clamp(150px, auto, 3000px);
 
 		animation: hero 15s linear infinite alternate;
 		& svg {
@@ -186,7 +187,7 @@
 		}
 
 		.hero-container {
-			transform: scale(80%);
+			transform: scale(60%);
 		}
 	}
 </style>
