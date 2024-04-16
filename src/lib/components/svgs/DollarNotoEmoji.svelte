@@ -25,9 +25,6 @@
 </svg>
 
 <style>
-	.body {
-	}
-
 	circle {
 		fill: var(--color-primary);
 		opacity: 0.5;
