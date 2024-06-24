@@ -7,6 +7,7 @@
 	import { goto } from '$app/navigation'
 	import { fade, slide } from 'svelte/transition'
 	import { onMount } from 'svelte'
+	import { flip } from 'svelte/animate'
 
 	export let payment: Payment & { tags: string[] }
 	export let selected: boolean = false
@@ -47,11 +48,10 @@
 						<IcRoundDelete width="20" height="20" />
 					</button>
 				</form>
-				<button class="edit-btn">
-					<a href={`/app/payment/${payment.id}`}>
-						<IcRoundEdit width="20" height="20" />
-					</a>
-				</button>
+
+				<a class="edit-btn" href={`/app/payment/${payment.id}`}>
+					<IcRoundEdit width="20" height="20" />
+				</a>
 			</div>
 		{/if}
 	</div>
@@ -165,10 +165,10 @@
 		border-radius: 2px;
 		background-color: transparent;
 		color: var(--color-text-60);
+	}
 
-		& a {
-			color: var(--color-text-60);
-		}
+	:global(.edit-btn path:nth-child(1)) {
+		fill: var(--color-text-60);
 	}
 
 	.remove-btn:hover {
