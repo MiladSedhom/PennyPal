@@ -22,6 +22,7 @@
 			onclick={() => {
 				theme.next()
 			}}
+			class="theme"
 		>
 			{#if theme.current === 'dark'}
 				<LightMode width="20px" height="20px" />
@@ -43,22 +44,19 @@
 	button {
 		padding: 0.25rem;
 		background-color: transparent;
-		& path {
-			fill: var(--color-text);
-		}
-
-		&:hover path {
-			fill: var(--color-primary);
-		}
 	}
 
-	.color {
-		& path {
-			fill: var(--color-primary);
-		}
+	:global(.theme:hover path) {
+		fill: var(--color-primary);
+	}
+	:global(.color:hover path) {
+		fill: var(--color-primary);
+	}
 
-		&:hover path {
-			filter: brightness(1.2) contrast(1.2);
-		}
+	:global(.theme:active path) {
+		scale: 0.9;
+	}
+	:global(.color:active path) {
+		scale: 0.9;
 	}
 </style>
