@@ -2,39 +2,28 @@
 	import DarkMode from '$lib/components/svgs/DarkMode.svelte'
 	import LightMode from '$lib/components/svgs/LightMode.svelte'
 	import Color from '$lib/components/svgs/Color.svelte'
-	import { enhance } from '$app/forms'
-	import { colors } from '$lib/theme'
-	import { getContext } from 'svelte'
-	import type { SubmitFunction } from '@sveltejs/kit'
-	import type { Writable } from 'svelte/store'
+	import { themeSwticher } from '$lib/theme/themes.svelte'
 
-	const theme: Writable<string> = getContext('theme')
-
-	const submitter: SubmitFunction = ({ action }) => {
-		const themeProvider = document.querySelector('.theme')
-		if (action.search === '?/changeColor') {
-			const currentColor = themeProvider?.classList[2]
-			if (currentColor) {
-				let nextColor = colors[(colors.indexOf(currentColor) + 1) % colors.length]
-				themeProvider?.classList.replace(currentColor, nextColor)
-			}
-		}
-		if (action.search === '?/changeTheme') {
-			const currentTheme = themeProvider?.classList[1]
-			const nextTheme = currentTheme === 'dark' ? 'light' : 'dark'
-			$theme = nextTheme
-			if (currentTheme) themeProvider?.classList.replace(currentTheme, nextTheme)
-		}
-	}
+	const color = themeSwticher(['green', 'pink', 'orange', 'blue'], 'color', 'blue')
+	const theme = themeSwticher(['dark', 'light'], 'theme', 'dark')
 </script>
 
 <div>
-	<form method="post" use:enhance={submitter}>
-		<button formaction="/?/changeColor" class="color">
+	<form>
+		<button
+			class="color"
+			onclick={() => {
+				color.next()
+			}}
+		>
 			<Color width="20px" height="20px" />
 		</button>
-		<button formaction="/?/changeTheme">
-			{#if $theme === 'dark'}
+		<button
+			onclick={() => {
+				theme.next()
+			}}
+		>
+			{#if theme.current === 'dark'}
 				<LightMode width="20px" height="20px" />
 			{:else}
 				<DarkMode width="20px" height="20px" />
