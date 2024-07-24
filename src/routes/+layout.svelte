@@ -10,7 +10,7 @@
 	setContext('theme', theme)
 </script>
 
-<div class={`theme ${$theme} ${data.color} `}>
+<div class={`theme ${$theme} ${data.color} bg-body text-text `}>
 	<main>
 		<slot />
 	</main>

@@ -42,6 +42,9 @@ importers:
       '@iconify-json/logos':
         specifier: ^1.1.42
         version: 1.1.42
+      '@iconify-json/tabler':
+        specifier: ^1.1.118
+        version: 1.1.118
       '@sveltejs/adapter-auto':
         specifier: ^3.0.0
         version: 3.1.1(@sveltejs/kit@2.5.0(@sveltejs/vite-plugin-svelte@3.0.2(svelte@4.2.10)(vite@5.1.1(@types/node@20.11.18)))(svelte@4.2.10)(vite@5.1.1(@types/node@20.11.18)))
@@ -427,6 +430,9 @@ packages:
 
   '@iconify-json/logos@1.1.42':
     resolution: {integrity: sha512-/f+frtPm3m3Z30oy8Pk+QqRDkbmAiIaWGPl5CmsCXm15MVfvw9a/V/gD7WzdyuSGAZcFuQaqbHXj92y/n+2ifg==}
+
+  '@iconify-json/tabler@1.1.118':
+    resolution: {integrity: sha512-nDOjYG75BlagOe4e+V3K4qVFujdPOeYzi6ZB3sYz0xbdIkpSF/4YvKGdLDr4tmkwGUTV8fhlHVfMpRoDoBnnnA==}
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -2497,6 +2503,10 @@ snapshots:
   '@floating-ui/utils@0.2.1': {}
 
   '@iconify-json/logos@1.1.42':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/tabler@1.1.118':
     dependencies:
       '@iconify/types': 2.0.0
 
