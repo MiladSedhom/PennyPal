@@ -1,5 +1,5 @@
 import { defineConfig } from 'unocss'
-import { presetUno, presetWebFonts, presetIcons } from 'unocss'
+import { presetUno, presetIcons } from 'unocss'
 
 export default defineConfig({
 	presets: [
@@ -20,7 +20,7 @@ export default defineConfig({
 			fields: 'var(--color-fields)',
 			bg: 'var(--color-background)',
 			bg1: 'var(--color-background-1)',
-			bg2: 'var(--color-background-2)',
+			bg2: 'var(--color-background-2)'
 		}
 	}
 })
