@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { writable } from 'svelte/store'
+	import '@unocss/reset/tailwind.css'
 	import 'virtual:uno.css'
 	import '../global.css'
 	import { setContext } from 'svelte'
