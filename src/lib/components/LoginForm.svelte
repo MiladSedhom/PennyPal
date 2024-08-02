@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms'
-	import LogosGithubIcon from '~icons/logos/github-icon'
 
 	export let form: any
 </script>
@@ -34,9 +33,9 @@
 
 	<span class="github">
 		<a href="/login/github">
-			<LogosGithubIcon width="1rem" height="1rem" />
-			Login with github</a
-		>
+			<div class="i-tabler-brand-github text-5"></div>
+			Login with github
+		</a>
 	</span>
 	<span>
 		Don't have an account?
