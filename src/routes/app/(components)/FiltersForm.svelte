@@ -3,7 +3,6 @@
 	import { queryParameters, ssp } from 'sveltekit-search-params'
 	import { page } from '$app/stores'
 	import { getLastWeeksDate } from '$lib/utils'
-	import DateRangePicker from './DateRangePicker.svelte'
 	import { CalendarDate } from '@internationalized/date'
 	import DatePicker from './DatePicker.svelte'
 
