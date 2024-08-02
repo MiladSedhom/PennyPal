@@ -3,9 +3,9 @@
 	import { queryParameters, ssp } from 'sveltekit-search-params'
 	import { page } from '$app/stores'
 	import { getLastWeeksDate } from '$lib/utils'
-
-	let dateRange: any
-	let form: HTMLElement
+	import DateRangePicker from './DateRangePicker.svelte'
+	import { CalendarDate } from '@internationalized/date'
+	import DatePicker from './DatePicker.svelte'
 
 	const filters = queryParameters({
 		startDate: ssp.string(),
@@ -14,12 +14,29 @@
 		sortType: ssp.string()
 	})
 
-	let selectedOptions: string[] = $filters.tags ? $filters?.tags?.split(',') : []
+	const initialStartDate = $filters.startDate ? new Date($filters.startDate) : getLastWeeksDate()
+	const initialEndDate = $filters.endDate ? new Date($filters.endDate) : new Date()
+
+	let startDateValue = new CalendarDate(
+		initialStartDate.getFullYear(),
+		initialStartDate.getMonth() + 1,
+		initialStartDate.getDate()
+	)
+	let endDateValue = new CalendarDate(
+		initialEndDate.getFullYear(),
+		initialEndDate.getMonth() + 1,
+		initialEndDate.getDate()
+	)
+
+	$: $filters.startDate = startDateValue.toString()
+	$: $filters.endDate = endDateValue.toString()
+
+	let selectedOptions: string[] = $filters.tags ? $filters.tags.split(',') : []
 
 	const options = $page.data.tags?.map((t: string) => ({ label: t, value: t })) || []
 </script>
 
-<form action="filter" bind:this={form}>
+<form action="filter">
 	<div class="m-b-4">
 		<label for="tags">Tags</label>
 		<Select
@@ -32,50 +49,28 @@
 		/>
 	</div>
 
-	<span class="m-b-4 flex items-center justify-between">
-		<label for="start-date">Start Date</label>
-		<input
-			class="w-[calc(100%/1.618)]"
-			type="date"
-			name="start-date"
-			id="start-date"
-			value={getLastWeeksDate().toISOString().substring(0, 10)}
-			on:input={(e) => {
-				// @ts-ignore
-				$filters.startDate = e.target.value
-			}}
-		/>
-	</span>
+	<div class="m-b-4">
+		<DatePicker label="Starting from" bind:value={startDateValue} />
+	</div>
+	<div class="m-b-4">
+		<DatePicker label="Until" bind:value={endDateValue} />
+	</div>
 
-	<span class="m-b-4 flex items-center justify-between">
-		<label for="end-date">End Date</label>
-		<input
-			class="w-[calc(100%/1.618)]"
-			type="date"
-			name="end-date"
-			id="end-date"
-			value={new Date().toISOString().substring(0, 10)}
-			on:input={(e) => {
-				// @ts-ignore
-				$filters.endDate = e.target.value
-			}}
-		/>
-	</span>
+	<label for="sort-by">Sort By</label>
 	<span class="m-b-4 flex items-center justify-center gap-4">
-		<label class="grow" for="sort-by">Sort By</label>
 		<Select
 			bind:value={$filters.sortBy}
 			options={[
 				{ label: 'date', value: 'date' },
 				{ label: 'amount', value: 'amount' }
 			]}
-			--width="calc(100% / 1.68 - 1rem - 34px)"
+			--width="calc(100% - 1rem - 34px)"
 		/>
 
 		<button
-			class="bg-fields h-10 w-10"
+			class="bg-fields hover:bg-muted active:bg-primary transition-duration-200 hover:scale-103 active:scale-97 rounded-1 h-10 w-10 transition-transform"
 			type="button"
-			title="Sort Type"
+			title="Sort type"
 			on:click={() => {
 				if (!$filters.sortType) {
 					$filters.sortType = 'asc'
@@ -85,7 +80,7 @@
 				else if ($filters.sortType === 'desc') $filters.sortType = 'asc'
 			}}
 		>
-			<div class="i-tabler-arrows-double-sw-ne text-5 text-text"></div>
+			<div class="i-tabler-arrows-sort text-5 text-text"></div>
 		</button>
 	</span>
 </form>
