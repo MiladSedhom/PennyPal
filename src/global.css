@@ -52,6 +52,8 @@ html {
 	--color-background-1: hsl(var(--h), 10%, 85%);
 	--color-background-2: hsl(var(--h), 10%, 70%);
 
+	--color-border: hwb(160 21% 77%);
+
 	--color-text-90: hsl(0, 0%, 10%);
 	--color-text-70: hsl(0, 0%, 30%);
 	--color-text-60: hsl(0, 0%, 40%);
@@ -63,6 +65,9 @@ html {
 	--color-text: #fff;
 	--color-text-on-primary: #000000;
 	--color-fields: hsl(var(--h), 2%, 28%);
+
+	--color-border: hsl(30, 1%, 58%);
+	--color-hover: hsl(148, 36%, 31%);
 
 	--color-background: hsl(var(--h), 3%, 19%);
 	--color-background-1: hsl(var(--h), 3%, 13%);

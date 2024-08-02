@@ -23,7 +23,9 @@ export default defineConfig({
 			bg2: 'var(--color-background-2)',
 			'text-90': 'var(--color-text-90)',
 			'text-70': 'var(--color-text-70)',
-			'text-60': 'var(--color-text-60)'
+			'text-60': 'var(--color-text-60)',
+			muted: 'var(--color-hover)',
+			border: 'var(--color-border)'
 		}
 	}
 })
