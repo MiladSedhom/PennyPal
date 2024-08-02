@@ -34,7 +34,7 @@ html {
 	--scrollbar-height: 0.2rem;
 }
 /* themes */
-.theme {
+:root {
 	color-scheme: light;
 
 	/* colors */
@@ -56,7 +56,7 @@ html {
 	--color-text-70: hsl(0, 0%, 30%);
 	--color-text-60: hsl(0, 0%, 40%);
 }
-.theme.dark {
+:root[data-theme='dark'] {
 	color-scheme: dark;
 
 	--color-body: hsl(var(--h), 3%, 25%);
@@ -73,36 +73,36 @@ html {
 	--color-text-60: hsl(0, 0%, 60%);
 }
 
-.theme.pink {
+:root[data-color='pink'] {
 	--h: 3;
 	--s: 74%;
 	--l: 76%;
 	--color-text-on-primary: #000;
 }
-.theme.orange {
+:root[data-color='orange'] {
 	--h: 34;
 	--s: 90%;
 	--l: 55%;
 	--color-text-on-primary: #000;
 }
-.theme.orange.dark {
+:root[data-color='orange'][data-theme='dark'] {
 	--h: 34;
 	--s: 90%;
 	--l: 55%;
 	--color-text-on-primary: #000;
 }
-.theme.blue {
+:root[data-color='blue'] {
 	--h: 219;
 	--s: 89%;
 	--l: 52%;
 }
-.theme.blue.dark {
+:root[data-color='blue'][data-theme='dark'] {
 	--h: 219;
 	--s: 89%;
 	--l: 65%;
 }
 
-/* resest */
+/* reset */
 * {
 	padding: 0;
 	margin: 0;

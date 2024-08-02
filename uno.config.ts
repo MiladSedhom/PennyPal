@@ -3,7 +3,7 @@ import { presetUno, presetIcons } from 'unocss'
 
 export default defineConfig({
 	presets: [
-		presetUno(),
+		presetUno({ dark: { dark: "[data-theme='dark']" } }),
 		presetIcons({
 			extraProperties: {
 				display: 'inline-block',
