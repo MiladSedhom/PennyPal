@@ -7,7 +7,7 @@
 	export let options: { label: string; value: string }[]
 	export let multiple: boolean = false
 	export let value: string[] | string = multiple ? [] : ''
-	export let placeholder: string
+	export let placeholder: string | undefined = undefined
 	export let onSelect: Function | null = null
 	export let name: string | null = null
 	export let id: string | null = null
@@ -161,13 +161,13 @@
 
 	<div class="bg-fields rounded-1 flex h-full items-center justify-center">
 		{#if !isInput}
-			<p class="p-y-4 text-14px">
+			<p class="text-14px p-x-1 grow">
 				{value ? options.filter((e) => e.value === value)[0]?.label : options[0].label}
 			</p>
 		{/if}
 
 		<input
-			class="text-14px p-x-2 rounded-1 placeholder:text-text-70 h-6 grow bg-transparent focus:outline-none"
+			class="text-14px p-x-1 rounded-1 placeholder:text-text-70 h-6 grow bg-transparent focus:outline-none"
 			placeholder={placeholder ?? 'Pick your tags...'}
 			class:hidden={!isInput}
 			bind:value={inputValue}
