@@ -7,6 +7,6 @@
 
 <Themes />
 
-<div class="bg-body text-text">
+<div class="bg-body text-text font-[var(--sans-serif)]">
 	<slot />
 </div>
