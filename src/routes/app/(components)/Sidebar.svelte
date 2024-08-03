@@ -3,235 +3,167 @@
 	import AddPaymentForm from './AddPaymentForm.svelte'
 	import FiltersForm from './FiltersForm.svelte'
 	import Modal from '$lib/components/Modal.svelte'
-	import FiltersIcon from '$lib/components/svgs/FiltersIcon.svelte'
-	import AddIcon from '$lib/components/svgs/AddIcon.svelte'
 	import ThemeSwitchers from '$lib/components/ThemeSwitchers.svelte'
+	import { DropdownMenu } from 'bits-ui'
 	import { slide } from 'svelte/transition'
+	import { themeSwitcher } from '$lib/themeSwitcher/themeSwitcher'
+	import Dropdown from '$lib/components/Dropdown.svelte'
+
+	const theme = themeSwitcher('theme')
+	const color = themeSwitcher('color', 'green')
 
 	let isFilters: boolean
 	let isAdd: boolean
 </script>
 
-<div class="wrapper">
-	<aside>
-		<div class="header">
-			<span class="logo">
-				<a href="/">
-					<span class="primary">Penny</span>Pal
+<div class="border-bg border-r-solid h-auto sm:h-screen">
+	<aside class="gutter-stable bg-bg flex h-auto w-full flex-col overflow-auto p-8 sm:h-[calc(100vh-42px)]">
+		<div class="flex items-center justify-between">
+			<span class="text-6 fw-bold inline-block font-[var(--serif)]">
+				<a href="/" class="text-text decoration-none">
+					<span class="text-primary">Penny</span>Pal
 				</a>
 			</span>
-			<ThemeSwitchers />
-			<div class="header-buttons small-only">
-				<button
-					on:click={() => {
-						isFilters = !isFilters
-					}}
-				>
-					<FiltersIcon width="20px" height="20px" />
-				</button>
-				<button
-					on:click={() => {
-						isAdd = true
-					}}
-				>
-					<AddIcon width="20px" height="20px" />
-				</button>
-			</div>
-			<div class="info">
-				<p>{$page.data.user.username}</p>
-				<a href="/logout">logout</a>
+			<div class="flex items-center gap-2">
+				<p class="text-3 text-text-90">{$page.data.user.username}</p>
+
+				<DropdownMenu.Root>
+					<DropdownMenu.Trigger class="hover:bg-muted rounded-1 p-1">
+						<div class="i-tabler-dots-vertical text-5"></div>
+					</DropdownMenu.Trigger>
+
+					<DropdownMenu.Content class="bg-bg border-border text-3 rounded-1 w-60 border p-1">
+						<DropdownMenu.Group class="sm:hidden">
+							<DropdownMenu.Item
+								class="text-text hover:bg-muted flex h-10 items-center p-2"
+								on:click={() => {
+									isFilters = !isFilters
+								}}
+							>
+								<div class="i-tabler-filter text-5 bg-text-90 m-r-2"></div>
+								Filters
+							</DropdownMenu.Item>
+
+							<DropdownMenu.Item
+								class="text-text hover:bg-muted flex h-10 items-center p-2"
+								on:click={() => {
+									isAdd = true
+								}}
+							>
+								<div class="i-tabler-circle-plus text-5 bg-text-90 m-r-2"></div>
+								Add a New Payment
+							</DropdownMenu.Item>
+							<DropdownMenu.Separator class="bg-border h-1px w-80% m-a " />
+						</DropdownMenu.Group>
+						<DropdownMenu.Group>
+							<DropdownMenu.Item
+								class="text-text hover:bg-muted flex h-10 items-center p-2"
+								on:click={() => {
+									$theme = $theme === 'dark' ? 'light' : 'dark'
+								}}
+							>
+								<div class="i-tabler-moon-stars text-5 bg-text-90 m-r-2"></div>
+								Change Theme
+							</DropdownMenu.Item>
+
+							<DropdownMenu.Item
+								class="text-text  hover:bg-muted flex h-10 items-center p-2"
+								on:click={() => {
+									const colors = ['green', 'blue', 'orange', 'pink']
+									const newColorIndex = $color ? (colors.indexOf($color) + 1) % colors.length : 0
+									$color = colors.at(newColorIndex)
+								}}
+							>
+								<div class="i-tabler-color-filter text-5 bg-text-90 m-r-2"></div>
+								Change Color
+							</DropdownMenu.Item>
+						</DropdownMenu.Group>
+						<DropdownMenu.Separator class="bg-border h-1px w-80% m-a " />
+
+						<DropdownMenu.Item class="text-text  hover:bg-muted  h-10 p-2">
+							<a href="/logout" class="flex size-full items-center">
+								<div
+									class="i-tabler-logout-2 text-5 bg-text-90
+bg-text-90 m-r-2"
+								></div>
+								Log Out</a
+							>
+						</DropdownMenu.Item>
+
+						<DropdownMenu.Sub>
+							<DropdownMenu.SubTrigger />
+							<DropdownMenu.SubContent />
+						</DropdownMenu.Sub>
+					</DropdownMenu.Content>
+				</DropdownMenu.Root>
 			</div>
 		</div>
 
 		{#key isFilters}
-			<div class="form-container" class:large-only={!isFilters} transition:slide={{ duration: 300 }}>
-				<h3>Choose Your Filters</h3>
+			<div class=" m-block-4 grow {isFilters || 'hidden'} sm:block" transition:slide={{ duration: 350 }}>
+				<h3 class="text-14px fw-400 m-t-4 m-b-2">Choose Your Filters</h3>
 
 				<FiltersForm />
+				<button class=" h-8 w-full sm:hidden" on:click={() => (isFilters = !isFilters)}>
+					<div class="i-tabler-caret-up text-6 m-a"></div>
+				</button>
 			</div>
 		{/key}
 		<button
-			class="add-btn large-only"
+			class=" p-x-4 p-y-2 bg-primary text-text-alt text-14px hidden self-end justify-self-end sm:block"
 			on:click={() => {
 				isAdd = true
-			}}>Add Payment</button
+			}}
 		>
+			New Payment
+			<div class="i-tabler-plus text-5 m-l-2"></div>
+		</button>
 
-		{#if isAdd}
-			<Modal
-				showModal
-				onClose={() => {
+		<Modal
+			showModal={isAdd}
+			onClose={() => {
+				isAdd = false
+			}}
+		>
+			<AddPaymentForm
+				onSubmit={() => {
 					isAdd = false
 				}}
-			>
-				<AddPaymentForm
-					onSubmit={() => {
-						isAdd = false
-					}}
-				/>
-			</Modal>
-		{/if}
+			/>
+		</Modal>
 	</aside>
 
-	<nav class="tabs-container">
-		<ul>
-			<li>
-				<a href={`/app${$page.url.search}`} class:active-tab={$page.route.id === '/app'}>Payments view</a>
+	<nav class="m-inline-auto bg-bg w-full">
+		<ul class="gap-2px p-b-2px h-42px flex w-full">
+			<li class="w-full">
+				<a
+					href={`/app${$page.url.search}`}
+					class="h-40px text-3 fw-500 decoration-none grid w-full place-content-center p-1
+						{$page.route.id === '/app' ? 'bg-bg2 text-text border-b-solid border-primary border-b-2' : 'bg-bg1 text-text-60'}"
+				>
+					Payments view
+				</a>
 			</li>
-			<li>
-				<a href={`/app/graphs${$page.url.search}`} class:active-tab={$page.route.id === '/app/graphs'}>Graphs view</a>
+			<li class="w-full">
+				<a
+					href={`/app/graphs${$page.url.search}`}
+					class="h-40px text-3 fw-500 decoration-none grid w-full place-content-center p-1
+						{$page.route.id === '/app/graphs'
+						? 'bg-bg2 text-text border-b-solid border-primary border-b-2'
+						: 'bg-bg1 text-text-60'}"
+				>
+					Graphs view
+				</a>
 			</li>
-			<li>
-				<a href={`/app/table${$page.url.search}`} class:active-tab={$page.route.id === '/app/table'}>Table view</a>
+			<li class="w-full">
+				<a
+					href={`/app/table${$page.url.search}`}
+					class="h-40px text-3 fw-500 decoration-none grid w-full place-content-center p-1
+							{$page.route.id === '/app/table' ? 'bg-bg2 text-text border-b-solid border-primary border-b-2' : 'bg-bg1 text-text-60'}"
+				>
+					Table view
+				</a>
 			</li>
 		</ul>
 	</nav>
 </div>
-
-<style>
-	.wrapper {
-		height: 100vh;
-		border-right: 2px solid var(--color-background);
-	}
-
-	aside {
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-		height: calc(100vh - 42px);
-		padding: calc(var(--spacing-32) - var(--scrollbar-width));
-		scrollbar-gutter: stable both-edges;
-		background-color: var(--color-background);
-		color: var(color-text);
-		overflow: auto;
-	}
-
-	.header {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-	}
-
-	.header .info {
-		display: flex;
-		flex-flow: column;
-		align-items: end;
-		padding-top: 0.25rem;
-
-		& p {
-			font-size: var(--fs-small);
-			color: var(--color-text-90);
-		}
-
-		& a {
-			font-size: var(--fs-small);
-			color: var(--color-text-70);
-		}
-	}
-
-	.header button {
-		background-color: transparent;
-	}
-
-	.header-buttons {
-		display: flex;
-		& button {
-			padding: 0.2rem;
-		}
-
-		& button:hover {
-			outline: 1px solid var(--color-primary);
-		}
-	}
-
-	.logo {
-		display: inline-block;
-		font-size: 1.5rem;
-		font-family: var(--serif);
-		font-weight: bold;
-
-		& a {
-			color: var(--color-text);
-			text-decoration: none;
-		}
-
-		& .primary {
-			color: var(--color-primary);
-		}
-	}
-
-	h3 {
-		font-size: var(--fs-base);
-		font-weight: 400;
-		margin-block: 1rem 0.5rem;
-	}
-
-	.form-container {
-		margin-bottom: 2rem;
-	}
-
-	.add-btn {
-		padding: 0.5rem 1rem;
-		background-color: var(--color-primary);
-		color: var(--color-text-on-primary);
-	}
-
-	nav {
-		width: 100%;
-		margin-inline: auto;
-		background-color: var(--color-background);
-
-		& ul {
-			width: 100%;
-			display: flex;
-			gap: 2px;
-			padding-bottom: 2px;
-		}
-
-		& li {
-			width: 100%;
-		}
-
-		& a {
-			display: grid;
-			place-content: center;
-			width: 100%;
-			height: 40px;
-			padding: 4px;
-			background-color: var(--color-background-1);
-			color: var(--color-text-60);
-			font-size: var(--fs-small);
-			font-weight: 500;
-			text-decoration: none;
-		}
-
-		& a.active-tab {
-			background-color: var(--color-background-2);
-			color: var(--color-text);
-			border-bottom: 2px solid var(--color-primary);
-		}
-	}
-
-	.small-only {
-		display: none;
-	}
-
-	@media (max-width: 640px) {
-		.wrapper {
-			height: auto;
-		}
-
-		aside {
-			height: auto;
-			padding-inline: calc(var(--spacing-16) - var(--scrollbar-width));
-		}
-
-		.large-only {
-			display: none;
-		}
-
-		.small-only {
-			display: block;
-		}
-	}
-</style>
