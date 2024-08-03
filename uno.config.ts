@@ -1,4 +1,4 @@
-import { defineConfig } from 'unocss'
+import { defineConfig, transformerVariantGroup } from 'unocss'
 import { presetUno, presetIcons } from 'unocss'
 
 export default defineConfig({
@@ -11,6 +11,7 @@ export default defineConfig({
 			}
 		})
 	],
+	transformers: [transformerVariantGroup()],
 	theme: {
 		colors: {
 			body: 'var(--color-body)',
