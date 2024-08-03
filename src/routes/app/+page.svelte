@@ -12,7 +12,9 @@
 	}
 </script>
 
-<div class="container">
+<div
+	class="m-b-8 grid min-h-full w-full grid-cols-[repeat(auto-fill,320px)] grid-rows-[repeat(auto-fill,minmax(16px,auto))] place-content-center gap-4 p-8"
+>
 	{#if data.payments?.length}
 		{#each data.payments as payment}
 			<PaymentCard
@@ -28,32 +30,10 @@
 		{/each}
 	{/if}
 </div>
-<div class="bot">
+<div class="pos-fixed bottom-0 w-full">
 	{#if data.payments?.length}
 		<Infobar
 			payments={selectedPayments.size === 0 ? data.payments : data.payments.filter((p) => selectedPayments.has(p.id))}
 		/>
 	{/if}
 </div>
-
-<style>
-	.container {
-		width: 100%;
-		min-height: 100%;
-		padding: var(--spacing-32);
-		margin-bottom: 2rem;
-
-		display: grid;
-		place-content: center;
-		grid-template-columns: repeat(auto-fill, 320px);
-		grid-template-rows: repeat(auto-fill, minmax(16px, auto));
-		/* grid-auto-rows: 16px; */
-		gap: 1rem;
-	}
-
-	.bot {
-		width: 100%;
-		position: fixed;
-		bottom: 0;
-	}
-</style>
