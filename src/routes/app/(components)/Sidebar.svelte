@@ -3,11 +3,9 @@
 	import AddPaymentForm from './AddPaymentForm.svelte'
 	import FiltersForm from './FiltersForm.svelte'
 	import Modal from '$lib/components/Modal.svelte'
-	import ThemeSwitchers from '$lib/components/ThemeSwitchers.svelte'
 	import { DropdownMenu } from 'bits-ui'
 	import { slide } from 'svelte/transition'
 	import { themeSwitcher } from '$lib/themeSwitcher/themeSwitcher'
-	import Dropdown from '$lib/components/Dropdown.svelte'
 
 	const theme = themeSwitcher('theme')
 	const color = themeSwitcher('color', 'green')
