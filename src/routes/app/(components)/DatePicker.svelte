@@ -12,8 +12,8 @@
 		<DatePicker.Label class="text-3 text-text-90 block select-none ">{label}</DatePicker.Label>
 		<DatePicker.Input
 			let:segments
-			class="bg-fields focus-within:outline-border hover:outline-border
-			rounded-1 outline-offset-3 flex h-12 w-full select-none items-center px-2 py-3  text-sm focus-within:outline focus-within:outline-2 hover:outline hover:outline-2 "
+			class="bg-fields focus-within:(outline-primary outline) hover:(outline-grey outline) hover:focus-within:outline-primary rounded-1 outline-offset-3
+			flex h-12 w-full select-none items-center px-2 py-3 text-sm outline-2 outline-2  "
 		>
 			{#each segments as { part, value }}
 				<div class="inline-block select-none">
@@ -24,7 +24,7 @@
 					{:else}
 						<DatePicker.Segment
 							{part}
-							class="rounded-5px hover:bg-muted focus:bg-muted focus:text-foreground aria-[valuetext=Empty]:text-muted-foreground px-1 py-1 focus-visible:!ring-0 focus-visible:!ring-offset-0"
+							class="rounded-5px hover:bg-grey-2 focus:bg-grey-2 aria-[valuetext=Empty]:text-text-60 px-1 py-1 focus-visible:!outline-none "
 						>
 							{value}
 						</DatePicker.Segment>
@@ -32,13 +32,13 @@
 				</div>
 			{/each}
 			<DatePicker.Trigger
-				class="text-text-90 active:bg-dark-10 hover:bg-muted ml-auto inline-flex size-8 items-center justify-center rounded-[5px] transition-all"
+				class="text-text-90 active:bg-primary hover:bg-muted rounded-1 focus-visible:(bg-muted !outline-0) ml-auto inline-flex size-8 items-center justify-center !ring-0 transition-colors"
 			>
 				<div class="i-tabler-calendar text-6"></div>
 			</DatePicker.Trigger>
 		</DatePicker.Input>
 		<DatePicker.Content sideOffset={6} transition={fade} class=" z-50">
-			<DatePicker.Calendar class="bg-bg rounded-2 border-border border p-4" let:months let:weekdays>
+			<DatePicker.Calendar class="bg-bg rounded-2 border-grey-2 border p-4" let:months let:weekdays>
 				<DatePicker.Header class="flex items-center justify-between">
 					<DatePicker.PrevButton
 						class="rounded-1 bg-background-alt hover:bg-muted active:scale-98 inline-flex size-10 items-center justify-center transition-all"

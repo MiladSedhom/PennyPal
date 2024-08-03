@@ -122,7 +122,7 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
-	class="bg-fields rounded-1 pos-relative outline-border outline-offset-3 hover:(outline outline-2) focus-within:(outline outline-2) flex min-h-10 w-[var(--width)] w-full flex-col justify-center p-2"
+	class="bg-fields rounded-1 pos-relative outline-offset-3 focus-within:(outline outline-primary) hover:(outline outline-grey) hover:focus-within:outline-primary flex min-h-10 w-[var(--width)] w-full flex-col justify-center p-2 outline-2"
 	use:clickOutside
 	use:focusOutside
 	use:floatingRef
@@ -182,7 +182,7 @@
 		<button
 			type="button"
 			on:click={() => (isOpen = !isOpen)}
-			class="hover:(bg-muted) rounded-1 flex size-8 content-center items-center justify-center"
+			class="hover:(bg-muted) rounded-1 focus:(bg-muted outline-0) flex size-8 content-center items-center justify-center"
 		>
 			<div class="i-tabler-caret-down text-5"></div>
 		</button>
@@ -190,7 +190,7 @@
 
 	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
 	<ul
-		class="rounded-1 pos-absolute outline-(2 solid border) z-1 bg-bg scrollbar:w-0 max-h-40 w-[calc(100%+4px)] overflow-auto p-1"
+		class="rounded-1 pos-absolute outline-(2 solid grey-2) z-1 bg-bg scrollbar:w-0 max-h-40 w-full overflow-auto p-1"
 		class:hidden={!(isOpen && filteredOptions.length !== 0)}
 		use:floatingContent
 		id="options-list"
@@ -204,9 +204,10 @@
 					on:keydown={(e) => {
 						if (e.key != 'Tab') e.preventDefault()
 					}}
-					data-hovered={hoveredOption?.value === option.value}
-					class="text-3 bg-bg data-[selected=true]:bg-muted data-[hovered=true]:bg-red w-full p-2"
+					class="text-3 bg-bg data-[selected=true]:bg-muted data-[hovered=true]:bg-grey-2
+					[&[data-selected=true][data-hovered=true]]:bg-grey-2 w-full p-2"
 					data-selected={multiple ? value.includes(option.value) : value === option.value}
+					data-hovered={hoveredOption?.value === option.value}
 					on:mouseenter={() => {
 						hoveredOption = option
 					}}

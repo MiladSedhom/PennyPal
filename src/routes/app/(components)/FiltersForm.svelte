@@ -57,7 +57,7 @@
 
 	<label class="text-3 text-text-90 m-b-1.5 block select-none" for="sort-by">Sort By</label>
 	<span class="m-b-4 flex items-center justify-between gap-4">
-		<div class="grow">
+		<div class="w-[calc(100%-1rem-48px)] grow">
 			<Select
 				bind:value={$filters.sortBy}
 				options={[
@@ -68,7 +68,7 @@
 		</div>
 
 		<button
-			class="bg-fields hover:bg-muted active:bg-primary transition-duration-200 hover:scale-103 active:scale-97 rounded-1 h-12 w-12 transition-transform"
+			class="bg-fields hover:bg-muted active:bg-primary transition-duration-200 hover:scale-103 active:scale-97 rounded-1 h-12 w-12 shrink-0 transition-all"
 			type="button"
 			title="Sort type"
 			on:click={() => {
