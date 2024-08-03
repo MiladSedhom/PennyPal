@@ -13,7 +13,7 @@
 		<DatePicker.Input
 			let:segments
 			class="bg-fields focus-within:outline-border hover:outline-border
-			rounded-1 outline-offset-3 flex h-10 w-full select-none items-center px-2 py-3  text-sm focus-within:outline focus-within:outline-2 hover:outline hover:outline-2 "
+			rounded-1 outline-offset-3 flex h-12 w-full select-none items-center px-2 py-3  text-sm focus-within:outline focus-within:outline-2 hover:outline hover:outline-2 "
 		>
 			{#each segments as { part, value }}
 				<div class="inline-block select-none">
