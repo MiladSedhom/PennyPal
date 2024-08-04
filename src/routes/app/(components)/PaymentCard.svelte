@@ -9,7 +9,7 @@
 </script>
 
 <div
-	class="bg-primary text-text-alt border-rd-1 flex min-w-80 flex-col gap-4 p-6
+	class="bg-primary text-text-alt border-rd-1 flex h-full w-80 flex-col gap-4 p-6
 	{selected && 'outline-color-primary outline-solid outline-2'}"
 	on:click
 	on:keydown
