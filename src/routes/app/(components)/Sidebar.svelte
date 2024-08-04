@@ -108,7 +108,7 @@ bg-text-90 m-r-2"
 			</div>
 		{/key}
 		<button
-			class=" p-x-4 p-y-2 bg-primary text-text-alt text-14px hidden self-end justify-self-end sm:block"
+			class=" p-x-4 p-y-2 bg-primary text-text-alt text-14px hover:filter-brightness-90 active:filter-brightness-85 transition-duration-200 hover:scale-103 active:scale-97 hidden self-end justify-self-end transition-all sm:block"
 			on:click={() => {
 				isAdd = true
 			}}

@@ -7,35 +7,32 @@
 	export let options: { label: string; value: string }[]
 	export let multiple: boolean = false
 	export let value: string[] | string = multiple ? [] : ''
-	export let placeholder: string = ''
+	export let placeholder: string | undefined = undefined
 	export let onSelect: Function | null = null
 	export let name: string | null = null
 	export let id: string | null = null
 
 	let isOpen = false
-	let isInput = multiple ? true : false //i know :)
+	let isInput = multiple
 	let inputValue = ''
 	let inputRef: HTMLInputElement
 
-	let hoverdTag: string | undefined
-	let hoverdOption: { label: string; value: string } | undefined
+	let hoveredTag: string | undefined
+	let hoveredOption: { label: string; value: string } | undefined
 
 	$: filteredOptions = options.filter((option) => option.label.toLowerCase().includes(inputValue.toLowerCase()))
 
-	//floating ui
-	let _floatingConfig: any = {
+	const [floatingRef, floatingContent] = createFloatingActions({
 		strategy: 'absolute',
-		placement: 'bottom-start',
-		middleware: [offset(8), flip(), shift()]
-	}
-
-	const [floatingRef, floatingContent] = createFloatingActions(_floatingConfig)
+		placement: 'bottom',
+		middleware: [offset(16), flip(), shift()]
+	})
 
 	//functions
 	const addOrRemoveFromSelectedValues = (v: string) => {
 		if (!Array.isArray(value)) return
 		value.includes(v) ? value.splice(value.indexOf(v), 1) : value.push(v)
-		// add option if it doesnt exit
+		// add option if it doesn't exit
 		if (!options.some((options) => options.value === inputValue))
 			options = [...options, { label: inputValue, value: inputValue }]
 		value = value
@@ -55,8 +52,8 @@
 	const handleKeydown = (e: any) => {
 		if (e.key === 'Enter') {
 			e.preventDefault()
-			if (hoverdOption) {
-				select(hoverdOption.value)
+			if (hoveredOption) {
+				select(hoveredOption.value)
 			} else if (inputValue.length != 0 && multiple) {
 				select(inputValue)
 				//reset input
@@ -65,41 +62,41 @@
 			!multiple && inputRef.blur()
 		}
 		if (e.key === 'Escape') {
-			if (hoverdTag) hoverdTag = undefined
+			if (hoveredTag) hoveredTag = undefined
 			else inputRef.blur()
 		}
 		if (e.key === 'Backspace') {
 			if (inputValue.length != 0) return
-			if (hoverdTag) {
-				removeTag(hoverdTag)
-				hoverdTag = undefined
+			if (hoveredTag) {
+				removeTag(hoveredTag)
+				hoveredTag = undefined
 			} else {
-				hoverdTag = value.at(-1)
+				hoveredTag = value.at(-1)
 			}
 		} else {
-			hoverdTag = undefined
+			hoveredTag = undefined
 		}
 		if (e.key === 'ArrowUp') {
 			e.preventDefault()
-			if (hoverdOption) {
-				let hoverdOptionIndex = filteredOptions.indexOf(hoverdOption)
-				if (hoverdOptionIndex === 0) hoverdOption = undefined
-				else hoverdOption = filteredOptions.at(hoverdOptionIndex - 1)
+			if (hoveredOption) {
+				let hoveredOptionIndex = filteredOptions.indexOf(hoveredOption)
+				if (hoveredOptionIndex === 0) hoveredOption = undefined
+				else hoveredOption = filteredOptions.at(hoveredOptionIndex - 1)
 			} else {
-				hoverdOption = filteredOptions.at(filteredOptions.length - 1)
+				hoveredOption = filteredOptions.at(filteredOptions.length - 1)
 			}
-			!multiple && hoverdOption && select(hoverdOption.value)
+			!multiple && hoveredOption && select(hoveredOption.value)
 		}
 		if (e.key === 'ArrowDown') {
 			e.preventDefault()
-			if (hoverdOption) {
-				let hoverdOptionIndex = filteredOptions.indexOf(hoverdOption)
-				if (hoverdOptionIndex === filteredOptions.length - 1) hoverdOption = filteredOptions.at(0)
-				else hoverdOption = filteredOptions.at(hoverdOptionIndex + 1)
+			if (hoveredOption) {
+				let hoveredOptionIndex = filteredOptions.indexOf(hoveredOption)
+				if (hoveredOptionIndex === filteredOptions.length - 1) hoveredOption = filteredOptions.at(0)
+				else hoveredOption = filteredOptions.at(hoveredOptionIndex + 1)
 			} else {
-				hoverdOption = filteredOptions.at(0)
+				hoveredOption = filteredOptions.at(0)
 			}
-			!multiple && hoverdOption && select(hoverdOption.value)
+			!multiple && hoveredOption && select(hoveredOption.value)
 		}
 	}
 
@@ -125,7 +122,7 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
-	class="container"
+	class="bg-fields rounded-1 pos-relative outline-offset-3 focus-within:(outline outline-primary) hover:(outline outline-grey) hover:focus-within:outline-primary flex min-h-10 w-[var(--width)] w-full flex-col justify-center p-2 outline-2"
 	use:clickOutside
 	use:focusOutside
 	use:floatingRef
@@ -147,55 +144,59 @@
 	tabindex="0"
 >
 	{#if multiple && value.length != 0}
-		<div class="tags-container">
+		<div class="bg-fields rounded-1 p-x-2 m-b-2 flex flex-wrap gap-2">
 			{#each value as tag}
 				<button
-					class="tag"
-					class:hoverd-tag={hoverdTag === tag}
+					class="bg-primary text-text-alt rounded-1 text-3 font-500 hover:(bg-[var(--color-semantic-red)] text-text) p-y-1 p-x-3 text-center"
+					type="button"
 					on:click={() => {
 						removeTag(tag)
 						onSelect?.()
 					}}
-					type="button"
 					>{tag}
 				</button>
 			{/each}
 		</div>
 	{/if}
 
-	<div class="input-caret-container">
+	<div class="bg-fields rounded-1 flex h-full items-center justify-center">
 		{#if !isInput}
-			<p>
+			<p class="text-14px p-x-1 grow">
 				{value ? options.filter((e) => e.value === value)[0]?.label : options[0].label}
 			</p>
 		{/if}
 
 		<input
+			class="text-14px p-x-1 rounded-1 placeholder:text-text-70 h-6 grow bg-transparent focus:outline-none"
+			placeholder={placeholder ?? 'Pick your tags...'}
 			class:hidden={!isInput}
 			bind:value={inputValue}
 			bind:this={inputRef}
 			on:blur={handleBlur}
 			on:focus={handleInputFocus}
 			on:input|preventDefault={() => {
-				hoverdOption = undefined
+				hoveredOption = undefined
 			}}
 			type="text"
-			{placeholder}
 		/>
-		<svg
-			class="caret"
-			class:caret-closed={!isOpen}
-			xmlns="http://www.w3.org/2000/svg"
-			width="16"
-			height="16"
-			viewBox="0 0 32 32"><path fill="currentColor" d="m24 12l-8 10l-8-10z" /></svg
+		<button
+			type="button"
+			on:click={() => (isOpen = !isOpen)}
+			class="hover:(bg-muted) rounded-1 focus:(bg-muted outline-0) flex size-8 content-center items-center justify-center"
 		>
+			<div class="i-tabler-caret-down text-5"></div>
+		</button>
 	</div>
 
 	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
-	<ul class:show={isOpen && filteredOptions.length !== 0} use:floatingContent id="options-list">
+	<ul
+		class="rounded-1 pos-absolute outline-(2 solid grey-2) z-1 bg-bg scrollbar:w-0 max-h-40 w-full overflow-auto p-1"
+		class:hidden={!(isOpen && filteredOptions.length !== 0)}
+		use:floatingContent
+		id="options-list"
+	>
 		{#each filteredOptions as option}
-			<li use:scrollAction={{ isScroll: option === hoverdOption }}>
+			<li class="w-full" use:scrollAction={{ isScroll: option === hoveredOption }}>
 				<button
 					on:click={() => {
 						handleOptionClick(option)
@@ -203,14 +204,15 @@
 					on:keydown={(e) => {
 						if (e.key != 'Tab') e.preventDefault()
 					}}
-					class:hoverd-option={hoverdOption?.value === option.value}
-					class="option"
-					class:selected-option={multiple ? value.includes(option.value) : value === option.value}
+					class="text-3 bg-bg data-[selected=true]:bg-muted data-[hovered=true]:bg-grey-2
+					[&[data-selected=true][data-hovered=true]]:bg-grey-2 w-full p-2"
+					data-selected={multiple ? value.includes(option.value) : value === option.value}
+					data-hovered={hoveredOption?.value === option.value}
 					on:mouseenter={() => {
-						hoverdOption = option
+						hoveredOption = option
 					}}
 					on:mouseleave={() => {
-						hoverdOption = undefined
+						hoveredOption = undefined
 					}}
 					type="button"
 					tabindex="-1"
@@ -224,7 +226,7 @@
 
 <!-- this key block ensures the matching between this select's value and the state value -->
 {#key value}
-	<select hidden {multiple} {name} {id}>
+	<select class="hidden" {multiple} {name} {id}>
 		{#each options as o}
 			<option value={o.value} selected={Array.isArray(value) ? value.includes(o.value) : value == o.value}></option>
 		{/each}
@@ -232,129 +234,7 @@
 {/key}
 
 <style>
-	.container {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		min-height: 2.5rem;
-		width: var(--width);
-		background-color: var(--color-fields);
-		border-radius: 2px;
-		position: relative;
-
-		&:focus-within {
-			outline: 1px solid color-mix(in srgb, var(--color-fields) 80%, var(color-text));
-		}
-	}
-
-	.tags-container {
-		background-color: var(--color-fields);
-		padding: 12px;
-		display: flex;
-		flex-flow: row wrap;
-		gap: var(--spacing-8);
-	}
-
-	.tag {
-		text-align: center;
-		background-color: var(--color-primary);
-		color: var(--color-text-on-primary);
-		padding: 6px var(--spacing-16);
-		border-radius: 4px;
-		font-size: var(--fs-small);
-		font-weight: 500;
-
-		&:hover {
-			background-color: var(--color-semantic-red);
-			color: var(color-text);
-		}
-	}
-
-	.hoverd-tag {
-		background-color: var(--color-semantic-red);
-		color: var(color-text);
-	}
-
-	.input-caret-container {
-		height: 100%;
-		background-color: var(--color-fields);
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
-
-	p {
-		padding: 0 1rem;
-		font-size: var(--fs-base);
-	}
-
-	svg {
-		margin-right: var(--spacing-16);
-		color: var(--caret-color, var(--color-text-70));
-	}
-
-	input:focus {
-		outline: none;
-	}
-
-	ul {
-		width: 100%;
-		display: none;
-		border-radius: 2px;
-		max-height: 10rem;
-		overflow: auto;
-		position: absolute;
-		z-index: 1;
-
-		outline: 1px solid color-mix(in srgb, var(--color-fields) 80%, var(color-text));
-	}
-
 	ul::-webkit-scrollbar {
 		width: 0;
-	}
-
-	li {
-		width: 100%;
-		display: block;
-		/* border-bottom: 2px solid hsl(150, 3%, 20%); */
-	}
-
-	.option {
-		width: 100%;
-		font-size: var(--fs-small);
-		font-weight: normal;
-		padding: 0.67rem;
-		border-radius: 0;
-
-		background-color: var(--color-fields);
-		color: var(color-text);
-
-		&:focus {
-			outline: none;
-		}
-
-		/* &:hover {
-			background-color: hsl(144, 65%, 42%);
-		} */
-	}
-
-	.selected-option {
-		background-color: color-mix(in srgb, var(--color-primary) 15%, var(--color-fields));
-	}
-
-	.hoverd-option {
-		background-color: color-mix(in srgb, var(--color-fields) 88%, white);
-	}
-
-	.selected-option.hoverd-option {
-		background-color: color-mix(in srgb, var(--color-primary) 30%, var(--color-fields));
-	}
-
-	.show {
-		display: block;
-	}
-
-	.hidden {
-		display: none;
 	}
 </style>

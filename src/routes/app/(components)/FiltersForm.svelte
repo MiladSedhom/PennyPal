@@ -37,7 +37,7 @@
 
 <form action="filter">
 	<div class="m-b-4">
-		<label for="tags">Tags</label>
+		<label class="text-3 text-text-90 m-b-1.5 block select-none" for="tags">Tags</label>
 		<Select
 			multiple
 			bind:value={selectedOptions}
@@ -55,19 +55,20 @@
 		<DatePicker label="Until" bind:value={endDateValue} />
 	</div>
 
-	<label for="sort-by">Sort By</label>
-	<span class="m-b-4 flex items-center justify-center gap-4">
-		<Select
-			bind:value={$filters.sortBy}
-			options={[
-				{ label: 'date', value: 'date' },
-				{ label: 'amount', value: 'amount' }
-			]}
-			--width="calc(100% - 1rem - 34px)"
-		/>
+	<label class="text-3 text-text-90 m-b-1.5 block select-none" for="sort-by">Sort By</label>
+	<span class="m-b-4 flex items-center justify-between gap-4">
+		<div class="w-[calc(100%-1rem-48px)] grow">
+			<Select
+				bind:value={$filters.sortBy}
+				options={[
+					{ label: 'Date', value: 'date' },
+					{ label: 'Amount', value: 'amount' }
+				]}
+			/>
+		</div>
 
 		<button
-			class="bg-fields hover:bg-muted active:bg-primary transition-duration-200 hover:scale-103 active:scale-97 rounded-1 h-10 w-10 transition-transform"
+			class="bg-fields hover:bg-muted active:bg-primary transition-duration-200 hover:scale-103 active:scale-97 rounded-1 h-12 w-12 shrink-0 transition-all"
 			type="button"
 			title="Sort type"
 			on:click={() => {
