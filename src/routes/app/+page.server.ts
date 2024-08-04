@@ -1,3 +1,5 @@
+export const ssr = false
+
 import { addPayment, removePayment } from '$lib/server/database'
 import { fail } from '@sveltejs/kit'
 import type { Actions } from './$types'
