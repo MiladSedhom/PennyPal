@@ -1,7 +1,6 @@
 <script lang="ts">
 	import PaymentCard from './(components)/PaymentCard.svelte'
 	import Infobar from './(components)/Infobar.svelte'
-	// @ts-ignore
 	import Masonry from 'masonry-layout'
 	import { onMount, afterUpdate } from 'svelte'
 
