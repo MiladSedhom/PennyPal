@@ -36,8 +36,8 @@
 	})
 </script>
 
-<div class="size-full p-6">
-	<div class="masonry m-x-auto">
+<div class=" size-full p-6">
+	<div class="masonry m-x-auto p-b-10">
 		{#if data.payments?.length}
 			{#each data.payments as payment (payment.id)}
 				<div class="masonry-item m-b-4 max-w-80">
@@ -55,11 +55,11 @@
 			{/each}
 		{/if}
 	</div>
-	<div class="pos-fixed bottom-0 w-full">
-		{#if data.payments?.length}
-			<Infobar
-				payments={selectedPayments.size === 0 ? data.payments : data.payments.filter((p) => selectedPayments.has(p.id))}
-			/>
-		{/if}
-	</div>
+</div>
+<div class="pos-fixed bottom-0 w-full">
+	{#if data.payments?.length}
+		<Infobar
+			payments={selectedPayments.size === 0 ? data.payments : data.payments.filter((p) => selectedPayments.has(p.id))}
+		/>
+	{/if}
 </div>
