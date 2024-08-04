@@ -31,17 +31,19 @@
 	{/if}
 	<div class="flex grow items-center justify-between">
 		<div class="flex gap-1">
-			<form action="?/removePayment" method="post" use:enhance>
+			<form action="?/removePayment" method="post" use:enhance class="flex items-center justify-center">
 				<input type="hidden" name="id" value={payment.id} />
 				<button
-					class="i-tabler-trash text-5 transition-transform-300 hover:scale-110 hover:text-red-600"
+					class="rounded-1 hover:bg-text group inline-block size-8 active:scale-95"
 					on:click|stopPropagation={() => {}}
 				>
+					<div class="i-tabler-trash text-5 transition-transform-300 group-hover:(scale-105 text-red-600)"></div>
 				</button>
 				<a
-					class="i-tabler-edit text-5 transition-transform-300 hover:text-primary hover:scale-110"
+					class="rounded-1 hover:bg-text-alt group inline-grid size-8 place-content-center active:scale-95"
 					href={`/app/payment/${payment.id}`}
 				>
+					<div class="i-tabler-edit text-5 transition-transform-300 group-hover:(text-primary scale-105)"></div>
 				</a>
 			</form>
 		</div>
