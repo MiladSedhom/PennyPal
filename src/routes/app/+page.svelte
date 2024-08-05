@@ -1,10 +1,12 @@
 <script lang="ts">
 	import PaymentCard from './(components)/PaymentCard.svelte'
-	import Infobar from './(components)/Infobar.svelte'
+	import InfoBar from './(components)/InfoBar.svelte'
 	import Masonry from 'masonry-layout'
 	import { onMount, afterUpdate } from 'svelte'
 
 	export let data
+
+	$: payments = data?.payments ?? []
 
 	let selectedPayments = new Set<number>()
 
@@ -14,7 +16,7 @@
 		selectedPayments = selectedPayments
 	}
 
-	let masonry: any
+	let masonry: Masonry
 
 	onMount(() => {
 		masonry = new Masonry('.masonry', {
@@ -26,20 +28,20 @@
 		})
 
 		return () => {
-			masonry.destroy()
+			masonry.destroy?.()
 		}
 	})
 
-	afterUpdate(() => {
-		masonry.reloadItems()
-		masonry.layout()
+	afterUpdate(async () => {
+		masonry.reloadItems?.()
+		masonry.layout?.()
 	})
 </script>
 
 <div class=" size-full p-6">
 	<div class="masonry m-x-auto p-b-10">
-		{#if data.payments?.length}
-			{#each data.payments as payment (payment.id)}
+		{#if payments?.length}
+			{#each payments as payment (payment.id)}
 				<div class="masonry-item m-b-4 max-w-80">
 					<PaymentCard
 						{payment}
@@ -50,6 +52,9 @@
 						on:keydown={(event) => {
 							if (event.code === 'Enter' || event.code === 'Space') handleClick(payment.id)
 						}}
+						onDelete={() => {
+							payments = payments.filter((p) => p.id !== payment.id)
+						}}
 					/>
 				</div>
 			{/each}
@@ -57,9 +62,7 @@
 	</div>
 </div>
 <div class="pos-fixed bottom-0 w-full">
-	{#if data.payments?.length}
-		<Infobar
-			payments={selectedPayments.size === 0 ? data.payments : data.payments.filter((p) => selectedPayments.has(p.id))}
-		/>
+	{#if payments?.length}
+		<InfoBar payments={selectedPayments.size === 0 ? payments : payments.filter((p) => selectedPayments.has(p.id))} />
 	{/if}
 </div>

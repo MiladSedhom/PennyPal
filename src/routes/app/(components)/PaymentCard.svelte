@@ -7,6 +7,7 @@
 
 	export let payment: Payment & { tags: string[] }
 	export let selected: boolean = false
+	export let onDelete: Function
 
 	let isEditForm = false
 </script>
@@ -37,6 +38,7 @@
 			<form action="?/removePayment" method="post" use:enhance class="flex items-center justify-center">
 				<input type="hidden" name="id" value={payment.id} />
 				<button
+					on:click={onDelete()}
 					class="rounded-1 hover:bg-text group inline-block size-8 active:scale-95"
 					on:click|stopPropagation={() => {}}
 				>
