@@ -15,7 +15,7 @@
 </script>
 
 <div class="border-bg border-r-solid h-auto sm:h-screen">
-	<aside class="gutter-stable bg-bg flex h-auto w-full flex-col overflow-auto p-8 sm:h-[calc(100vh-42px)]">
+	<aside class=" bg-bg flex h-auto w-full flex-col overflow-y-auto p-8 sm:h-[calc(100vh-42px)]">
 		<div class="flex items-center justify-between">
 			<span class="text-6 fw-bold inline-block font-[var(--serif)]">
 				<a href="/" class="text-text decoration-none">
@@ -110,11 +110,12 @@ bg-text/90 m-r-2"
 			</div>
 		{/key}
 		<button
-			class="rounded-50% m-r--2px bg-primary text-text-alt transition-duration-200 active:(scale-95 filter-brightness-85 ) hover:(translate-y--1 filter-brightness-110 ) hidden size-12 translate-y-1 self-end justify-self-end p-2 shadow-lg transition-all sm:block"
+			class="rounded-50% m-r--2px bg-primary text-text-alt transition-duration-200 active:(scale-95 filter-brightness-85 ) hover:(translate-y--1 filter-brightness-110 ) border-body pos-fixed sm:(position-static border-none) bottom-12 right-4 z-30 size-12 shrink-0 translate-y-1 self-end justify-self-end border-2 shadow-lg transition-all"
 			on:click={() => {
 				isAdd = true
 			}}
-			><div class="i-tabler-plus text-5"></div>
+		>
+			<div class="i-tabler-plus text-5"></div>
 		</button>
 
 		<Modal
