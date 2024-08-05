@@ -44,7 +44,7 @@
 				</button>
 				<button
 					class="rounded-1 hover:bg-text-alt group inline-grid size-8 place-content-center active:scale-95"
-					on:click={() => (isEditForm = true)}
+					on:click|stopPropagation={() => (isEditForm = true)}
 					type="button"
 				>
 					<div class="i-tabler-edit text-5 transition-transform-300 group-hover:(text-primary scale-105)"></div>
