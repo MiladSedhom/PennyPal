@@ -38,74 +38,74 @@ html {
 	color-scheme: light;
 
 	/* colors */
-	--h: 151;
+	--h: 151deg;
 	--s: 94%;
 	--l: 35%;
-	--color-body: hsl(var(--h), 10%, 85%);
-	--color-primary: hsl(var(--h), var(--s), var(--l));
-	--color-semantic-red: hsl(0, 76%, 52%);
-	--color-text: #000;
-	--color-text-on-primary: #fff;
-	--color-fields: hsl(var(--h), 25%, 86%);
 
-	--color-background: hsl(var(--h), 10%, 95%);
-	--color-background-1: hsl(var(--h), 10%, 85%);
-	--color-background-2: hsl(var(--h), 10%, 70%);
+	--color-primary: var(--h) var(--s) var(--l);
+	--color-body: var(--h) 10% 85%;
 
-	--color-border: hwb(160 21% 77%);
+	--color-semantic-red: 0 76% 52%;
 
-	--color-text-90: hsl(0, 0%, 10%);
-	--color-text-70: hsl(0, 0%, 30%);
-	--color-text-60: hsl(0, 0%, 40%);
+	--color-fields: var(--h) 35% 84%;
+	--color-background: var(--h) 10% 95%;
+	--color-background-1: var(--h) 10% 85%;
+	--color-background-2: var(--h) 10% 70%;
+
+	--color-text: var(--h) 5% 0%;
+	--color-text-on-primary: var(--h) 5% 0%;
+
+	--color-muted: var(--h) 40% 90%;
+	--color-grey: var(--h) 5% 80%;
+	--color-grey-2: var(--h) 5% 70%;
 }
 :root[data-theme='dark'] {
 	color-scheme: dark;
 
-	--color-body: hsl(var(--h), 3%, 22%);
-	--color-text: #fff;
-	--color-text-on-primary: #000000;
-	--color-fields: hsl(var(--h), 2%, 24%);
+	--color-body: var(--h) 3% 22%;
+	--color-text: var(--h) 3% 100%;
+	--color-text-on-primary: var(--h) 5% 0%;
+	--color-fields: var(--h) 2% 24%;
 
-	--color-muted: hsl(148, 36%, 31%);
-	--color-grey: hsl(157, 5%, 40%);
-	--color-grey-2: hsl(154, 5%, 30%);
+	--color-muted: var(--h) 30% 30%;
+	--color-grey: var(--h) 5% 40%;
+	--color-grey-2: var(--h) 5% 30%;
 
-	--color-background: hsl(var(--h), 3%, 15%);
-	--color-background-1: hsl(var(--h), 3%, 13%);
-	--color-background-2: hsl(var(--h), 3%, 9%);
-
-	--color-text-90: hsl(0, 0%, 90%);
-	--color-text-70: hsl(0, 0%, 70%);
-	--color-text-60: hsl(0, 0%, 60%);
+	--color-background: var(--h) 3% 15%;
+	--color-background-1: var(--h) 3% 13%;
+	--color-background-2: var(--h) 3% 9%;
 }
 
 :root[data-color='pink'] {
-	--h: 3;
+	--h: 3deg;
 	--s: 74%;
 	--l: 76%;
-	--color-text-on-primary: #000;
+	--color-text-on-primary: var(--h) 5% 0%;
 }
 :root[data-color='orange'] {
 	--h: 34;
 	--s: 90%;
 	--l: 55%;
-	--color-text-on-primary: #000;
+	--color-text-on-primary: var(--h) 5% 0%;
 }
 :root[data-color='orange'][data-theme='dark'] {
 	--h: 34;
 	--s: 90%;
 	--l: 55%;
-	--color-text-on-primary: #000;
+	--color-text-on-primary: var(--h) 5% 0%;
 }
 :root[data-color='blue'] {
 	--h: 219;
 	--s: 89%;
 	--l: 52%;
+	--color-text-on-primary: var(--h) 5% 0%;
 }
 :root[data-color='blue'][data-theme='dark'] {
 	--h: 219;
-	--s: 89%;
-	--l: 65%;
+	--s: 80%;
+	--l: 48%;
+
+	--color-text-on-primary: var(--h) 5% 0%;
 }
 
 /* scrollbar */

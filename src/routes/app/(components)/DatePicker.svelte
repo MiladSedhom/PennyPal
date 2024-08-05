@@ -9,7 +9,7 @@
 
 <DatePicker.Root weekdayFormat="short" fixedWeeks={true} bind:value portal={null}>
 	<div class="flex w-full flex-col gap-1.5">
-		<DatePicker.Label class="text-3 text-text-90 block select-none ">{label}</DatePicker.Label>
+		<DatePicker.Label class="text-3 text-text/90 block select-none ">{label}</DatePicker.Label>
 		<DatePicker.Input
 			let:segments
 			class="bg-fields focus-within:(outline-primary outline) hover:(outline-grey outline) hover:focus-within:outline-primary rounded-1 outline-offset-3
@@ -24,7 +24,7 @@
 					{:else}
 						<DatePicker.Segment
 							{part}
-							class="rounded-5px hover:bg-grey-2 focus:bg-grey-2 aria-[valuetext=Empty]:text-text-60 px-1 py-1 focus-visible:!outline-none "
+							class="rounded-5px hover:bg-grey-2 focus:bg-grey-2 aria-[valuetext=Empty]:text-text/40 px-1 py-1 focus-visible:!outline-none "
 						>
 							{value}
 						</DatePicker.Segment>
@@ -32,7 +32,7 @@
 				</div>
 			{/each}
 			<DatePicker.Trigger
-				class="text-text-90 active:bg-primary hover:bg-muted rounded-1 focus-visible:(bg-muted !outline-0) ml-auto inline-flex size-8 items-center justify-center !ring-0 transition-colors"
+				class="text-text/90 active:bg-primary hover:bg-muted rounded-1 focus-visible:(bg-muted !outline-0) ml-auto inline-flex size-8 items-center justify-center !ring-0 transition-colors"
 			>
 				<div class="i-tabler-calendar text-6"></div>
 			</DatePicker.Trigger>
@@ -58,7 +58,7 @@
 							<DatePicker.GridHead>
 								<DatePicker.GridRow class="mb-1 flex w-full justify-between">
 									{#each weekdays as day}
-										<DatePicker.HeadCell class="text-text-70 w-10 rounded-md text-xs !font-normal">
+										<DatePicker.HeadCell class="text-text/70 w-10 rounded-md text-xs !font-normal">
 											<div>{day.slice(0, 2)}</div>
 										</DatePicker.HeadCell>
 									{/each}
@@ -72,7 +72,7 @@
 												<DatePicker.Day
 													{date}
 													month={month.value}
-													class="rounded-1 text-6 hover:bg-muted data-[selected]:bg-primary data-[disabled]:text-text-60 data-[selected]:text-text-alt data-[unavailable]:text-text-60 hover:border-border group relative inline-flex size-8 items-center justify-center whitespace-nowrap border border-transparent bg-transparent p-0 text-sm font-normal transition-all data-[disabled]:pointer-events-none data-[outside-month]:pointer-events-none data-[selected]:font-medium data-[unavailable]:line-through"
+													class="rounded-1 text-6 hover:bg-muted data-[selected]:bg-primary data-[disabled]:text-text/40 data-[selected]:text-text-alt data-[unavailable]:text-text/40 hover:border-border group relative inline-flex size-8 items-center justify-center whitespace-nowrap border border-transparent bg-transparent p-0 text-sm font-normal transition-all data-[disabled]:pointer-events-none data-[outside-month]:pointer-events-none data-[selected]:font-medium data-[unavailable]:line-through"
 												>
 													<div
 														class="bg-text group-data-[selected]:bg-bg absolute top-0 hidden size-1 rounded-full transition-all group-data-[today]:block"

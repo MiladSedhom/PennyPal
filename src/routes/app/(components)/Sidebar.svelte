@@ -23,7 +23,7 @@
 				</a>
 			</span>
 			<div class="flex items-center gap-2">
-				<p class="text-3 text-text-90">{$page.data.user.username}</p>
+				<p class="text-3 text-text/90">{$page.data.user.username}</p>
 
 				<DropdownMenu.Root>
 					<DropdownMenu.Trigger class="hover:bg-muted rounded-1 p-1">
@@ -38,7 +38,7 @@
 									isFilters = !isFilters
 								}}
 							>
-								<div class="i-tabler-filter text-5 bg-text-90 m-r-2"></div>
+								<div class="i-tabler-filter text-5 bg-text/90 m-r-2"></div>
 								Filters
 							</DropdownMenu.Item>
 
@@ -48,7 +48,7 @@
 									isAdd = true
 								}}
 							>
-								<div class="i-tabler-circle-plus text-5 bg-text-90 m-r-2"></div>
+								<div class="i-tabler-circle-plus text-5 bg-text/90 m-r-2"></div>
 								Add a New Payment
 							</DropdownMenu.Item>
 							<DropdownMenu.Separator class="bg-border h-1px w-80% m-a " />
@@ -60,7 +60,7 @@
 									$theme = $theme === 'dark' ? 'light' : 'dark'
 								}}
 							>
-								<div class="i-tabler-moon-stars text-5 bg-text-90 m-r-2"></div>
+								<div class="i-tabler-moon-stars text-5 bg-text/90 m-r-2"></div>
 								Change Theme
 							</DropdownMenu.Item>
 
@@ -72,7 +72,7 @@
 									$color = colors.at(newColorIndex)
 								}}
 							>
-								<div class="i-tabler-color-filter text-5 bg-text-90 m-r-2"></div>
+								<div class="i-tabler-color-filter text-5 bg-text/90 m-r-2"></div>
 								Change Color
 							</DropdownMenu.Item>
 						</DropdownMenu.Group>
@@ -81,8 +81,8 @@
 						<DropdownMenu.Item class="text-text  hover:bg-muted  h-10 p-2">
 							<a href="/logout" class="flex size-full items-center">
 								<div
-									class="i-tabler-logout-2 text-5 bg-text-90
-bg-text-90 m-r-2"
+									class="i-tabler-logout-2 text-5 bg-text/90
+bg-text/90 m-r-2"
 								></div>
 								Log Out</a
 							>
@@ -139,7 +139,7 @@ bg-text-90 m-r-2"
 				<a
 					href={`/app${$page.url.search}`}
 					class="h-40px text-3 fw-500 decoration-none grid w-full place-content-center p-1
-						{$page.route.id === '/app' ? 'bg-bg2 text-text border-b-solid border-primary border-b-2' : 'bg-bg1 text-text-60'}"
+						{$page.route.id === '/app' ? 'bg-bg2 text-text/95 border-b-solid border-primary border-b-2' : 'bg-bg1 text-text/50'}"
 				>
 					Payments view
 				</a>
@@ -149,8 +149,8 @@ bg-text-90 m-r-2"
 					href={`/app/graphs${$page.url.search}`}
 					class="h-40px text-3 fw-500 decoration-none grid w-full place-content-center p-1
 						{$page.route.id === '/app/graphs'
-						? 'bg-bg2 text-text border-b-solid border-primary border-b-2'
-						: 'bg-bg1 text-text-60'}"
+						? 'bg-bg2 text-text/95 border-b-solid border-primary border-b-2'
+						: 'bg-bg1 text-text/50'}"
 				>
 					Graphs view
 				</a>
@@ -159,7 +159,9 @@ bg-text-90 m-r-2"
 				<a
 					href={`/app/table${$page.url.search}`}
 					class="h-40px text-3 fw-500 decoration-none grid w-full place-content-center p-1
-							{$page.route.id === '/app/table' ? 'bg-bg2 text-text border-b-solid border-primary border-b-2' : 'bg-bg1 text-text-60'}"
+							{$page.route.id === '/app/table'
+						? 'bg-bg2 text-text/95 border-b-solid border-primary border-b-2'
+						: 'bg-bg1 text-text/50'}"
 				>
 					Table view
 				</a>

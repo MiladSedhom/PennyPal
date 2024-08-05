@@ -39,7 +39,7 @@
 
 <form action="filter">
 	<div class="m-b-4">
-		<label class="text-3 text-text-90 m-b-1.5 block select-none" for="tags">Tags</label>
+		<label class="text-3 text-text/90 m-b-1.5 block select-none" for="tags">Tags</label>
 		<Select
 			multiple
 			bind:value={selectedOptions}
@@ -63,7 +63,7 @@
 			Sorting Options <span class="i-tabler-sort-descending text-5 float-right"></span>
 		</h3>
 
-		<label class="text-3 text-text-90 m-b-1.5 block select-none" for="sort-by">Sort By</label>
+		<label class="text-3 text-text/90 m-b-1.5 block select-none" for="sort-by">Sort By</label>
 		<span class="m-b-4 flex items-center justify-between gap-4">
 			<div class="w-[calc(100%-1rem-48px)] grow">
 				<Select

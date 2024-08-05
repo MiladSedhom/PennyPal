@@ -31,7 +31,7 @@
 			<h1 class="text-text text-12 md:text-16 font-700 max-w-16ch line-height-100% m-b-4 font-[var(--serif)]">
 				Expense Tracking Made <span class="text-primary"> Simple </span>
 			</h1>
-			<p class="text-text-70 text-4 line-height-140% max-w-45ch m-b-4">
+			<p class="text-text/70 text-4 line-height-140% max-w-45ch m-b-4">
 				A modern expense tracker, With an intuitive interface and powerful features, Take control over how you manage
 				your expenses
 			</p>

@@ -22,11 +22,11 @@
 	transition:fade={{ duration: 200 }}
 >
 	<div class="flex basis-full items-start justify-between">
-		<span class="text-10 fw-700 font-[var(--serif)]">{payment.amount}</span>
+		<span class="text-10 fw-700 text-text-alt font-[var(--serif)]">{payment.amount}</span>
 
 		<div class="p-t-2 flex flex-wrap justify-end gap-2">
 			{#each payment.tags as tag}
-				<span class="bg-text text-14px text-text-alt p-x-4 p-y-1 rounded-1 font-700"> {tag} </span>
+				<span class="text-14px p-x-4 p-y-1 rounded-1 font-700 bg-white text-black"> {tag} </span>
 			{/each}
 		</div>
 	</div>

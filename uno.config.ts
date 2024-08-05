@@ -14,21 +14,18 @@ export default defineConfig({
 	transformers: [transformerVariantGroup()],
 	theme: {
 		colors: {
-			body: 'var(--color-body)',
-			primary: 'var(--color-primary)',
-			text: 'var(--color-text)',
-			'text-alt': 'var(--color-text-on-primary)',
-			fields: 'var(--color-fields)',
-			bg: 'var(--color-background)',
-			bg1: 'var(--color-background-1)',
-			bg2: 'var(--color-background-2)',
-			'text-90': 'var(--color-text-90)',
-			'text-70': 'var(--color-text-70)',
-			'text-60': 'var(--color-text-60)',
-			muted: 'var(--color-muted)',
-			grey: 'var(--color-grey)',
-			'grey-2': 'var(--color-grey-2)',
-			error: 'var(--color-semantic-red)'
+			body: 'hsl(var(--color-body) / <alpha-value>)',
+			primary: 'hsl(var(--color-primary) / <alpha-value>)',
+			text: 'hsl(var(--color-text) / <alpha-value>)',
+			'text-alt': 'hsl(var(--color-text-on-primary) / <alpha-value>)',
+			fields: 'hsl(var(--color-fields) / <alpha-value>)',
+			bg: 'hsl(var(--color-background) / <alpha-value>)',
+			bg1: 'hsl(var(--color-background-1) / <alpha-value>)',
+			bg2: 'hsl(var(--color-background-2) / <alpha-value>)',
+			muted: 'hsl(var(--color-muted) / <alpha-value>)',
+			grey: 'hsl(var(--color-grey) / <alpha-value>)',
+			'grey-2': 'hsl(var(--color-grey-2) / <alpha-value>)',
+			error: 'hsl(var(--color-semantic-red) / <alpha-value>)'
 		}
 	}
 })

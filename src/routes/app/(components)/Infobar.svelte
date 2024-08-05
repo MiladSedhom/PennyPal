@@ -53,7 +53,7 @@
 		line-height: 2rem;
 		font-size: var(--fs-base);
 
-		background-color: var(--color-background);
+		background-color: hsl(var(--color-background));
 		color: var(--color-text-70);
 	}
 

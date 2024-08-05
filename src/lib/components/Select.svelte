@@ -167,7 +167,7 @@
 		{/if}
 
 		<input
-			class="text-14px p-x-1 rounded-1 placeholder:text-text-70 h-6 grow bg-transparent focus:outline-none"
+			class="text-14px p-x-1 rounded-1 placeholder:text-text/50 h-6 grow bg-transparent focus:outline-none"
 			placeholder={placeholder ?? 'Pick your tags...'}
 			class:hidden={!isInput}
 			bind:value={inputValue}
