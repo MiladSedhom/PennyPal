@@ -122,7 +122,7 @@
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
-	class="bg-fields rounded-1 pos-relative outline-offset-3 focus-within:(outline outline-primary) hover:(outline outline-grey) hover:focus-within:outline-primary flex min-h-10 w-[var(--width)] w-full flex-col justify-center p-2 outline-2"
+	class="bg-fields rounded-1 pos-relative interactions-ring flex min-h-10 w-[var(--width)] w-full flex-col justify-center p-2"
 	use:clickOutside
 	use:focusOutside
 	use:floatingRef

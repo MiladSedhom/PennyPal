@@ -12,7 +12,7 @@
 		<DatePicker.Label class="text-3 text-text/90 block select-none ">{label}</DatePicker.Label>
 		<DatePicker.Input
 			let:segments
-			class="bg-fields focus-within:(outline-primary outline) hover:(outline-grey outline) hover:focus-within:outline-primary rounded-1 outline-offset-3
+			class="bg-fields interactions-ring rounded-1 outline-offset-3
 			flex h-12 w-full select-none items-center px-2 py-3 text-sm outline-2 outline-2  "
 		>
 			{#each segments as { part, value }}

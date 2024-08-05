@@ -39,7 +39,7 @@
 <form {action} method="post" use:enhance={submitter} class="rounded-1 border-primary min-h-80% bg-bg border-2 p-8">
 	<label class="text-3 text-text/90 m-b-1.5 block select-none" for="amount">Amount</label>
 	<input
-		class="text-14px rounded-1 placeholder:text-text/50 bg-fields hover:(outline outline-grey-2) focus:(outline-primary outline) outline-offset-3 h-12 w-full p-4 outline-2"
+		class="text-14px rounded-1 placeholder:text-text/50 bg-fields interactions-ring h-12 w-full p-4"
 		type="number"
 		name="amount"
 		id="amount"
@@ -66,7 +66,7 @@
 
 	<label class="text-3 text-text/90 m-b-1.5 block select-none" for="note">Note</label>
 	<textarea
-		class="bg-fields rounded-1 min-h-18 hover:(outline outline-grey-2) focus:(outline-primary outline) outline-offset-3 text-3 max-h-24 w-full p-2 outline-2"
+		class="bg-fields rounded-1 min-h-18 text-3 interactions-ring max-h-24 w-full p-2"
 		name="note"
 		id="note"
 		value={initialPaymentData?.note ?? ''}

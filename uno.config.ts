@@ -2,6 +2,10 @@ import { defineConfig, transformerVariantGroup } from 'unocss'
 import { presetUno, presetIcons } from 'unocss'
 
 export default defineConfig({
+	shortcuts: {
+		'interactions-ring':
+			'outline-2 outline-offset-3 focus-within:(outline outline-primary) hover:(outline outline-grey) hover:focus-within:outline-primary'
+	},
 	presets: [
 		presetUno({ dark: { dark: "[data-theme='dark']" } }),
 		presetIcons({
