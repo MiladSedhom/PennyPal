@@ -42,6 +42,7 @@
 			multiple
 			bind:value={selectedOptions}
 			{options}
+			placeholder="Pick tags to view..."
 			onSelect={() => {
 				$filters.tags = selectedOptions.toString()
 			}}
@@ -54,6 +55,14 @@
 	<div class="m-b-4">
 		<DatePicker label="Until" bind:value={endDateValue} />
 	</div>
+
+	<h3 class="text-14px fw-500 m-t-8 m-b-2">
+		Sorting Options <span
+			class="i-tabler-sort-descending
+
+ text-5 float-right"
+		></span>
+	</h3>
 
 	<label class="text-3 text-text-90 m-b-1.5 block select-none" for="sort-by">Sort By</label>
 	<span class="m-b-4 flex items-center justify-between gap-4">
