@@ -8,14 +8,16 @@
 
 	export let onSubmit: Function | null = null
 	export let action: string
+	export let initialPaymentData: any = undefined
+	export let submitButtonText = 'Submit'
 
 	let loading: boolean = false
 
-	let selectedTags: string[]
+	let selectedTags: string[] = initialPaymentData?.tags ?? []
 	const options = $page.data.tags.map((o: string) => ({ label: o, value: o }))
-	let dateValue = new CalendarDate(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate())
 
-	let form: HTMLFormElement
+	let initialDate = initialPaymentData?.createdAt ?? new Date()
+	let dateValue = new CalendarDate(initialDate.getFullYear(), initialDate.getMonth() + 1, initialDate.getDate())
 
 	const submitter: SubmitFunction = async ({ formData }) => {
 		loading = true
@@ -33,13 +35,7 @@
 	}
 </script>
 
-<form
-	{action}
-	method="post"
-	bind:this={form}
-	use:enhance={submitter}
-	class="border-primary min-h-80% bg-bg border-2 p-8"
->
+<form {action} method="post" use:enhance={submitter} class="border-primary min-h-80% bg-bg border-2 p-8">
 	<label class="text-3 text-text-90 m-b-1.5 block select-none" for="amount">Amount</label>
 	<input
 		class="text-14px rounded-1 placeholder:text-text-70 bg-fields hover:(outline outline-grey-2) focus:(outline-primary outline) outline-offset-3 h-12 w-full p-4 outline-2"
@@ -47,6 +43,7 @@
 		name="amount"
 		id="amount"
 		placeholder="amount"
+		value={initialPaymentData?.amount}
 	/>
 	{#if $page.form?.errors?.amount}
 		<p class="text-3 text-error">{$page.form.errors.amount}</p>
@@ -60,7 +57,7 @@
 	{/if}
 	<div class="m-b-4"></div>
 
-	<DatePicker bind:value={dateValue} portal={form} />
+	<DatePicker bind:value={dateValue} />
 	{#if $page.form?.errors?.date}
 		<div class="text-3 text-error">{$page.form.errors.date}</div>
 	{/if}
@@ -71,6 +68,7 @@
 		class="bg-fields rounded-1 min-h-18 hover:(outline outline-grey-2) focus:(outline-primary outline) outline-offset-3 text-3 max-h-24 w-full p-2 outline-2"
 		name="note"
 		id="note"
+		value={initialPaymentData?.note ?? ''}
 	/>
 	{#if $page.form?.errors?.note}
 		<p class="text-3 text-error">{$page.form.errors.note}</p>
@@ -84,7 +82,7 @@
 		disabled={loading}
 	>
 		{#if !loading}
-			Add Payment
+			{submitButtonText}
 		{:else}
 			<span class="i-tabler-fidget-spinner text-5 animate-spin"></span>
 			Loading

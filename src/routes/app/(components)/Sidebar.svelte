@@ -128,6 +128,7 @@ bg-text-90 m-r-2"
 				onSubmit={() => {
 					isAdd = false
 				}}
+				submitButtonText="Create Payment"
 			/>
 		</Modal>
 	</aside>

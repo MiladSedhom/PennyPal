@@ -1,11 +1,14 @@
 <script lang="ts">
 	import { enhance } from '$app/forms'
 	import type { Payment } from '@prisma/client'
-	import { goto } from '$app/navigation'
 	import { fade } from 'svelte/transition'
+	import Modal from '$lib/components/Modal.svelte'
+	import PaymentForm from './PaymentForm.svelte'
 
 	export let payment: Payment & { tags: string[] }
 	export let selected: boolean = false
+
+	let isEditForm = false
 </script>
 
 <div
@@ -39,14 +42,31 @@
 				>
 					<div class="i-tabler-trash text-5 transition-transform-300 group-hover:(scale-105 text-red-600)"></div>
 				</button>
-				<a
+				<button
 					class="rounded-1 hover:bg-text-alt group inline-grid size-8 place-content-center active:scale-95"
-					href={`/app/payment/${payment.id}`}
+					on:click={() => (isEditForm = true)}
+					type="button"
 				>
 					<div class="i-tabler-edit text-5 transition-transform-300 group-hover:(text-primary scale-105)"></div>
-				</a>
+				</button>
 			</form>
 		</div>
 		<span class="text-3 fw-600 self-end">{new Date(payment.createdAt).toLocaleDateString()}</span>
 	</div>
 </div>
+
+<Modal
+	showModal={isEditForm}
+	onClose={() => {
+		isEditForm = false
+	}}
+>
+	<PaymentForm
+		action="/app/payment/{payment.id}?/updatePayment"
+		onSubmit={() => {
+			isEditForm = false
+		}}
+		initialPaymentData={payment}
+		submitButtonText="Update Payment"
+	/>
+</Modal>
