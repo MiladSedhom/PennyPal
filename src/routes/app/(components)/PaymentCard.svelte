@@ -55,12 +55,7 @@
 	</div>
 </div>
 
-<Modal
-	showModal={isEditForm}
-	onClose={() => {
-		isEditForm = false
-	}}
->
+<Modal bind:showModal={isEditForm}>
 	<PaymentForm
 		action="/app/payment/{payment.id}?/updatePayment"
 		onSubmit={() => {
