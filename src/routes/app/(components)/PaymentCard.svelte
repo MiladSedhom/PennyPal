@@ -13,7 +13,7 @@
 
 <div
 	class="bg-primary text-text-alt border-rd-1 flex h-full w-80 flex-col gap-4 p-6
-	{selected && 'outline-color-primary outline-solid outline-2'}"
+	{selected && 'outline-text outline-solid outline-3'} select-none"
 	on:click
 	on:keydown
 	role="button"
