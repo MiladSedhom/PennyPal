@@ -19,131 +19,59 @@
 	setContext('showModal', showModal)
 </script>
 
-<section>
+<section class="grid min-h-full grid-rows-[auto_1fr]">
 	<Header />
-	<main>
-		<div class="blur"></div>
-		<div class="hero-title-container">
-			<h1>Expense Tracking Made <span class="primary"> Simple </span></h1>
-			<p>
+	<main
+		class="bg-animation p-x-8 pos-relative bg-bg md:(flex-row items-center) flex flex-col justify-center overflow-hidden bg-[linear-gradient(var(--color-grey),transparent_1px),linear-gradient(to_right,var(--color-grey)_1px,var(--color-background)_1px)] bg-[length:20px_20px]
+
+
+		"
+	>
+		<div class="p-x-28 p-t-20 md:(p-b-20 text-left) text-center">
+			<h1 class="text-text text-12 md:text-16 font-700 max-w-16ch line-height-100% m-b-4 font-[var(--serif)]">
+				Expense Tracking Made <span class="text-primary"> Simple </span>
+			</h1>
+			<p class="text-text-70 text-4 line-height-140% max-w-45ch m-b-4">
 				A modern expense tracker, With an intuitive interface and powerful features, Take control over how you manage
 				your expenses
 			</p>
 			{#if !$page.data?.user}
-				<button on:click={() => showModal('signup')}>Get Started</button>
+				<button class="rounded-1 bg-primary text-text-alt m-t-4 p-x-1 p-y-1" on:click={() => showModal('signup')}
+					>Get Started</button
+				>
 			{:else}
-				<a href="/app">Go To App</a>
+				<a class="rounded-1 bg-primary text-text-alt m-t-4 decoration-none line-height-12 p-x-4 p-y-2" href="/app "
+					>Go To App</a
+				>
 			{/if}
 		</div>
-		<div class="hero-container">
-			<DollarNotoEmoji />
+		<div
+			class="hero-animation scale-60 translate-y--8rem md:(scale-100 translate-y-0) p-x-4 p-y-12 w-[clamp(150px,auto,3000px)]"
+		>
+			<DollarNotoEmoji class="brightness-80" />
 		</div>
 	</main>
-	{#if $page.state?.loginModal}
-		<Modal showModal onClose={() => history.back()}>
-			<div class="form-container">
-				<LoginForm {form} />
-			</div>
-		</Modal>
-	{/if}
 
-	{#if $page.state?.signupModal}
-		<Modal showModal onClose={() => history.back()}>
-			<div class="form-container">
-				<SignupForm {form} />
-			</div>
-		</Modal>
-	{/if}
+	<Modal showModal={$page.state?.loginModal} onClose={() => history.back()}>
+		<div class="h-70vh bg-primary p-y-12 grid place-content-center">
+			<LoginForm {form} />
+		</div>
+	</Modal>
+
+	<Modal showModal={$page.state?.signupModal} onClose={() => history.back()}>
+		<div class="h-70vh bg-primary p-y-12 grid place-content-center">
+			<SignupForm {form} />
+		</div>
+	</Modal>
 </section>
 
 <style>
-	section {
-		display: grid;
-		grid-template-rows: auto 1fr;
-		background-color: var(--color-background);
-		min-height: 100vh;
-	}
-
-	main {
-		display: flex;
-		justify-content: space-between;
-
-		margin-inline: 2rem;
-		position: relative;
-		overflow: hidden;
-
-		background-color: var(--color-background);
-		--c1: color-mix(in srgb, var(--color-text) 25%, var(--color-background));
-		--c2: var(--color-background);
-		background-image: linear-gradient(var(--c1) 1px, transparent 1px),
-			linear-gradient(to right, var(--c1) 1px, var(--c2) 1px);
-		background-size: 20px 20px;
-
+	.bg-animation {
 		animation: bg 200s linear infinite alternate;
-
-		& .blur {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			backdrop-filter: blur(0.3px);
-			z-index: -1;
-		}
-
-		& p {
-			color: var(--color-text-70);
-			font-size: 1.1rem;
-			line-height: 120%;
-			max-width: 45ch;
-		}
 	}
 
-	h1 {
-		color: var(--color-text);
-		font-size: 4rem;
-		max-width: 16ch;
-		margin-bottom: 1rem;
-	}
-
-	.hero-title-container {
-		padding: 7rem 3rem;
-
-		& button,
-		a {
-			background-color: var(--color-primary);
-			color: var(--color-text-on-primary);
-			display: inline-block;
-			margin-top: 1rem;
-			padding: 0.4rem 0.8rem;
-			text-decoration: none;
-
-			&:hover {
-				filter: brightness(0.9);
-			}
-		}
-	}
-
-	.hero-container {
-		padding: 1rem 3rem;
-		width: clamp(150px, auto, 3000px);
-
+	.hero-animation {
 		animation: hero 15s linear infinite alternate;
-		& svg {
-			filter: brightness(0.8);
-		}
-	}
-
-	.form-container {
-		height: 70vh;
-		background-color: var(--color-primary);
-		padding: 0 3rem;
-		display: grid;
-		place-content: center;
-	}
-
-	.primary {
-		color: var(--color-primary);
 	}
 
 	@keyframes bg {
@@ -168,26 +96,6 @@
 		100% {
 			rotate: 15deg;
 			translate: 1% -2%;
-		}
-	}
-
-	@media (max-width: 640px) {
-		main {
-			flex-direction: column;
-			align-items: center;
-		}
-
-		.hero-title-container {
-			text-align: center;
-			padding-bottom: 0rem;
-		}
-
-		h1 {
-			font-size: 3rem;
-		}
-
-		.hero-container {
-			transform: scale(60%) translateY(-8rem);
 		}
 	}
 </style>
