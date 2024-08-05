@@ -23,6 +23,7 @@
 		loading = true
 		await new Promise((r) => setTimeout(r, 2000))
 		formData.set('date', dateValue.toString())
+		if (initialPaymentData) formData.set('id', initialPaymentData?.id)
 		return async ({ update, result }) => {
 			applyAction(result)
 			loading = false
@@ -36,8 +37,6 @@
 </script>
 
 <form {action} method="post" use:enhance={submitter} class="rounded-1 border-primary min-h-80% bg-bg border-2 p-8">
-	<input type="hidden" name="id" value={initialPaymentData?.id} />
-
 	<label class="text-3 text-text-90 m-b-1.5 block select-none" for="amount">Amount</label>
 	<input
 		class="text-14px rounded-1 placeholder:text-text-70 bg-fields hover:(outline outline-grey-2) focus:(outline-primary outline) outline-offset-3 h-12 w-full p-4 outline-2"

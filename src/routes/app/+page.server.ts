@@ -23,7 +23,7 @@ export const actions: Actions = {
 		try {
 			//@ts-ignore
 			await addPayment({ ...result.data }, locals.user.id)
-			return { succes: true }
+			return { success: true }
 		} catch (error) {
 			console.log(error)
 			fail(500, { error })
@@ -37,6 +37,7 @@ export const actions: Actions = {
 
 		try {
 			await removePayment(id, locals.user?.id)
+			return { success: true }
 		} catch (e) {
 			console.log(e)
 		}

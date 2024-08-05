@@ -124,7 +124,7 @@ bg-text-90 m-r-2"
 			}}
 		>
 			<AddPaymentForm
-				action="/app/?/addPayment"
+				action="/app?/addPayment"
 				onSubmit={() => {
 					isAdd = false
 				}}
