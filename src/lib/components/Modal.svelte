@@ -3,11 +3,13 @@
 	import { createEventDispatcher } from 'svelte'
 
 	export let showModal: boolean = false
+	export let onClose: (() => void) | undefined
 
 	const dispatch = createEventDispatcher()
 
 	function closeModal() {
 		showModal = false
+		onClose?.()
 		dispatch('close')
 	}
 
@@ -19,7 +21,11 @@
 </script>
 
 {#if showModal}
+	<!-- svelte-ignore a11y-no-static-element-interactions -->
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<div class="modal-backdrop" on:click={closeModal} transition:fade={{ duration: 200 }}>
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<div class="modal-content" on:click|stopPropagation transition:scale={{ duration: 300, start: 0.95 }}>
 			<div class="modal-body">
 				<slot />
