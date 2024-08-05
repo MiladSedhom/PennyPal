@@ -13,6 +13,8 @@
 		sortType: ssp.string()
 	})
 
+	console.log($page)
+
 	const initialStartDate = $filters.startDate ? new Date($filters.startDate) : getLastWeeksDate()
 	const initialEndDate = $filters.endDate ? new Date($filters.endDate) : new Date()
 
@@ -56,40 +58,38 @@
 		<DatePicker label="Until" bind:value={endDateValue} />
 	</div>
 
-	<h3 class="text-14px fw-500 m-t-8 m-b-2">
-		Sorting Options <span
-			class="i-tabler-sort-descending
+	<div class="transition-all {$page.route.id !== '/app' && 'pointer-events-none opacity-50 '}">
+		<h3 class="text-14px fw-500 m-t-8 m-b-2">
+			Sorting Options <span class="i-tabler-sort-descending text-5 float-right"></span>
+		</h3>
 
- text-5 float-right"
-		></span>
-	</h3>
+		<label class="text-3 text-text-90 m-b-1.5 block select-none" for="sort-by">Sort By</label>
+		<span class="m-b-4 flex items-center justify-between gap-4">
+			<div class="w-[calc(100%-1rem-48px)] grow">
+				<Select
+					bind:value={$filters.sortBy}
+					options={[
+						{ label: 'Date', value: 'date' },
+						{ label: 'Amount', value: 'amount' }
+					]}
+				/>
+			</div>
 
-	<label class="text-3 text-text-90 m-b-1.5 block select-none" for="sort-by">Sort By</label>
-	<span class="m-b-4 flex items-center justify-between gap-4">
-		<div class="w-[calc(100%-1rem-48px)] grow">
-			<Select
-				bind:value={$filters.sortBy}
-				options={[
-					{ label: 'Date', value: 'date' },
-					{ label: 'Amount', value: 'amount' }
-				]}
-			/>
-		</div>
-
-		<button
-			class="bg-fields hover:bg-muted active:bg-primary transition-duration-200 hover:scale-103 active:scale-97 rounded-1 h-12 w-12 shrink-0 transition-all"
-			type="button"
-			title="Sort type"
-			on:click={() => {
-				if (!$filters.sortType) {
-					$filters.sortType = 'asc'
-					return
-				}
-				if ($filters.sortType === 'asc') $filters.sortType = 'desc'
-				else if ($filters.sortType === 'desc') $filters.sortType = 'asc'
-			}}
-		>
-			<div class="i-tabler-arrows-sort text-5 text-text"></div>
-		</button>
-	</span>
+			<button
+				class="bg-fields hover:bg-muted active:bg-primary transition-duration-200 hover:scale-103 active:scale-97 rounded-1 h-12 w-12 shrink-0 transition-all"
+				type="button"
+				title="Sort type"
+				on:click={() => {
+					if (!$filters.sortType) {
+						$filters.sortType = 'asc'
+						return
+					}
+					if ($filters.sortType === 'asc') $filters.sortType = 'desc'
+					else if ($filters.sortType === 'desc') $filters.sortType = 'asc'
+				}}
+			>
+				<div class="i-tabler-arrows-sort text-5 text-text"></div>
+			</button>
+		</span>
+	</div>
 </form>
