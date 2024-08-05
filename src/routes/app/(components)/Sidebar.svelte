@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores'
-	import AddPaymentForm from './AddPaymentForm.svelte'
+	import AddPaymentForm from './PaymentForm.svelte'
 	import FiltersForm from './FiltersForm.svelte'
 	import Modal from '$lib/components/Modal.svelte'
 	import { DropdownMenu } from 'bits-ui'
@@ -124,6 +124,7 @@ bg-text-90 m-r-2"
 			}}
 		>
 			<AddPaymentForm
+				action="/app/?/addPayment"
 				onSubmit={() => {
 					isAdd = false
 				}}

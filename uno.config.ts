@@ -27,7 +27,8 @@ export default defineConfig({
 			'text-60': 'var(--color-text-60)',
 			muted: 'var(--color-muted)',
 			grey: 'var(--color-grey)',
-			'grey-2': 'var(--color-grey-2)'
+			'grey-2': 'var(--color-grey-2)',
+			error: 'var(--color-semantic-red)'
 		}
 	}
 })
