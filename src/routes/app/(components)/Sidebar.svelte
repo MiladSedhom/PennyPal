@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores'
-	import AddPaymentForm from './AddPaymentForm.svelte'
+	import AddPaymentForm from './PaymentForm.svelte'
 	import FiltersForm from './FiltersForm.svelte'
 	import Modal from '$lib/components/Modal.svelte'
 	import { DropdownMenu } from 'bits-ui'
@@ -99,7 +99,9 @@ bg-text-90 m-r-2"
 
 		{#key isFilters}
 			<div class=" m-block-4 grow {isFilters || 'hidden'} sm:block" transition:slide={{ duration: 350 }}>
-				<h3 class="text-14px fw-400 m-t-4 m-b-2">Choose Your Filters</h3>
+				<h3 class="text-14px fw-500 m-t-4 m-b-2">
+					Choose Your Filters <span class="i-tabler-adjustments-horizontal text-5 float-right"></span>
+				</h3>
 
 				<FiltersForm />
 				<button class=" h-8 w-full sm:hidden" on:click={() => (isFilters = !isFilters)}>
@@ -108,13 +110,11 @@ bg-text-90 m-r-2"
 			</div>
 		{/key}
 		<button
-			class=" p-x-4 p-y-2 bg-primary text-text-alt text-14px hover:filter-brightness-90 active:filter-brightness-85 transition-duration-200 hover:scale-103 active:scale-97 hidden self-end justify-self-end transition-all sm:block"
+			class="rounded-50% m-r--2px bg-primary text-text-alt transition-duration-200 active:(scale-95 filter-brightness-85 ) hover:(translate-y--1 filter-brightness-110 ) hidden size-12 translate-y-1 self-end justify-self-end p-2 shadow-lg transition-all sm:block"
 			on:click={() => {
 				isAdd = true
 			}}
-		>
-			New Payment
-			<div class="i-tabler-plus text-5 m-l-2"></div>
+			><div class="i-tabler-plus text-5"></div>
 		</button>
 
 		<Modal
@@ -124,9 +124,11 @@ bg-text-90 m-r-2"
 			}}
 		>
 			<AddPaymentForm
+				action="/app/?/addPayment"
 				onSubmit={() => {
 					isAdd = false
 				}}
+				submitButtonText="Create Payment"
 			/>
 		</Modal>
 	</aside>
