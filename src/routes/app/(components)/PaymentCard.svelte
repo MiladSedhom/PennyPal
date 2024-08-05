@@ -57,7 +57,7 @@
 
 <Modal bind:showModal={isEditForm}>
 	<PaymentForm
-		action="/app/payment/{payment.id}?/updatePayment"
+		action="?/updatePayment"
 		onSubmit={() => {
 			isEditForm = false
 		}}
