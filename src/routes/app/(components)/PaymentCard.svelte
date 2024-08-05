@@ -12,8 +12,8 @@
 </script>
 
 <div
-	class="bg-primary text-text-alt border-rd-1 flex h-full w-80 flex-col gap-4 p-6
-	{selected && 'outline-text outline-solid outline-3'} select-none"
+	class="bg-primary text-text-alt border-rd-1 outline-3 flex h-full w-80 flex-col gap-4 p-6
+	{selected && 'outline-primary outline'} hover:(outline-grey outline) outline-offset-3 select-none"
 	on:click
 	on:keydown
 	role="button"
@@ -57,7 +57,7 @@
 
 <Modal bind:showModal={isEditForm}>
 	<PaymentForm
-		action="/app/payment/{payment.id}?/updatePayment"
+		action="?/updatePayment"
 		onSubmit={() => {
 			isEditForm = false
 		}}
