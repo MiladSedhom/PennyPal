@@ -31,7 +31,7 @@
 		<!-- svelte-ignore a11y-click-events-have-key-events -->
 		<!-- svelte-ignore a11y-no-static-element-interactions -->
 		<div
-			class="min-w-120 max-w-80% max-h-80% position-fixed left-50% top-50% translate--50% z-40 overflow-y-auto"
+			class="sm:min-w-110 max-w-90% max-h-80% position-fixed left-50% top-50% translate--50% min-w-90 z-40 overflow-y-auto"
 			on:click|stopPropagation
 			transition:scale={{ duration: 300, start: 0.95 }}
 		>
