@@ -26,15 +26,15 @@
 
 <style>
 	circle {
-		fill: var(--color-primary);
+		fill: hsl(var(--color-primary));
 		opacity: 0.5;
 	}
 
 	.lines {
-		fill: color-mix(in srgb, var(--color-primary) 60%, black);
+		fill: color-mix(in srgb, hsl(var(--color-primary)) 60%, black);
 	}
 
 	.shadow {
-		fill: color-mix(in srgb, var(--color-primary) 30%, rgb(54, 54, 54));
+		fill: color-mix(in srgb, hsl(var(--color-primary)) 30%, rgb(54, 54, 54));
 	}
 </style>
