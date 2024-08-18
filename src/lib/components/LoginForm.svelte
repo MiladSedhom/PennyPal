@@ -7,119 +7,53 @@
 <form
 	action="/login?/login"
 	method="post"
+	class="bg-primary w-120 flex h-full flex-col items-center justify-center p-4"
 	use:enhance={() => {
 		return async ({ result, update }) => {
 			await applyAction(result)
 		}
 	}}
 >
-	<h3>Welcome back💰</h3>
-	<p>Log in to your account</p>
-	<div class="input-items">
-		<div class="field">
-			<input type="text" name="username" id="username" placeholder="Username" autocomplete="off" />
-			{#if form?.errors?.username}
-				<p class="error">{form.errors.username[0]}</p>
-			{/if}
-		</div>
-		<div class="field">
-			<input type="password" name="password" id="password" placeholder="Password" />
-			{#if form?.errors?.password}
-				<p class="error">{form.errors.password[0]}</p>
-			{/if}
-		</div>
-	</div>
-	<button type="submit">Log in</button>
+	<h3 class="text-8 text-text-alt font-600 font-[var(--serif)]">Welcome back💰</h3>
+	<p class="text-14px text-text-alt m-b-2 fw-500">Log in to your account</p>
 
-	<span class="github">
-		<a href="/login/github">
-			<div class="i-tabler-brand-github text-5"></div>
-			Login with github
-		</a>
-	</span>
-	<span>
+	<input
+		class="text-14px rounded-1 fw-500 placeholder:text-text-alt/60 border-text-alt w-90% bg-fields/20 interactions-ring-text-alt/30,text-alt/60 text-text-alt h-12 border border-2 p-4"
+		type="text"
+		name="username"
+		id="username"
+		placeholder="Username"
+		autocomplete="off"
+	/>
+	{#if form?.errors?.username}
+		<p class="error">{form.errors.username[0]}</p>
+	{/if}
+	<div class="h-4"></div>
+	<input
+		class="text-14px rounded-1 fw-500 placeholder:text-text-alt/60 border-text-alt w-90% bg-fields/20 interactions-ring-text-alt/30,text-alt/60 text-text-alt h-12 border border-2 p-4"
+		type="password"
+		name="password"
+		id="password"
+		placeholder="Password"
+	/>
+	{#if form?.errors?.password}
+		<p class="error">{form.errors.password[0]}</p>
+	{/if}
+	<div class="h-6"></div>
+
+	<button
+		class="bg-bg text-primary fw-500 rounded-1 hover:(filter-brightness-110) active:(filter-brightness-85) disabled:bg-muted focus:(outline-primary outline-offset-3 outline) w-90% h-12 outline-none outline-2"
+		type="submit">Log in</button
+	>
+	<div class="h-4"></div>
+
+	<a class="text-text-alt/80 fw-500 decoration-underline text-13px underline-offset-2" href="/login/github">
+		<div class="i-tabler-brand-github text-5"></div>
+		Login with github
+	</a>
+
+	<span class="text-text-alt/80 fw-500 text-13px">
 		Don't have an account?
-		<a href="/signup"> Sign up</a>
+		<a class="decoration-underline underline-offset-2" href="/signup"> Sign up</a>
 	</span>
 </form>
-
-<style>
-	form {
-		width: 350px;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex-flow: column;
-		background-color: var(--color-primary);
-
-		& h3 {
-			font-size: 2rem;
-			color: var(--color-text-on-primary);
-		}
-
-		& p {
-			font-size: 0.875rem;
-			color: var(--color-text-on-primary);
-		}
-
-		& .input-items {
-			width: 90%;
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			gap: 0.5rem;
-			margin-block: 1rem;
-			& div {
-				width: 100%;
-			}
-		}
-
-		& input {
-			background-color: color-mix(in srgb, var(--color-fields) 20%, var(--color-primary));
-			padding: 1.3rem 1rem;
-			border: 2px solid var(--color-text-on-primary);
-			color: var(--color-text-on-primary);
-
-			&::placeholder {
-				color: color-mix(in srgb, var(--color-text-on-primary) 60%, var(--color-primary));
-			}
-		}
-
-		& button {
-			width: 90%;
-			height: 40px;
-			background-color: var(--color-primary);
-			color: var(--color-text-on-primary);
-			border: 2px solid var(--color-text-on-primary);
-			box-shadow: 0 5px #1a010133;
-			margin-bottom: 0.5rem;
-		}
-
-		& button:hover {
-			filter: brightness(1.1);
-		}
-
-		& span {
-			font-size: 0.75rem;
-			color: color-mix(in srgb, var(--color-text-on-primary) 80%, var(--color-primary));
-		}
-
-		& a {
-			color: var(--color-text-on-primary);
-		}
-
-		& .error {
-			padding-left: 1rem;
-			font-size: 0.75rem;
-			color: tomato;
-		}
-
-		& .github a {
-			display: flex;
-			align-items: center;
-			gap: 0.5rem;
-			margin-block: 0.6rem;
-		}
-	}
-</style>
