@@ -12,6 +12,7 @@
 	let signupModal = false
 
 	function showModal(modal: 'login' | 'signup') {
+		form = null
 		if (modal === 'login') {
 			signupModal = false
 			loginModal = true

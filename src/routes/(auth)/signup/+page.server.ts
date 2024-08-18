@@ -10,12 +10,12 @@ const register: Action = async ({ request }) => {
 
 	//validate form
 	if (typeof username !== 'string' || typeof password !== 'string' || !username || !password)
-		return fail(400, { invalid: true })
+		return fail(400, { error: 'Please enter both username and password' })
 
 	//if ther is a user with the same name return name is already taken
 	const user = await db.user.findUnique({ where: { username } })
 
-	if (user) return fail(400, { usernameTaken: true })
+	if (user) return fail(400, { error: 'Username is already taken :(' })
 
 	//if success return add them to db and log them in
 	try {
@@ -27,7 +27,7 @@ const register: Action = async ({ request }) => {
 		})
 	} catch (error) {
 		console.log(error)
-		return fail(500, { message: 'oops' })
+		return fail(500, { message: 'Something went wrong please try again' })
 	}
 
 	redirect(303, '/login')

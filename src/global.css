@@ -53,7 +53,7 @@ html {
 	--color-background-2: var(--h) 10% 70%;
 
 	--color-text: var(--h) 5% 0%;
-	--color-text-on-primary: var(--h) 5% 0%;
+	--color-text-on-primary: var(--h) 3% 15%;
 
 	--color-muted: var(--h) 40% 90%;
 	--color-grey: var(--h) 5% 80%;
@@ -64,7 +64,7 @@ html {
 
 	--color-body: var(--h) 3% 22%;
 	--color-text: var(--h) 3% 100%;
-	--color-text-on-primary: var(--h) 5% 0%;
+	--color-text-on-primary: var(--h) 3% 15%;
 	--color-fields: var(--h) 2% 24%;
 
 	--color-muted: var(--h) 30% 30%;

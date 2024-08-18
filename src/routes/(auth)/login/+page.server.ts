@@ -11,15 +11,15 @@ export const actions: Actions = {
 		const password = formData.get('password')
 
 		if (typeof username !== 'string' || typeof password !== 'string' || !username || !password)
-			return fail(400, { invalid: true })
+			return fail(400, { error: 'Please enter both username and password' })
 
 		// if credentials is wrong
 		const user = await db.user.findUnique({ where: { username } })
-		if (!user) return fail(400, { credentials: true })
+		if (!user) return fail(400, { error: 'Invalid username or password' })
 
 		if (user.passwordHash) {
 			const userPassword = bcrypt.compare(password, user.passwordHash)
-			if (!userPassword) return fail(400, { credentials: true })
+			if (!userPassword) return fail(400, { error: 'Invalid username or password' })
 		}
 
 		// else login and redirect
