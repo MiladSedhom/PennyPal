@@ -1,4 +1,4 @@
-# PennyPal
+# PennyPal (Work in progress)
 
 PennyPal is a modern, intuitive expense tracker designed to help you take control of your finances with ease.
 
