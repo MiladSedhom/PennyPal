@@ -10,10 +10,8 @@ export default defineConfig({
 
 		[
 			/^interactions-ring-([^-]+(?:-[^-]+)*),([^-]+(?:-[^-]+)*)$/,
-			([, c1, c2]) => {
-				console.log(c1, c2)
-				return `outline-2 outline-offset-3 focus-within:(outline outline-${c2}) hover:(outline outline-${c1}) hover:focus-within:outline-${c2}`
-			}
+			([, c1, c2]) =>
+				`outline-2 outline-offset-3 focus-within:(outline outline-${c2}) hover:(outline outline-${c1}) hover:focus-within:outline-${c2}`
 		]
 	],
 	presets: [

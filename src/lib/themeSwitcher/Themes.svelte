@@ -4,7 +4,6 @@
       (function() {
         const saved_theme = localStorage.getItem('theme')
 		if (saved_theme) {
-			console.log('Saved theme:', saved_theme)
 			document.documentElement.setAttribute('data-theme', saved_theme)
 		} else {
 			const prefers_dark = window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -15,7 +14,6 @@
 
 		const savedColor = localStorage.getItem('color')
 		if (savedColor) {
-			console.log('Saved color:', savedColor)
 			document.documentElement.setAttribute('data-color', savedColor)
 		}
       })();

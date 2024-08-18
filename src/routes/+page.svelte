@@ -12,7 +12,6 @@
 	let signupModal = false
 
 	function showModal(modal: 'login' | 'signup') {
-		console.log(modal)
 		if (modal === 'login') {
 			signupModal = false
 			loginModal = true

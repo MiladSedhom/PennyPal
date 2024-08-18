@@ -24,7 +24,6 @@ import { writable, type Writable } from 'svelte/store'
 export const themeSwitcher = (key: string, initialValue?: string): Writable<string> | undefined => {
 	if (!browser) return writable('')
 	const value = localStorage.getItem(key) ?? initialValue
-	console.log('store value is:', value)
 	const store = writable(value)
 
 	store.subscribe((value) => {
