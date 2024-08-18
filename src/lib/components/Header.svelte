@@ -3,7 +3,7 @@
 	import { page } from '$app/stores'
 	import { getContext } from 'svelte'
 
-	const showModal: Function = getContext('showModal')
+	const showModal: Function = getContext('authModals')
 </script>
 
 <header class="p-x-4 sm:p-x-12 bg-bg pos-relative flex h-20 items-center justify-between">

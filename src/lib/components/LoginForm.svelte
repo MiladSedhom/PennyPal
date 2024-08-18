@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms'
+	import { getContext } from 'svelte'
 
 	export let form: any
+	const showModal: (modal: 'login' | 'signup') => void = getContext('authModals')
 </script>
 
 <form
@@ -54,6 +56,8 @@
 
 	<span class="text-text-alt/80 fw-500 text-13px">
 		Don't have an account?
-		<a class="decoration-underline underline-offset-2" href="/signup"> Sign up</a>
+		<button class="decoration-underline underline-offset-2" type="button" on:click={() => showModal('signup')}>
+			Sign up</button
+		>
 	</span>
 </form>

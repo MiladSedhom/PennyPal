@@ -2,21 +2,28 @@
 	import Modal from '../lib/components/Modal.svelte'
 	import LoginForm from '$lib/components/LoginForm.svelte'
 	import SignupForm from '$lib/components/SignupForm.svelte'
-	import { pushState } from '$app/navigation'
 	import { page } from '$app/stores'
 	import DollarNotoEmoji from '$lib/components/svgs/DollarNotoEmoji.svelte'
 	import Header from '$lib/components/Header.svelte'
 	import { setContext } from 'svelte'
 
 	export let form
+	let loginModal = false
+	let signupModal = false
 
-	function showModal(url: string) {
-		pushState(url, {
-			[url + 'Modal']: true
-		})
+	function showModal(modal: 'login' | 'signup') {
+		console.log(modal)
+		if (modal === 'login') {
+			signupModal = false
+			loginModal = true
+		}
+		if (modal === 'signup') {
+			loginModal = false
+			signupModal = true
+		}
 	}
 
-	setContext('showModal', showModal)
+	setContext('authModals', showModal)
 </script>
 
 <section class="bg-bg grid min-h-full grid-rows-[auto_1fr]">
@@ -34,7 +41,7 @@
 				your expenses
 			</p>
 			{#if !$page.data?.user}
-				<button class="rounded-1 bg-primary text-text-alt m-t-4 p-x-1 p-y-1" on:click={() => showModal('signup')}
+				<button class="rounded-1 bg-primary text-text-alt m-t-4 p-x-1 p-y-1" on:click={() => (signupModal = true)}
 					>Get Started</button
 				>
 			{:else}
@@ -50,13 +57,13 @@
 		</div>
 	</main>
 
-	<Modal showModal={$page.state?.loginModal} onClose={() => history.back()}>
+	<Modal bind:showModal={loginModal}>
 		<div class="h-70vh bg-primary p-y-12 grid place-content-center">
 			<LoginForm {form} />
 		</div>
 	</Modal>
 
-	<Modal showModal={$page.state?.signupModal} onClose={() => history.back()}>
+	<Modal bind:showModal={signupModal}>
 		<div class="h-70vh bg-primary p-y-12 grid place-content-center">
 			<SignupForm {form} />
 		</div>
