@@ -21,14 +21,9 @@
 	}
 </script>
 
-<form
-	{action}
-	method="post"
-	class="bg-primary flex w-full grow flex-col items-center justify-center"
-	use:enhance={submitter}
->
+<form {action} method="post" class="flex w-full grow flex-col items-center justify-center" use:enhance={submitter}>
 	<input
-		class="text-14px rounded-1 fw-500 placeholder:text-text-alt/60 border-text-alt w-90% bg-fields/20 interactions-ring-text-alt/50,text-alt text-text-alt h-12 border border-2 p-4"
+		class="text-14px rounded-1 fw-500 placeholder:text-text-alt/60 border-text-alt w-90% bg-fields/20 interactions-ring-text-alt/40,text-alt text-text-alt h-12 border border-2 p-4"
 		type="text"
 		name="username"
 		id="username"
@@ -39,7 +34,7 @@
 
 	<div class="h-4"></div>
 	<input
-		class="text-14px rounded-1 fw-500 placeholder:text-text-alt/60 border-text-alt w-90% bg-fields/20 interactions-ring-text-alt/50,text-alt text-text-alt h-12 border border-2 p-4"
+		class="text-14px rounded-1 fw-500 placeholder:text-text-alt/60 border-text-alt w-90% bg-fields/20 interactions-ring-text-alt/40,text-alt text-text-alt h-12 border border-2 p-4"
 		type="password"
 		name="password"
 		id="password"

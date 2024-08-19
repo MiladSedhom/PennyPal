@@ -58,13 +58,13 @@
 	</main>
 
 	<Modal bind:showModal={loginModal}>
-		<div class="h-70vh bg-primary p-y-12 grid place-content-center">
+		<div class="h-70vh rounded-1 bg-primary p-y-12 grid place-content-center">
 			<LoginForm {form} />
 		</div>
 	</Modal>
 
 	<Modal bind:showModal={signupModal}>
-		<div class="h-70vh bg-primary p-y-12 grid place-content-center">
+		<div class="h-70vh rounded-1 bg-primary p-y-12 grid place-content-center">
 			<SignupForm {form} />
 		</div>
 	</Modal>

@@ -6,7 +6,7 @@
 	const showModal: (modal: 'login' | 'signup') => void = getContext('authModals')
 </script>
 
-<div class="bg-primary w-120 flex h-full flex-col items-center justify-center p-4">
+<div class="bg-primary w-120 rounded-1 flex h-full flex-col items-center justify-center p-4">
 	<h3 class="text-8 text-text-alt font-600 font-[var(--serif)]">Welcome back💰</h3>
 	<p class="text-14px text-text-alt m-b-2 fw-500">Log in to your account</p>
 
