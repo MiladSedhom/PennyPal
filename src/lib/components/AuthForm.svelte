@@ -55,7 +55,7 @@
 		disabled={loading || !!form?.error}
 	>
 		{#if form?.error}
-			<p class="text-red-3">
+			<p class="text-red-4 animate-head-shake">
 				{form.error}
 			</p>
 		{:else}
