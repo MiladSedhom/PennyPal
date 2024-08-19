@@ -2,20 +2,23 @@
 	import Select from '$lib/components/Select.svelte'
 	import { queryParameters, ssp } from 'sveltekit-search-params'
 	import { page } from '$app/stores'
-	import { getLastWeeksDate } from '$lib/utils'
+	import { getFirstDayOfTheMonth, getLastWeeksDate } from '$lib/utils'
 	import { CalendarDate } from '@internationalized/date'
 	import DatePicker from './DatePicker.svelte'
+	import { persisted } from '$lib/stores/persist'
+
+	const persistedFilters = persisted('filters', {} as Filters)
 
 	const filters = queryParameters({
-		startDate: ssp.string(),
-		endDate: ssp.string(),
-		sortBy: ssp.string(),
-		sortType: ssp.string()
+		startDate: ssp.string($persistedFilters?.startDate),
+		endDate: ssp.string($persistedFilters?.endDate),
+		sortBy: ssp.string($persistedFilters?.sortBy),
+		sortType: ssp.string($persistedFilters?.sortType)
 	})
 
-	console.log($page)
+	filters.subscribe((v) => ($persistedFilters = v as Filters))
 
-	const initialStartDate = $filters.startDate ? new Date($filters.startDate) : getLastWeeksDate()
+	const initialStartDate = $filters.startDate ? new Date($filters.startDate) : getFirstDayOfTheMonth()
 	const initialEndDate = $filters.endDate ? new Date($filters.endDate) : new Date()
 
 	let startDateValue = new CalendarDate(
@@ -32,9 +35,15 @@
 	$: $filters.startDate = startDateValue.toString()
 	$: $filters.endDate = endDateValue.toString()
 
+	const options = $page.data.tags?.map((t: string) => ({ label: t, value: t })) || []
 	let selectedOptions: string[] = $filters.tags ? $filters.tags.split(',') : []
 
-	const options = $page.data.tags?.map((t: string) => ({ label: t, value: t })) || []
+	interface Filters {
+		startDate: string
+		endDate: string
+		sortBy: 'amount' | 'date'
+		sortType: 'asc' | 'desc'
+	}
 </script>
 
 <form action="filter">
