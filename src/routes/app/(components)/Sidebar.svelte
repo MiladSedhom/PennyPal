@@ -23,7 +23,7 @@
 				</a>
 			</span>
 			<div class="flex items-center gap-2">
-				<p class="text-3 text-text/90">{$page.data.user.username}</p>
+				<p class="text-3 text-text/90">{$page.data?.user?.username}</p>
 
 				<DropdownMenu.Root>
 					<DropdownMenu.Trigger class="hover:bg-muted rounded-1 p-1">

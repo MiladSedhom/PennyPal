@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms'
+	import { goto } from '$app/navigation'
 	import type { SubmitFunction } from '@sveltejs/kit'
 
 	export let form
@@ -17,7 +18,7 @@
 	}
 
 	const inputHandler = () => {
-		form.error = null
+		if (form?.error) form.error = null
 	}
 </script>
 
