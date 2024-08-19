@@ -14,14 +14,21 @@
 
 	<div class="h-4"></div>
 
-	<a class="text-text-alt/80 fw-500 decoration-underline text-13px underline-offset-2" href="/login/github">
+	<a
+		class="text-text-alt/80 fw-500 decoration-underline text-13px focus:(outline outline-text-alt outline-2) rounded-1 underline-offset-2"
+		href="/login/github"
+	>
 		<div class="i-tabler-brand-github text-5"></div>
 		Login with github
 	</a>
 
 	<span class="text-text-alt/80 fw-500 text-13px">
 		Don't have an account?
-		<button class="decoration-underline underline-offset-2" type="button" on:click={() => showModal('signup')}>
+		<button
+			class="decoration-underline focus:(outline outline-text-alt outline-2) rounded-1 underline-offset-2 outline-offset-1"
+			type="button"
+			on:click={() => showModal('signup')}
+		>
 			Sign up</button
 		>
 	</span>

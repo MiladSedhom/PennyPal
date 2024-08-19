@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms'
-	import { goto } from '$app/navigation'
 	import type { SubmitFunction } from '@sveltejs/kit'
 
 	export let form
@@ -29,7 +28,7 @@
 	use:enhance={submitter}
 >
 	<input
-		class="text-14px rounded-1 fw-500 placeholder:text-text-alt/60 border-text-alt w-90% bg-fields/20 interactions-ring-text-alt/30,text-alt/60 text-text-alt h-12 border border-2 p-4"
+		class="text-14px rounded-1 fw-500 placeholder:text-text-alt/60 border-text-alt w-90% bg-fields/20 interactions-ring-text-alt/50,text-alt text-text-alt h-12 border border-2 p-4"
 		type="text"
 		name="username"
 		id="username"
@@ -40,7 +39,7 @@
 
 	<div class="h-4"></div>
 	<input
-		class="text-14px rounded-1 fw-500 placeholder:text-text-alt/60 border-text-alt w-90% bg-fields/20 interactions-ring-text-alt/30,text-alt/60 text-text-alt h-12 border border-2 p-4"
+		class="text-14px rounded-1 fw-500 placeholder:text-text-alt/60 border-text-alt w-90% bg-fields/20 interactions-ring-text-alt/50,text-alt text-text-alt h-12 border border-2 p-4"
 		type="password"
 		name="password"
 		id="password"
@@ -51,7 +50,7 @@
 	<div class="h-6"></div>
 
 	<button
-		class="bg-text-alt text-primary fw-500 rounded-1 hover:not:disabled:(filter-brightness-110) active:not:disabled:(filter-brightness-85) disabled:(cursor-not-allowed) focus:(outline-primary outline-offset-3 outline) w-90% h-12 outline-none outline-2"
+		class="bg-text-alt text-primary fw-500 rounded-1 hover:not-disabled:(filter-brightness-120) active:not-disabled:(filter-brightness-85) disabled:(cursor-not-allowed) focus:(outline-text-alt outline-offset-3 outline) w-90% h-12 outline-none outline-2"
 		type="submit"
 		disabled={loading || !!form?.error}
 	>
