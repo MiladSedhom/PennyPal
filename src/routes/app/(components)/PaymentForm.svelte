@@ -36,7 +36,7 @@
 	}
 </script>
 
-<form {action} method="post" use:enhance={submitter} class="rounded-1 border-primary min-h-80% bg-bg border-2 p-8">
+<form {action} method="post" use:enhance={submitter} class="rounded-1 border-grey min-h-80% bg-bg border-2 p-8">
 	<label class="text-3 text-text/90 m-b-1.5 block select-none" for="amount">Amount</label>
 	<input
 		class="text-14px rounded-1 placeholder:text-text/50 bg-fields interactions-ring h-12 w-full p-4"

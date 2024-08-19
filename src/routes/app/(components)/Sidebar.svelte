@@ -30,7 +30,7 @@
 						<div class="i-tabler-dots-vertical text-5"></div>
 					</DropdownMenu.Trigger>
 
-					<DropdownMenu.Content class="bg-bg border-border text-3 rounded-1 w-60 border p-1">
+					<DropdownMenu.Content class="bg-bg border-grey text-3 rounded-1 w-60 border p-1">
 						<DropdownMenu.Group class="sm:hidden">
 							<DropdownMenu.Item
 								class="text-text hover:bg-muted flex h-10 items-center p-2"
@@ -80,10 +80,7 @@
 
 						<DropdownMenu.Item class="text-text  hover:bg-muted  h-10 p-2">
 							<a href="/logout" class="flex size-full items-center">
-								<div
-									class="i-tabler-logout-2 text-5 bg-text/90
-bg-text/90 m-r-2"
-								></div>
+								<div class="i-tabler-logout-2 text-5 bg-text/90 bg-text/90 m-r-2"></div>
 								Log Out</a
 							>
 						</DropdownMenu.Item>
