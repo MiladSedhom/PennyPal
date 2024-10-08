@@ -2,7 +2,7 @@
 	import Select from '$lib/components/Select.svelte'
 	import { queryParameters, ssp } from 'sveltekit-search-params'
 	import { page } from '$app/stores'
-	import { getFirstDayOfTheMonth, getLastWeeksDate } from '$lib/utils'
+	import { getFirstDayOfTheYear, getLastWeeksDate } from '$lib/utils'
 	import { CalendarDate } from '@internationalized/date'
 	import DatePicker from './DatePicker.svelte'
 	import { persisted } from '$lib/stores/persist'
@@ -18,7 +18,7 @@
 
 	filters.subscribe((v) => ($persistedFilters = v as Filters))
 
-	const initialStartDate = $filters.startDate ? new Date($filters.startDate) : getFirstDayOfTheMonth()
+	const initialStartDate = $filters.startDate ? new Date($filters.startDate) : getFirstDayOfTheYear()
 	const initialEndDate = $filters.endDate ? new Date($filters.endDate) : new Date()
 
 	let startDateValue = new CalendarDate(
