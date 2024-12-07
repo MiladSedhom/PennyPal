@@ -26,7 +26,7 @@
 	setContext('authModals', showModal)
 </script>
 
-<section class="bg-bg grid min-h-full grid-rows-[auto_1fr]">
+<section class="bg-bg min-h-100vh grid grid-rows-[auto_1fr]">
 	<Header />
 	<main
 		class="bg-animation m-x-8 pos-relative bg-bg md:(flex-row items-center) flex flex-col justify-center overflow-hidden bg-[linear-gradient(hsl(var(--color-grey)),transparent_1px),linear-gradient(to_right,hsl(var(--color-grey))_1px,hsl(var(--color-background))_1px)] bg-[length:20px_20px]
