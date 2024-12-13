@@ -29,7 +29,7 @@
 	})
 
 	//functions
-	const addOrRemoveFromSelectedValues = (v: string) => {
+	const toggleSelectValue = (v: string) => {
 		if (!Array.isArray(value)) return
 		value.includes(v) ? value.splice(value.indexOf(v), 1) : value.push(v)
 		// add option if it doesn't exit
@@ -39,7 +39,7 @@
 	}
 
 	const select = (v: string) => {
-		if (multiple) addOrRemoveFromSelectedValues(v)
+		if (multiple) toggleSelectValue(v)
 		else if (options.map((o) => o.value).includes(v)) value = v
 		onSelect?.(value)
 		!multiple && (isOpen = false)
@@ -56,9 +56,8 @@
 				select(hoveredOption.value)
 			} else if (inputValue.length != 0 && multiple) {
 				select(inputValue)
-				//reset input
-				inputValue = ''
 			}
+			inputValue = ''
 			!multiple && inputRef.blur()
 		}
 		if (e.key === 'Escape') {
