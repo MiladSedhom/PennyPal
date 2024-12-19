@@ -1,13 +1,11 @@
 <script lang="ts">
 	import type { Payment } from '@prisma/client'
-	export let payments: Payment[]
+	interface Props {
+		payments: Payment[];
+	}
 
-	$: sum = roundNumber(
-		payments.reduce((total: any, currentValue: any) => total + currentValue.amount, 0),
-		2
-	)
-	$: avg = roundNumber(sum / payments.length, 2)
-	$: dailyAvg = roundNumber(sum / getDayCount(payments), 2)
+	let { payments }: Props = $props();
+
 
 	const getDayCount = (payments: any) => {
 		const daysSet = new Set()
@@ -31,6 +29,12 @@
 			return +(Math.round(+arr[0] + 'e' + sig + (+arr[1] + scale)) + 'e-' + scale)
 		}
 	}
+	let sum = $derived(roundNumber(
+		payments.reduce((total: any, currentValue: any) => total + currentValue.amount, 0),
+		2
+	))
+	let avg = $derived(roundNumber(sum / payments.length, 2))
+	let dailyAvg = $derived(roundNumber(sum / getDayCount(payments), 2))
 </script>
 
 <div class="infobar">

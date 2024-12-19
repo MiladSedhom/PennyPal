@@ -1,17 +1,27 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 	import { getContext } from 'svelte'
 	import type { Writable } from 'svelte/store'
 	import { slide } from 'svelte/transition'
 
-	export let open = false
+	interface Props {
+		open?: boolean;
+		header?: import('svelte').Snippet;
+		content?: import('svelte').Snippet;
+	}
+
+	let { open = $bindable(false), header, content }: Props = $props();
 	const id = crypto.randomUUID()
 
 	const colapse = getContext('colapse')
 	const activeItemId: Writable<string | null> = getContext('activeItemId')
 
 	colapse && open && ($activeItemId = id)
-	$: isActive = $activeItemId === id
-	$: colapse && (open = isActive)
+	let isActive = $derived($activeItemId === id)
+	run(() => {
+		colapse && (open = isActive)
+	});
 
 	//function
 	const toggleOpen = () => {
@@ -28,9 +38,9 @@
 </script>
 
 <div class="accordion-item">
-	<button on:click={handleClick} aria-expanded={open} aria-controls={`accordion-${id}`}>
+	<button onclick={handleClick} aria-expanded={open} aria-controls={`accordion-${id}`}>
 		<div class="accordion-header">
-			<slot name="header" />
+			{@render header?.()}
 			<svg
 				class="caret"
 				class:caret-closed={!open}
@@ -49,7 +59,7 @@
 			aria-hidden={!open}
 			role="region"
 		>
-			<slot name="content" />
+			{@render content?.()}
 		</div>
 	{/if}
 </div>

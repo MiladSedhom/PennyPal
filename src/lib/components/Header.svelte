@@ -13,11 +13,11 @@
 		{#if !$page.data.user}
 			<button
 				class="bg-primary p-x-4 p-y-1 rounded-1 text-text-alt text-14px font-500 hover:(filter-brightness-110)"
-				on:click={() => showModal('login')}>Login</button
+				onclick={() => showModal('login')}>Login</button
 			>
 			<button
 				class="bg-primary p-x-4 p-y-1 rounded-1 text-text-alt text-14px font-500 hover:(filter-brightness-110)"
-				on:click={() => showModal('signup')}>Signup</button
+				onclick={() => showModal('signup')}>Signup</button
 			>
 		{:else if $page.data.user}
 			<span class="text-3 sm:text-14px text-text/90">{$page.data.user.username}</span>

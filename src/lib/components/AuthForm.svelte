@@ -2,11 +2,15 @@
 	import { applyAction, enhance } from '$app/forms'
 	import type { SubmitFunction } from '@sveltejs/kit'
 
-	export let form
-	export let action
-	export let buttonText
+	interface Props {
+		form: any;
+		action: any;
+		buttonText: any;
+	}
 
-	let loading = false
+	let { form = $bindable(), action, buttonText }: Props = $props();
+
+	let loading = $state(false)
 
 	const submitter: SubmitFunction = () => {
 		loading = true
@@ -29,7 +33,7 @@
 		id="username"
 		placeholder="Username"
 		autocomplete="off"
-		on:input={inputHandler}
+		oninput={inputHandler}
 	/>
 
 	<div class="h-4"></div>
@@ -39,7 +43,7 @@
 		name="password"
 		id="password"
 		placeholder="Password"
-		on:input={inputHandler}
+		oninput={inputHandler}
 	/>
 
 	<div class="h-6"></div>

@@ -6,18 +6,27 @@
 	import DatePicker from './DatePicker.svelte'
 	import { CalendarDate } from '@internationalized/date'
 
-	export let onSubmit: Function | null = null
-	export let action: string
-	export let initialPaymentData: any = undefined
-	export let submitButtonText = 'Submit'
+	interface Props {
+		onSubmit?: Function | null;
+		action: string;
+		initialPaymentData?: any;
+		submitButtonText?: string;
+	}
 
-	let loading: boolean = false
+	let {
+		onSubmit = null,
+		action,
+		initialPaymentData = undefined,
+		submitButtonText = 'Submit'
+	}: Props = $props();
 
-	let selectedTags: string[] = initialPaymentData?.tags ?? []
+	let loading: boolean = $state(false)
+
+	let selectedTags: string[] = $state(initialPaymentData?.tags ?? [])
 	const options = $page.data.tags.map((o: string) => ({ label: o, value: o }))
 
 	let initialDate = initialPaymentData?.createdAt ?? new Date()
-	let dateValue = new CalendarDate(initialDate.getFullYear(), initialDate.getMonth() + 1, initialDate.getDate())
+	let dateValue = $state(new CalendarDate(initialDate.getFullYear(), initialDate.getMonth() + 1, initialDate.getDate()))
 
 	const submitter: SubmitFunction = async ({ formData }) => {
 		loading = true
@@ -70,7 +79,7 @@
 		name="note"
 		id="note"
 		value={initialPaymentData?.note ?? ''}
-	/>
+	></textarea>
 	{#if $page.form?.errors?.note}
 		<p class="text-3 text-error">{$page.form.errors.note}</p>
 	{/if}

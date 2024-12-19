@@ -2,7 +2,12 @@
 	import { setContext } from 'svelte'
 	import { writable, type Writable } from 'svelte/store'
 
-	export let colapse = false
+	interface Props {
+		colapse?: boolean;
+		children?: import('svelte').Snippet;
+	}
+
+	let { colapse = false, children }: Props = $props();
 	const activeItemId: Writable<string | null> = writable(null)
 
 	setContext('activeItemId', activeItemId)
@@ -10,7 +15,7 @@
 </script>
 
 <div class="accordion">
-	<slot />
+	{@render children?.()}
 </div>
 
 <style>

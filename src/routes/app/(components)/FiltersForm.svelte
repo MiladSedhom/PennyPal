@@ -21,22 +21,22 @@
 	const initialStartDate = $filters.startDate ? new Date($filters.startDate) : getFirstDayOfTheYear()
 	const initialEndDate = $filters.endDate ? new Date($filters.endDate) : new Date()
 
-	let startDateValue = new CalendarDate(
+	let startDateValue = $state(new CalendarDate(
 		initialStartDate.getFullYear(),
 		initialStartDate.getMonth() + 1,
 		initialStartDate.getDate()
-	)
-	let endDateValue = new CalendarDate(
+	))
+	let endDateValue = $state(new CalendarDate(
 		initialEndDate.getFullYear(),
 		initialEndDate.getMonth() + 1,
 		initialEndDate.getDate()
-	)
+	))
 
-	$: $filters.startDate = startDateValue.toString()
-	$: $filters.endDate = endDateValue.toString()
+	let $filters.startDate = $derived(startDateValue.toString())
+	let $filters.endDate = $derived(endDateValue.toString())
 
 	const options = $page.data.tags?.map((t: string) => ({ label: t, value: t })) || []
-	let selectedOptions: string[] = $filters.tags ? $filters.tags.split(',') : []
+	let selectedOptions: string[] = $state($filters.tags ? $filters.tags.split(',') : [])
 
 	interface Filters {
 		startDate: string
@@ -88,7 +88,7 @@
 				class="bg-fields hover:bg-muted active:bg-primary transition-duration-200 hover:scale-103 active:scale-97 rounded-1 h-12 w-12 shrink-0 transition-all"
 				type="button"
 				title="Sort type"
-				on:click={() => {
+				onclick={() => {
 					if (!$filters.sortType) {
 						$filters.sortType = 'asc'
 						return

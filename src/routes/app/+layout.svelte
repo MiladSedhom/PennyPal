@@ -1,11 +1,13 @@
 <script>
 	import Sidebar from './(components)/Sidebar.svelte'
+	/** @type {{children?: import('svelte').Snippet}} */
+	let { children } = $props();
 </script>
 
 <div>
 	<Sidebar />
 	<main>
-		<slot />
+		{@render children?.()}
 	</main>
 </div>
 

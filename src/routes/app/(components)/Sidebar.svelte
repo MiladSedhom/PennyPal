@@ -10,8 +10,8 @@
 	const theme = themeSwitcher('theme')
 	const color = themeSwitcher('color', 'green')
 
-	let isFilters: boolean
-	let isAdd: boolean
+	let isFilters: boolean = $state()
+	let isAdd: boolean = $state()
 </script>
 
 <div class="border-bg border-r-solid h-auto sm:h-screen">
@@ -101,14 +101,14 @@
 				</h3>
 
 				<FiltersForm />
-				<button class=" h-8 w-full sm:hidden" on:click={() => (isFilters = !isFilters)}>
+				<button class=" h-8 w-full sm:hidden" onclick={() => (isFilters = !isFilters)}>
 					<div class="i-tabler-caret-up text-6 m-a"></div>
 				</button>
 			</div>
 		{/key}
 		<button
 			class="rounded-50% m-r--2px bg-primary text-text-alt transition-duration-200 active:(scale-95 filter-brightness-85 ) hover:(translate-y--1 filter-brightness-110 ) border-body pos-fixed sm:(position-static border-none) bottom-12 right-4 z-30 size-12 shrink-0 translate-y-1 self-end justify-self-end border-2 shadow-lg transition-all"
-			on:click={() => {
+			onclick={() => {
 				isAdd = true
 			}}
 		>

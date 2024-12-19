@@ -1,9 +1,14 @@
 <script lang="ts">
 	import tinycolor from 'tinycolor2'
 	import { onMount } from 'svelte'
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
 
-	let cellRef: any
-	let textColor: any
+	let { children }: Props = $props();
+
+	let cellRef: any = $state()
+	let textColor: any = $state()
 
 	onMount(async () => {
 		const styles = getComputedStyle(cellRef)
@@ -46,7 +51,7 @@
 </script>
 
 <td bind:this={cellRef} style="color: {textColor};">
-	<slot />
+	{@render children?.()}
 </td>
 
 <style>

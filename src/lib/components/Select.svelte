@@ -1,26 +1,40 @@
 <script lang="ts">
+	import { preventDefault } from 'svelte/legacy';
+
 	import { clickOutside, focusOutside, scrollAction } from '$lib/actions'
 	import { offset, flip, shift } from 'svelte-floating-ui/dom'
 	import { createFloatingActions } from 'svelte-floating-ui'
 	import { tick } from 'svelte'
 
-	export let options: { label: string; value: string }[]
-	export let multiple: boolean = false
-	export let value: string[] | string = multiple ? [] : ''
-	export let placeholder: string | undefined = undefined
-	export let onSelect: Function | null = null
-	export let name: string | null = null
-	export let id: string | null = null
+	interface Props {
+		options: { label: string; value: string }[];
+		multiple?: boolean;
+		value?: string[] | string;
+		placeholder?: string | undefined;
+		onSelect?: Function | null;
+		name?: string | null;
+		id?: string | null;
+	}
 
-	let isOpen = false
-	let isInput = multiple
-	let inputValue = ''
-	let inputRef: HTMLInputElement
+	let {
+		options = $bindable(),
+		multiple = false,
+		value = $bindable(multiple ? [] : ''),
+		placeholder = undefined,
+		onSelect = null,
+		name = null,
+		id = null
+	}: Props = $props();
+
+	let isOpen = $state(false)
+	let isInput = $state(multiple)
+	let inputValue = $state('')
+	let inputRef: HTMLInputElement = $state()
 
 	let hoveredTag: string | undefined
-	let hoveredOption: { label: string; value: string } | undefined
+	let hoveredOption: { label: string; value: string } | undefined = $state()
 
-	$: filteredOptions = options.filter((option) => option.label.toLowerCase().includes(inputValue.toLowerCase()))
+	let filteredOptions = $derived(options.filter((option) => option.label.toLowerCase().includes(inputValue.toLowerCase())))
 
 	const [floatingRef, floatingContent] = createFloatingActions({
 		strategy: 'absolute',
@@ -119,24 +133,24 @@
 	}
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
 <div
 	class="bg-fields rounded-1 pos-relative interactions-ring flex min-h-10 w-[var(--width)] w-full flex-col justify-center p-2"
 	use:clickOutside
 	use:focusOutside
 	use:floatingRef
-	on:clickoutside={closeDropDown}
-	on:focusoutside={() => {
+	onclickoutside={closeDropDown}
+	onfocusoutside={() => {
 		if (!multiple) isInput = false
 		closeDropDown()
 	}}
-	on:focus={async (e) => {
+	onfocus={async (e) => {
 		isInput = true
 		isOpen = true
 		await tick()
 		inputRef.focus()
 	}}
-	on:keydown={handleKeydown}
+	onkeydown={handleKeydown}
 	role="combobox"
 	aria-controls="options-list"
 	aria-expanded={isOpen}
@@ -148,7 +162,7 @@
 				<button
 					class="bg-primary text-text-alt rounded-1 text-3 font-500 hover:(bg-[var(--color-semantic-red)] text-text) p-y-1 p-x-3 text-center"
 					type="button"
-					on:click={() => {
+					onclick={() => {
 						removeTag(tag)
 						onSelect?.()
 					}}
@@ -171,23 +185,23 @@
 			class:hidden={!isInput}
 			bind:value={inputValue}
 			bind:this={inputRef}
-			on:blur={handleBlur}
-			on:focus={handleInputFocus}
-			on:input|preventDefault={() => {
+			onblur={handleBlur}
+			onfocus={handleInputFocus}
+			oninput={preventDefault(() => {
 				hoveredOption = undefined
-			}}
+			})}
 			type="text"
 		/>
 		<button
 			type="button"
-			on:click={() => (isOpen = !isOpen)}
+			onclick={() => (isOpen = !isOpen)}
 			class="hover:(bg-muted) rounded-1 focus:(bg-muted outline-0) flex size-8 content-center items-center justify-center"
 		>
 			<div class="i-tabler-caret-down text-5"></div>
 		</button>
 	</div>
 
-	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 	<ul
 		class="rounded-1 pos-absolute outline-(2 solid grey-2) z-1 bg-bg scrollbar:w-0 max-h-40 w-full overflow-auto p-1"
 		class:hidden={!(isOpen && filteredOptions.length !== 0)}
@@ -197,20 +211,20 @@
 		{#each filteredOptions as option}
 			<li class="w-full" use:scrollAction={{ isScroll: option === hoveredOption }}>
 				<button
-					on:click={() => {
+					onclick={() => {
 						handleOptionClick(option)
 					}}
-					on:keydown={(e) => {
+					onkeydown={(e) => {
 						if (e.key != 'Tab') e.preventDefault()
 					}}
 					class="text-3 bg-bg data-[selected=true]:bg-muted data-[hovered=true]:bg-grey-2
 					[&[data-selected=true][data-hovered=true]]:bg-grey-2 w-full p-2"
 					data-selected={multiple ? value.includes(option.value) : value === option.value}
 					data-hovered={hoveredOption?.value === option.value}
-					on:mouseenter={() => {
+					onmouseenter={() => {
 						hoveredOption = option
 					}}
-					on:mouseleave={() => {
+					onmouseleave={() => {
 						hoveredOption = undefined
 					}}
 					type="button"

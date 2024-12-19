@@ -7,9 +7,13 @@
 	import Header from '$lib/components/Header.svelte'
 	import { setContext } from 'svelte'
 
-	export let form
-	let loginModal = false
-	let signupModal = false
+	interface Props {
+		form: any;
+	}
+
+	let { form = $bindable() }: Props = $props();
+	let loginModal = $state(false)
+	let signupModal = $state(false)
 
 	function showModal(modal: 'login' | 'signup') {
 		form = null
@@ -41,7 +45,7 @@
 				your expenses
 			</p>
 			{#if !$page.data?.user}
-				<button class="rounded-1 bg-primary text-text-alt m-t-4 p-x-1 p-y-1" on:click={() => (signupModal = true)}
+				<button class="rounded-1 bg-primary text-text-alt m-t-4 p-x-1 p-y-1" onclick={() => (signupModal = true)}
 					>Get Started</button
 				>
 			{:else}

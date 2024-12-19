@@ -2,7 +2,11 @@
 	import { getContext } from 'svelte'
 	import AuthForm from './AuthForm.svelte'
 
-	export let form: any
+	interface Props {
+		form: any;
+	}
+
+	let { form }: Props = $props();
 	const showModal: (modal: 'login' | 'signup') => void = getContext('authModals')
 </script>
 
@@ -26,7 +30,7 @@
 		<button
 			class="decoration-underline focus:(outline outline-text-alt outline-2) rounded-1 underline-offset-2"
 			type="button"
-			on:click={() => showModal('login')}>Log in</button
+			onclick={() => showModal('login')}>Log in</button
 		>
 	</span>
 </div>

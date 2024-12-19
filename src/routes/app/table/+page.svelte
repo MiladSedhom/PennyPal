@@ -1,3 +1,4 @@
+<!-- @migration-task Error while migrating Svelte code: `<tr>` is invalid inside `<table>` -->
 <script lang="ts">
 	import TableCell from './TableCell.svelte'
 	import { page } from '$app/stores'

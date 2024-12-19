@@ -8,7 +8,7 @@
 <div>
 	<button
 		class="i-tabler-color-filter text-18px bg-primary"
-		on:click={() => {
+		onclick={() => {
 			const colors = ['green', 'blue', 'orange', 'pink']
 			const newColorIndex = $color ? (colors.indexOf($color) + 1) % colors.length : 0
 			$color = colors.at(newColorIndex)
@@ -17,7 +17,7 @@
 
 	<button
 		class="i-tabler-moon-stars dark:i-tabler-sun text-5"
-		on:click={() => {
+		onclick={() => {
 			$theme = $theme === 'dark' ? 'light' : 'dark'
 		}}
 	>

@@ -1,4 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="30rem" height="30rem" viewBox="0 0 128 128" {...$$props}>
+<script>
+	/** @type {{[key: string]: any}} */
+	let { ...props } = $props();
+</script>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="30rem" height="30rem" viewBox="0 0 128 128" {...props}>
 	<path
 		class="shadow"
 		fill="#1f8956"
