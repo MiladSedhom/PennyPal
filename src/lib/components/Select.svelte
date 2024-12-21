@@ -146,12 +146,13 @@
 		<div class="bg-fields rounded-1 p-x-2 m-b-2 flex flex-wrap gap-2">
 			{#each value as tag}
 				<button
-					class="bg-primary text-text-alt rounded-1 text-3 font-500 hover:(bg-[var(--color-semantic-red)] text-text) p-y-1 p-x-3 text-center"
+					class="bg-primary text-text-alt rounded-1 text-3 font-500 hover:(bg-[var(--color-semantic-red)] text-text) p-y-1 p-x-3 data-[selected='true']:(bg-red-6 text-white) hover:(bg-red-6 text-white) focus-visible:(bg-red-6 text-white) text-center"
 					type="button"
 					on:click={() => {
 						removeTag(tag)
 						onSelect?.()
 					}}
+					data-selected={tag === hoveredTag}
 					>{tag}
 				</button>
 			{/each}
@@ -181,6 +182,7 @@
 		<button
 			type="button"
 			on:click={() => (isOpen = !isOpen)}
+			aria-label="toggle dropdown"
 			class="hover:(bg-muted) rounded-1 focus:(bg-muted outline-0) flex size-8 content-center items-center justify-center"
 		>
 			<div class="i-tabler-caret-down text-5"></div>
