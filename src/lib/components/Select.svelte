@@ -30,6 +30,7 @@
 
 	//functions
 	const toggleSelectValue = (v: string) => {
+		console.log({ v })
 		if (!Array.isArray(value)) return
 		value.includes(v) ? value.splice(value.indexOf(v), 1) : value.push(v)
 		// add option if it doesn't exit
@@ -43,6 +44,7 @@
 		else if (options.map((o) => o.value).includes(v)) value = v
 		onSelect?.(value)
 		!multiple && (isOpen = false)
+		inputValue = ''
 	}
 
 	const handleInputFocus = () => {
@@ -50,6 +52,7 @@
 	}
 
 	const handleKeydown = (e: any) => {
+		console.log('on keydown')
 		if (e.key === 'Enter') {
 			e.preventDefault()
 			if (hoveredOption) {
@@ -106,6 +109,7 @@
 	}
 
 	const handleOptionClick = (option: any) => {
+		console.log('handle option click')
 		select(option.value)
 	}
 
@@ -143,7 +147,7 @@
 	tabindex="0"
 >
 	{#if multiple && value.length != 0}
-		<div class="bg-fields rounded-1 p-x-2 m-b-2 flex flex-wrap gap-2">
+		<div class="bg-fields rounded-1 p-x-2 m-b-2 flex flex-wrap gap-2" on:blur={handleBlur}>
 			{#each value as tag}
 				<button
 					class="bg-primary text-text-alt rounded-1 text-3 font-500 hover:(bg-[var(--color-semantic-red)] text-text) p-y-1 p-x-3 data-[selected='true']:(bg-red-6 text-white) hover:(bg-red-6 text-white) focus-visible:(bg-red-6 text-white) text-center"
@@ -172,7 +176,6 @@
 			class:hidden={!isInput}
 			bind:value={inputValue}
 			bind:this={inputRef}
-			on:blur={handleBlur}
 			on:focus={handleInputFocus}
 			on:input|preventDefault={() => {
 				hoveredOption = undefined
