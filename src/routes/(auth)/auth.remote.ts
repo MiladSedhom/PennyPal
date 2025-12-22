@@ -12,10 +12,10 @@ export const getLoggedInUser = query(async () => {
 
 	if (!locals.user && url.pathname !== '/login' && url.pathname !== '/register') {
 		console.log('No logged in user, redirecting to /login')
-		return redirect(302, '/login')
+		throw redirect(302, '/login')
 	}
 
-	return locals.user
+	return locals.user!
 })
 
 export const login = form(credentialsSchema, async ({ username, password }) => {
