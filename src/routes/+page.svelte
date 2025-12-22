@@ -5,7 +5,7 @@
 	const user = $derived(await getLoggedInUser())
 </script>
 
-<div class="bg-[#101211] text-[#ADEFE6] p-4 w-screen h-screen">
+<div class="p-4">
 	<h1 class="text-[2rem] font-black">Welcome to SvelteKit</h1>
 	<p>
 		Visit <a class="underline hover:text-white active:text-amber-100" href="https://svelte.dev/docs/kit"

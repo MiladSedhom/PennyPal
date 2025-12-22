@@ -51,6 +51,7 @@
 	},
 	"dependencies": {
 		"@node-rs/argon2": "^2.0.2",
+		"mode-watcher": "^1.1.0",
 		"postgres": "^3.4.7",
 		"valibot": "^1.2.0"
 	}
