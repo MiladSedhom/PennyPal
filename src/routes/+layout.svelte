@@ -19,7 +19,7 @@
 <ModeWatcher />
 
 <div class="grid grid-cols-[5rem_auto] w-screen h-screen">
-	<nav class="bg-accent flex flex-col items-center p-4">
+	<nav class="bg-accent flex flex-col items-center p-4 max-h-screen">
 		<Button href="/" variant="outline" size="icon">
 			<span class="font-black font-sans text-xl">P</span>
 		</Button>
@@ -40,7 +40,7 @@
 			</Button>
 		</div>
 	</nav>
-	<div>
+	<div class="overflow-auto">
 		{@render children()}
 	</div>
 </div>
