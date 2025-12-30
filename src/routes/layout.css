@@ -44,7 +44,7 @@
 	--foreground: oklch(0.9473 0.0025 165.07);
 	--card: oklch(0.6386 0.1048 185.87);
 	--card-foreground: oklch(0.9473 0.0025 165.07);
-	--popover: oklch(0.6386 0.1048 185.87);
+	--popover: oklch(0.1795 0.0038 164.58);
 	--popover-foreground: oklch(0.9473 0.0025 165.07);
 	--primary: oklch(0.922 0 0);
 	--primary-foreground: oklch(0.6386 0.1048 185.87);
@@ -118,4 +118,16 @@
 	body {
 		@apply bg-background text-foreground;
 	}
+}
+
+@utility scale-in {
+	@apply scale-100 rotate-0 opacity-100 transition-all!;
+}
+
+@utility scale-out {
+	@apply scale-0 rotate-90 opacity-0 transition-all!;
+}
+
+@utility scale-out-reverse {
+	@apply scale-0 -rotate-90 opacity-0 transition-all!;
 }
