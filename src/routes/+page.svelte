@@ -7,10 +7,19 @@
 	import XIcon from '@lucide/svelte/icons/x'
 	import DatePicker from '$lib/components/ui/date-picker/date-picker.svelte'
 	import { type DateValue, getLocalTimeZone, today } from '@internationalized/date'
+	import { formatRelativeTime } from '$lib/utils'
+	import PaymentTable from '$lib/components/payment-table.svelte'
 
 	const user = $derived(await getLoggedInUser())
 
-	const paymentsFields = $state<{ amount: number; tags: number[]; note: string; date: DateValue }[]>([
+	const formatter = new Intl.DateTimeFormat('en-US', {
+		year: 'numeric',
+		month: 'long',
+		day: 'numeric',
+		weekday: 'long'
+	})
+
+	const paymentsForms = $state<{ amount: number; tags: number[]; note: string; date: DateValue }[]>([
 		{ amount: 0, tags: [], note: '', date: today(getLocalTimeZone()) }
 	])
 </script>
@@ -18,6 +27,8 @@
 <div class="p-4">
 	<h1>Hi, {user?.username}!</h1>
 	<p>Your user ID is {user?.id}.</p>
+
+	<PaymentTable payments={await getPayments()} />
 
 	{#each await getPayments() as payment}
 		<div class="border p-2 my-2">
@@ -27,13 +38,13 @@
 		</div>
 	{/each}
 
-	{#each paymentsFields as paymentField, index}
+	{#each paymentsForms as p, index}
 		<form class="p-4 w-120 max-w-200 gap-2 flex">
-			<Input bind:value={paymentField.amount} type="number" placeholder="amount" />
-			<DatePicker bind:value={paymentField.date} />
-			<Textarea bind:value={paymentField.note} placeholder="note" />
+			<Input bind:value={p.amount} type="number" placeholder="amount" />
+			<DatePicker bind:value={p.date} />
+			<Textarea bind:value={p.note} placeholder="note" />
 			{#if index > 0}
-				<Button variant="destructive" type="button" size="icon" onclick={() => paymentsFields.splice(index, 1)}>
+				<Button variant="destructive" type="button" size="icon" onclick={() => paymentsForms.splice(index, 1)}>
 					<XIcon />
 				</Button>
 			{/if}
@@ -42,7 +53,7 @@
 	<Button
 		variant="default"
 		type="button"
-		onclick={() => paymentsFields.push({ amount: 0, tags: [], note: '', date: paymentsFields.at(-1)!.date })}
+		onclick={() => paymentsForms.push({ amount: 0, tags: [], note: '', date: paymentsForms.at(-1)!.date })}
 	>
 		Add Payment
 	</Button>
@@ -51,7 +62,7 @@
 		type="button"
 		onclick={async () => {
 			await createPayments({
-				payments: paymentsFields.map((pf) => ({
+				payments: paymentsForms.map((pf) => ({
 					amount: pf.amount,
 					note: pf.note,
 					tags: [] as number[],
