@@ -8,7 +8,24 @@ import * as v from 'valibot'
 export const getPayments = query(async () => {
 	const user = await getLoggedInUser()
 
-	return db.select().from(payment).where(eq(payment.userId, user.id))
+	const payments = await db.query.payment.findMany({
+		where: eq(payment.userId, user.id),
+		with: {
+			paymentsToTags: {
+				with: {
+					tag: true
+				}
+			}
+		}
+	})
+
+	return payments.map((p) => ({
+		id: p.id,
+		amount: p.amount,
+		note: p.note,
+		createdAt: p.createdAt,
+		tags: p.paymentsToTags.map((ptt) => ({ id: ptt.tag.id, name: ptt.tag.name }))
+	}))
 })
 
 const paymentsSchema = v.object({
@@ -24,6 +41,8 @@ const paymentsSchema = v.object({
 
 export const createPayments = command(paymentsSchema, async ({ payments }) => {
 	const user = await getLoggedInUser()
+
+	console.log({ payments })
 
 	await db.transaction(async (tx) => {
 		const insertedPayments = await tx
