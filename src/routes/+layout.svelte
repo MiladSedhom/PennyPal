@@ -6,7 +6,7 @@
 	import SunIcon from '@lucide/svelte/icons/sun'
 	import MoonIcon from '@lucide/svelte/icons/moon'
 	import LogOutIcon from '@lucide/svelte/icons/log-out'
-	import { getLoggedInUser, logout } from './(auth)/auth.remote'
+	import { getLoggedInUser, logout } from '../lib/remote/auth.remote'
 
 	let { children } = $props()
 

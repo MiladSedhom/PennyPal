@@ -1,8 +1,8 @@
-import { command, form, query } from '$app/server'
+import { command, query } from '$app/server'
 import { db } from '$lib/server/db'
 import { payment, paymentsToTags, tag } from '$lib/server/db/schema'
 import { eq } from 'drizzle-orm'
-import { getLoggedInUser } from './(auth)/auth.remote'
+import { getLoggedInUser } from '$lib/remote/auth.remote'
 import * as v from 'valibot'
 
 export const getPayments = query(async () => {
@@ -69,19 +69,3 @@ export const createPayments = command(paymentsSchema, async ({ payments }) => {
 		}
 	})
 })
-
-export const getTags = query(async () => {
-	const user = await getLoggedInUser()
-
-	return db.select().from(tag).where(eq(tag.userId, user.id))
-})
-
-export const createTag = form(
-	v.object({
-		name: v.string()
-	}),
-	async ({ name }) => {
-		const user = await getLoggedInUser()
-		await db.insert(tag).values({ name, userId: user.id })
-	}
-)

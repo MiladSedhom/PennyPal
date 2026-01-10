@@ -18,12 +18,14 @@
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js'
 	import { Input } from '$lib/components/ui/input/index.js'
 	import { FlexRender, createSvelteTable, renderComponent, renderSnippet } from '$lib/components/ui/data-table/index.js'
-	import SortButton from './ui/data-table/sort-button.svelte'
+	import SortButton from '../ui/data-table/sort-button.svelte'
+	import TagsList from './tags-list.svelte'
 
 	type Payment = {
 		amount: number
 		createdAt: string | Date
 		note: string | null
+		tags: { id: number; name: string }[]
 	}
 	interface Props {
 		payments: Payment[]
@@ -91,6 +93,23 @@
 				})
 				return renderSnippet(dateCellSnippet, {
 					date: new Date(row.original.createdAt)
+				})
+			},
+			enableSorting: true,
+			enableHiding: true
+		},
+		{
+			accessorKey: 'tags',
+			header: ({ column }) =>
+				renderComponent(SortButton, {
+					variant: 'ghost',
+					onclick: column.getToggleSortingHandler(),
+					text: 'Tags',
+					isSorted: column.getIsSorted()
+				}),
+			cell: ({ row }) => {
+				return renderComponent(TagsList, {
+					tags: row.original.tags
 				})
 			},
 			enableSorting: true,
@@ -187,10 +206,10 @@
 	})
 </script>
 
-<div class="-mb-8 w-full">
+<div class="w-full">
 	<div class="flex items-center py-4">
 		<Input
-			placeholder="Filter emails..."
+			placeholder="Search"
 			value={(table.getColumn('amount')?.getFilterValue() as string) ?? ''}
 			oninput={(e) => table.getColumn('amount')?.setFilterValue(e.currentTarget.value)}
 			onchange={(e) => {

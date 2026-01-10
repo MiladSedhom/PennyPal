@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button'
 	import { credentialsSchema } from '$lib/schemas/credentials'
-	import { login, register } from '../auth.remote'
+	import { login, register } from '../../../lib/remote/auth.remote'
 
 	const error = $derived(login.fields.allIssues()?.at(0) ?? register.fields.allIssues()?.at(0))
 </script>

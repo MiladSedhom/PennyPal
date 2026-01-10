@@ -5,12 +5,15 @@
 	import { Button } from '$lib/components/ui/button/index.js'
 	import { Calendar } from '$lib/components/ui/calendar/index.js'
 	import * as Popover from '$lib/components/ui/popover/index.js'
+	import type { ClassValue } from 'svelte/elements'
 
 	const df = new DateFormatter('en-US', {
 		dateStyle: 'long'
 	})
 
-	let { value = $bindable() } = $props<{ value?: DateValue }>()
+	type Props = { value?: DateValue; class: ClassValue }
+
+	let { value = $bindable(), class: className, ...restProps }: Props = $props()
 </script>
 
 <Popover.Root>
@@ -18,8 +21,8 @@
 		{#snippet child({ props })}
 			<Button
 				variant="outline"
-				class={cn('w-[280px] justify-start text-start font-normal', !value && 'text-muted-foreground')}
-				{...props}
+				class={cn('w-[280px] justify-start text-start font-normal ', !value && 'text-muted-foreground ', className)}
+				{...restProps}
 			>
 				<CalendarIcon class="me-2 size-4" />
 				{value ? df.format(value.toDate(getLocalTimeZone())) : 'Select a date'}
