@@ -10,12 +10,11 @@
 	import * as Select from '$lib/components/ui/select/index.js'
 	import * as Dialog from '$lib/components/ui/dialog'
 
-	let open = $state(true)
+	let open = $state(false)
 
-	const paymentsForms = $state<{ amount: number; tags: number[]; note: string; date: DateValue }[]>([
-		{ amount: 0, tags: [], note: '', date: today(getLocalTimeZone()) },
-		{ amount: 0, tags: [], note: '', date: today(getLocalTimeZone()) }
-	])
+	type paymentForm = { amount: number; tags: number[]; note: string; date: DateValue }
+
+	const paymentsForms = $state<paymentForm[]>([{ amount: 0, tags: [], note: '', date: today(getLocalTimeZone()) }])
 
 	const tags = $derived(await getTags())
 </script>
@@ -30,12 +29,12 @@
 />
 
 <Dialog.Root bind:open>
-	<Dialog.Content class=" min-h-[45%] h-[50%] overflow-y-scroll flex flex-col justify-between gap-8">
-		<Dialog.Header class="w-full max-h-12 stikcy top-0">
+	<Dialog.Content class=" min-h-[45%] h-[50%] flex flex-col justify-between gap-8">
+		<Dialog.Header class="w-full max-h-12 sticky top-0">
 			<Dialog.Title class="text-lg font-semibold text-start w-full">Add Payments</Dialog.Title>
 		</Dialog.Header>
 
-		<div class="flex flex-col gap-8 items-center justify-start *:max-w-120 grow">
+		<div class="flex flex-col gap-8 items-center justify-start *:max-w-120 grow overflow-y-auto no-scrollbar p-2">
 			<ul class="flex flex-col gap-6">
 				{#each paymentsForms as p, index}
 					<li>
@@ -44,16 +43,21 @@
 						>
 							<Input bind:value={p.amount} class="max-w-full" type="number" placeholder="amount" />
 
-							<DatePicker bind:value={p.date} class="bg-amber-400 w-full col-span-(--cols) sm:col-span-1" />
+							<DatePicker
+								bind:value={p.date}
+								class="bg-amber-400 w-full col-span-(--cols) sm:col-span-1"
+								title={p.date.toString()}
+							/>
 
 							<Select.Root type="multiple" onValueChange={(values) => (p.tags = values.map((v) => parseInt(v)))}>
-								<Select.Trigger class="w-full col-span-(--cols) md:col-span-1">
-									{@const tagNames = tags
-										.filter((t) => p.tags.includes(t.id))
-										.map((t) => t.name)
-										.join(', ')}
-									<span class="truncate" title={tagNames}>
-										{p.tags.length === 0 ? 'Select tags...' : `${tagNames}`}
+								<Select.Trigger class="w-full col-span-(--cols) md:col-span-1 md:max-w-42">
+									{@const tagNames = tags.filter((t) => p.tags.includes(t.id)).map((t) => t.name)}
+									{@const tagNamesStr =
+										tagNames.length < 4
+											? tagNames.join(', ')
+											: `${tagNames.at(1)}, ${tagNames.at(2)}, (+${tagNames.length - 3}), ${tagNames.at(-1)}`}
+									<span class="truncate" title={tagNames.join(', ')}>
+										{p.tags.length === 0 ? 'Select tags...' : `${tagNamesStr}`}
 									</span>
 								</Select.Trigger>
 								<Select.Content>
@@ -82,7 +86,7 @@
 				{/each}
 			</ul>
 		</div>
-		<div class="flex *:grow w-full max-w-full gap-4">
+		<Dialog.Footer class="flex *:grow w-full max-w-full gap-4">
 			<Button
 				variant="outline"
 				type="button"
@@ -106,6 +110,6 @@
 			>
 				Submit Payments
 			</Button>
-		</div>
+		</Dialog.Footer>
 	</Dialog.Content>
 </Dialog.Root>
