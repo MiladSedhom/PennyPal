@@ -120,6 +120,11 @@
 	}
 }
 
+@utility no-scrollbar {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
 @utility scale-in {
 	@apply scale-100 rotate-0 opacity-100 transition-all!;
 }
