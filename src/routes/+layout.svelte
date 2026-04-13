@@ -19,9 +19,9 @@
 <ModeWatcher />
 
 <div class="grid grid-cols-[5rem_auto] w-screen h-screen">
-	<nav class="bg-accent flex flex-col items-center p-4 max-h-screen">
+	<nav class="bg-bg border-r border-accent flex flex-col items-center p-4 max-h-screen">
 		<Button href="/" variant="outline" size="icon">
-			<span class="font-black font-sans text-xl">P</span>
+			<span class="font-black font-sans text-2xl text-primary">P</span>
 		</Button>
 		<div class="mt-auto flex flex-col items-center gap-2">
 			{#if loggedInUser}
