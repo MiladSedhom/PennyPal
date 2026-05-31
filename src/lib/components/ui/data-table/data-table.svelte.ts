@@ -3,8 +3,8 @@ import {
 	type TableOptions,
 	type TableOptionsResolved,
 	type TableState,
-	createTable,
-} from "@tanstack/table-core";
+	createTable
+} from '@tanstack/table-core'
 
 /**
  * Creates a reactive TanStack table object for Svelte.
@@ -38,18 +38,15 @@ export function createSvelteTable<TData extends RowData>(options: TableOptions<T
 			state: {},
 			onStateChange() {},
 			renderFallbackValue: null,
-			mergeOptions: (
-				defaultOptions: TableOptions<TData>,
-				options: Partial<TableOptions<TData>>
-			) => {
-				return mergeObjects(defaultOptions, options);
-			},
+			mergeOptions: (defaultOptions: TableOptions<TData>, options: Partial<TableOptions<TData>>) => {
+				return mergeObjects(defaultOptions, options)
+			}
 		},
 		options
-	);
+	)
 
-	const table = createTable(resolvedOptions);
-	let state = $state<Partial<TableState>>(table.initialState);
+	const table = createTable(resolvedOptions)
+	let state = $state<Partial<TableState>>(table.initialState)
 
 	function updateOptions() {
 		table.setOptions((prev) => {
@@ -58,28 +55,26 @@ export function createSvelteTable<TData extends RowData>(options: TableOptions<T
 
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				onStateChange: (updater: any) => {
-					if (updater instanceof Function) state = updater(state);
-					else state = mergeObjects(state, updater);
+					if (updater instanceof Function) state = updater(state)
+					else state = mergeObjects(state, updater)
 
-					options.onStateChange?.(updater);
-				},
-			});
-		});
+					options.onStateChange?.(updater)
+				}
+			})
+		})
 	}
 
-	updateOptions();
+	updateOptions()
 
 	$effect.pre(() => {
-		updateOptions();
-	});
+		updateOptions()
+	})
 
-	return table;
+	return table
 }
 
-type MaybeThunk<T extends object> = T | (() => T | null | undefined);
-type Intersection<T extends readonly unknown[]> = (T extends [infer H, ...infer R]
-	? H & Intersection<R>
-	: unknown) & {};
+type MaybeThunk<T extends object> = T | (() => T | null | undefined)
+type Intersection<T extends readonly unknown[]> = (T extends [infer H, ...infer R] ? H & Intersection<R> : unknown) & {}
 
 /**
  * Lazily merges several objects (or thunks) while preserving
@@ -92,51 +87,51 @@ export function mergeObjects<Sources extends readonly MaybeThunk<any>[]>(
 	...sources: Sources
 ): Intersection<{ [K in keyof Sources]: Sources[K] }> {
 	const resolve = <T extends object>(src: MaybeThunk<T>): T | undefined =>
-		typeof src === "function" ? (src() ?? undefined) : src;
+		typeof src === 'function' ? (src() ?? undefined) : src
 
 	const findSourceWithKey = (key: PropertyKey) => {
 		for (let i = sources.length - 1; i >= 0; i--) {
-			const obj = resolve(sources[i]);
-			if (obj && key in obj) return obj;
+			const obj = resolve(sources[i])
+			if (obj && key in obj) return obj
 		}
-		return undefined;
-	};
+		return undefined
+	}
 
 	return new Proxy(Object.create(null), {
 		get(_, key) {
-			const src = findSourceWithKey(key);
+			const src = findSourceWithKey(key)
 
-			return src?.[key as never];
+			return src?.[key as never]
 		},
 
 		has(_, key) {
-			return !!findSourceWithKey(key);
+			return !!findSourceWithKey(key)
 		},
 
 		ownKeys(): (string | symbol)[] {
 			// eslint-disable-next-line svelte/prefer-svelte-reactivity
-			const all = new Set<string | symbol>();
+			const all = new Set<string | symbol>()
 			for (const s of sources) {
-				const obj = resolve(s);
+				const obj = resolve(s)
 				if (obj) {
 					for (const k of Reflect.ownKeys(obj) as (string | symbol)[]) {
-						all.add(k);
+						all.add(k)
 					}
 				}
 			}
-			return [...all];
+			return [...all]
 		},
 
 		getOwnPropertyDescriptor(_, key) {
-			const src = findSourceWithKey(key);
-			if (!src) return undefined;
+			const src = findSourceWithKey(key)
+			if (!src) return undefined
 			return {
 				configurable: true,
 				enumerable: true,
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				value: (src as any)[key],
-				writable: true,
-			};
-		},
-	}) as Intersection<{ [K in keyof Sources]: Sources[K] }>;
+				writable: true
+			}
+		}
+	}) as Intersection<{ [K in keyof Sources]: Sources[K] }>
 }

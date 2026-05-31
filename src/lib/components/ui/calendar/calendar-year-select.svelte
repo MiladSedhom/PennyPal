@@ -1,19 +1,19 @@
 <script lang="ts">
-	import { Calendar as CalendarPrimitive } from "bits-ui";
-	import { cn, type WithoutChildrenOrChild } from "$lib/utils.js";
-	import ChevronDownIcon from "@lucide/svelte/icons/chevron-down";
+	import { Calendar as CalendarPrimitive } from 'bits-ui'
+	import { cn, type WithoutChildrenOrChild } from '$lib/utils.js'
+	import ChevronDownIcon from '@lucide/svelte/icons/chevron-down'
 
 	let {
 		ref = $bindable(null),
 		class: className,
 		value,
 		...restProps
-	}: WithoutChildrenOrChild<CalendarPrimitive.YearSelectProps> = $props();
+	}: WithoutChildrenOrChild<CalendarPrimitive.YearSelectProps> = $props()
 </script>
 
 <span
 	class={cn(
-		"has-focus:border-ring border-input has-focus:ring-ring/50 relative flex rounded-md border shadow-xs has-focus:ring-[3px]",
+		'has-focus:border-ring border-input has-focus:ring-ring/50 relative flex rounded-md border shadow-xs has-focus:ring-[3px]',
 		className
 	)}
 >
@@ -23,9 +23,7 @@
 				{#each yearItems as yearItem (yearItem.value)}
 					<option
 						value={yearItem.value}
-						selected={value !== undefined
-							? yearItem.value === value
-							: yearItem.value === selectedYearItem.value}
+						selected={value !== undefined ? yearItem.value === value : yearItem.value === selectedYearItem.value}
 					>
 						{yearItem.label}
 					</option>

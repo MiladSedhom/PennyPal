@@ -44,12 +44,7 @@ export async function getAllPayments() {
 	})
 }
 
-export async function createPayment(data: {
-	amount: number
-	note?: string
-	userId: string
-	tagIds?: number[]
-}) {
+export async function createPayment(data: { amount: number; note?: string; userId: string; tagIds?: number[] }) {
 	const { tagIds, ...paymentData } = data
 	const [payment] = await db.insert(paymentTable).values(paymentData).returning()
 
@@ -75,11 +70,7 @@ export async function updatePayment(
 ) {
 	const { tagIds, ...paymentData } = data
 
-	const [payment] = await db
-		.update(paymentTable)
-		.set(paymentData)
-		.where(eq(paymentTable.id, paymentId))
-		.returning()
+	const [payment] = await db.update(paymentTable).set(paymentData).where(eq(paymentTable.id, paymentId)).returning()
 
 	if (tagIds !== undefined) {
 		await db.delete(paymentsToTags).where(eq(paymentsToTags.paymentId, paymentId))
