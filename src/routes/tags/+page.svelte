@@ -87,9 +87,9 @@
 	<div class="grid items-start gap-4 lg:grid-cols-[1fr_1.15fr]">
 		<Card pad="xl" class="lg:sticky lg:top-4">
 			<form
-				{...createOrUpdateTag.enhance(async ({ submit, form }) => {
+				{...createOrUpdateTag.enhance(async ({ submit, element }) => {
 					if (await submit()) {
-						if (createOrUpdateTag.result?.ok) form.reset()
+						if (createOrUpdateTag.result?.ok) element.reset()
 					}
 				})}
 			>
