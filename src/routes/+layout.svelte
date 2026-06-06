@@ -10,6 +10,7 @@
 	import SearchIcon from '@lucide/svelte/icons/search'
 	import WalletIcon from '@lucide/svelte/icons/wallet'
 	import { getLoggedInUser, logout } from '../lib/remote/auth.remote'
+	import { ConfirmDialog } from '$lib/components/pp/confirm-dialog'
 
 	let { children } = $props()
 	const loggedInUser = $derived(await getLoggedInUser())
@@ -113,3 +114,5 @@
 		{@render children()}
 	</main>
 </div>
+
+<ConfirmDialog />

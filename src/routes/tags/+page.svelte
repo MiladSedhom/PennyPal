@@ -6,6 +6,7 @@
 	import Caption from '$lib/components/pp/caption.svelte'
 	import TagIconChip from '$lib/components/pp/tag-icon-chip.svelte'
 	import { Button } from '$lib/components/ui/button'
+	import { dialogs } from '$lib/components/pp/confirm-dialog'
 	import { TAG_PALETTE, TAG_COLOR_LIST, ICON_CHOICES, ICON_LIBRARY, getSwatch, getIcon } from '$lib/tag-meta'
 	import { formatMoney } from '$lib/utils'
 
@@ -64,6 +65,14 @@
 	async function remove(id: number) {
 		await deleteTag(id)
 		if (fields.id.value() === id.toString()) resetForm()
+	}
+
+	function confirmRemove(t: (typeof tagsWithPaymentCount)[number]) {
+		dialogs.danger(() => remove(t.id), {
+			title: `Delete “${t.name}”?`,
+			message: `This can't be undone.${t.count > 0 ? ` It will be removed from ${t.count} payment${t.count === 1 ? '' : 's'}.` : ''}`,
+			confirmText: 'Delete tag'
+		})
 	}
 </script>
 
@@ -210,7 +219,10 @@
 						</Button>
 						<Button
 							type="button"
-							onclick={() => fields.id.value() && remove(Number(fields.id.value()))}
+							onclick={() => {
+								const t = tagsWithPaymentCount.find((x) => x.id.toString() === fields.id.value())
+								if (t) confirmRemove(t)
+							}}
 							class="h-[40px] gap-2 rounded-full bg-transparent px-[18px] text-[13.5px] font-semibold text-(--danger) hover:bg-(--danger)/10"
 							aria-label="Delete this tag"
 						>
@@ -308,7 +320,7 @@
 						</button>
 						<button
 							type="button"
-							onclick={() => remove(t.id)}
+							onclick={() => confirmRemove(t)}
 							class="border-none bg-transparent p-1.5 text-text-mute hover:text-(--danger)"
 							aria-label="Delete tag"
 						>
