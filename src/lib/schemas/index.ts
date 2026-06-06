@@ -1,5 +1,16 @@
 import * as v from 'valibot'
 
+// Tag create/update. Submitted via a remote `form()`, so every field is a string
+// from FormData. An empty `id` means "create"; a present `id` means "update". The
+// handler coerces `id`/`budget` to numbers so the form-field types stay plain strings.
+export const tagUpsertSchema = v.object({
+	id: v.optional(v.string(), ''),
+	name: v.pipe(v.string(), v.trim(), v.minLength(1, 'Give the tag a name.'), v.maxLength(255)),
+	color: v.pipe(v.string(), v.minLength(1)),
+	icon: v.pipe(v.string(), v.minLength(1)),
+	budget: v.optional(v.string(), '')
+})
+
 export const loginOrRegisterSchema = v.object({
 	username: v.pipe(
 		v.string(),

@@ -102,6 +102,8 @@ export const ICON_CHOICES = [
 	'Tag'
 ] as const
 
+export type IconChoices = (typeof ICON_CHOICES)[number]
+
 export const DEFAULT_TAG_COLOR: TagColor = 'sage'
 export const DEFAULT_TAG_ICON = 'Tag'
 
