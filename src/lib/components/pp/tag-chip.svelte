@@ -1,27 +1,17 @@
 <script lang="ts">
-	import { getTagMeta, TAG_PALETTE } from '$lib/tag-meta'
+	import { getSwatch, getIcon } from '$lib/tag-meta'
 
-	type Props = { name: string; size?: 'sm' | 'md' }
-	const { name, size = 'md' }: Props = $props()
+	type Props = { name: string; color: string; icon: string; size?: 'sm' | 'md' }
+	const { name, color, icon, size = 'md' }: Props = $props()
 
-	const meta = $derived(getTagMeta(name))
-	const c = $derived(TAG_PALETTE[meta.color])
-	const Icon = $derived(meta.icon)
+	const c = $derived(getSwatch(color))
+	const Icon = $derived(getIcon(icon))
 	const sm = $derived(size === 'sm')
 </script>
 
 <span
-	class="inline-flex items-center whitespace-nowrap rounded-full font-semibold leading-none"
-	class:gap-[5px]={sm}
-	class:gap-1.5={!sm}
-	class:px-[9px]={sm}
-	class:py-[3px]={sm}
-	class:pl-[7px]={sm}
-	class:px-[11px]={!sm}
-	class:py-[4px]={!sm}
-	class:pl-2={!sm}
-	class:text-[11.5px]={sm}
-	class:text-[12.5px]={!sm}
+	class="inline-flex items-center whitespace-nowrap rounded-full font-semibold leading-none
+    {sm ? 'gap-[5px] py-[7px] pr-[9px] pl-[7px] text-[11.5px]' : 'gap-1.5 py-[4px] pr-[11px] pl-2 text-[12.5px]'}"
 	style:background={c.bg}
 	style:color={c.ink}
 >

@@ -12,6 +12,13 @@ export type WithoutChildren<T> = T extends { children?: any } ? Omit<T, 'childre
 export type WithoutChildrenOrChild<T> = WithoutChildren<WithoutChild<T>>
 export type WithElementRef<T, U extends HTMLElement = HTMLElement> = T & { ref?: U | null }
 
+const usd = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })
+
+/** Format a whole-dollar amount as USD, e.g. 2150 -> "$2,150". */
+export function formatMoney(dollars: number): string {
+	return usd.format(Math.round(dollars))
+}
+
 export function formatRelativeTime(date: Date, locale: string = 'en'): string {
 	const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' })
 

@@ -1,4 +1,4 @@
-import { pgTable, uuid, varchar, timestamp, integer, text, primaryKey } from 'drizzle-orm/pg-core'
+import { pgTable, uuid, varchar, timestamp, integer, text, primaryKey, date, unique } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm'
 
 export const timestamps = {
@@ -19,6 +19,7 @@ export const usersRelations = relations(user, ({ many }) => ({
 	oauthAccounts: many(oauthAccount),
 	payments: many(payment),
 	tags: many(tag),
+	budgets: many(budget),
 	sessions: many(session)
 }))
 
@@ -39,13 +40,23 @@ export const paymentsRelations = relations(payment, ({ one, many }) => ({
 	paymentsToTags: many(paymentsToTags)
 }))
 
-export const tag = pgTable('Tag', {
-	id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
-	name: varchar('name', { length: 255 }).notNull().unique(),
-	userId: uuid('userId')
-		.notNull()
-		.references(() => user.id)
-})
+export const tag = pgTable(
+	'Tag',
+	{
+		id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
+		name: varchar('name', { length: 255 }).notNull(),
+		color: varchar('color', { length: 32 }).notNull().default('sage'),
+		icon: varchar('icon', { length: 64 }).notNull().default('Tag'),
+		// Optional per-tag monthly budget, in whole dollars.
+		budget: integer('budget'),
+		userId: uuid('userId')
+			.notNull()
+			.references(() => user.id)
+	},
+	(table) => ({
+		namePerUser: unique('Tag_userId_name_unique').on(table.userId, table.name)
+	})
+)
 export const tagsRelations = relations(tag, ({ many, one }) => ({
 	paymentsToTags: many(paymentsToTags),
 	user: one(user, {
@@ -76,6 +87,25 @@ export const paymentsToTagsRelations = relations(paymentsToTags, ({ one }) => ({
 	tag: one(tag, {
 		fields: [paymentsToTags.tagId],
 		references: [tag.id]
+	})
+}))
+
+// A budget is an overall monthly spending cap over a [startMonth, endMonth] range.
+// endMonth may be null (open-ended). Amounts are whole dollars.
+export const budget = pgTable('Budget', {
+	id: integer('id').primaryKey().generatedAlwaysAsIdentity(),
+	amount: integer('amount').notNull(),
+	startMonth: date('startMonth', { mode: 'date' }).notNull(),
+	endMonth: date('endMonth', { mode: 'date' }),
+	...timestamps,
+	userId: uuid('userId')
+		.notNull()
+		.references(() => user.id)
+})
+export const budgetsRelations = relations(budget, ({ one }) => ({
+	user: one(user, {
+		fields: [budget.userId],
+		references: [user.id]
 	})
 }))
 

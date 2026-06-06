@@ -20,6 +20,12 @@ const config = {
 		experimental: {
 			async: true
 		}
+	},
+	vitePlugin: {
+		inspector: {
+			toggleKeyCombo: 'alt-x',
+			showToggleButton: 'always'
+		}
 	}
 }
 

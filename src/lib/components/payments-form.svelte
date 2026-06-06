@@ -15,6 +15,9 @@
 	import Kbd from '$lib/components/pp/kbd.svelte'
 	import TagChip from '$lib/components/pp/tag-chip.svelte'
 	import TagIconChip from '$lib/components/pp/tag-icon-chip.svelte'
+	import { formatMoney } from '$lib/utils'
+
+	const { onsaved }: { onsaved?: () => void } = $props()
 
 	let open = $state(false)
 	let pickerSearch = $state('')
@@ -44,8 +47,6 @@
 		if (!s) return tags
 		return tags.filter((t) => t.name.toLowerCase().includes(s))
 	}
-
-	const fmt = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
 </script>
 
 <svelte:window
@@ -67,7 +68,7 @@
 
 <Dialog.Root bind:open>
 	<Dialog.Content
-		class="!max-w-[1100px] sm:!max-w-[1100px] gap-0 rounded-2xl border-none bg-card p-0 shadow-2xl"
+		class="!max-w-[1100px] gap-0 rounded-2xl border-none bg-card p-0 shadow-2xl sm:!max-w-[1100px]"
 		showCloseButton={false}
 	>
 		<div class="flex items-center justify-between border-b border-border-soft px-7 py-5">
@@ -116,15 +117,16 @@
 
 					<DatePicker
 						bind:value={p.date}
-						class="w-full !border-transparent !bg-transparent !rounded-[10px] !px-2.5 hover:!bg-bg-warm focus:!border-primary"
+						class="w-full !rounded-[10px] !border-transparent !bg-transparent !px-2.5 hover:!bg-bg-warm focus:!border-primary"
 						title={p.date.toString()}
 					/>
 
 					<input
 						type="number"
 						bind:value={p.amount}
-						placeholder="0.00"
-						step="0.01"
+						placeholder="0"
+						step="1"
+						min="0"
 						class="w-full rounded-[10px] border border-transparent bg-transparent px-2.5 py-2 text-right font-mono text-[13.5px] font-medium text-foreground outline-none hover:bg-bg-warm focus:border-primary"
 					/>
 
@@ -139,7 +141,7 @@
 									{#if p.tags.length > 0}
 										<span class="flex flex-wrap items-center gap-1.5">
 											{#each tags.filter((t) => p.tags.includes(t.id)) as tg (tg.id)}
-												<TagChip name={tg.name} size="sm" />
+												<TagChip name={tg.name} color={tg.color} icon={tg.icon} size="sm" />
 											{/each}
 										</span>
 									{:else}
@@ -169,7 +171,7 @@
 										class:bg-bg-warm={sel}
 										class:bg-transparent={!sel}
 									>
-										<TagIconChip name={tg.name} size={26} />
+										<TagIconChip color={tg.color} icon={tg.icon} size={26} />
 										<span class="flex-1 text-[13.5px] font-semibold">{tg.name}</span>
 										{#if sel}
 											<CheckIcon size={15} class="text-lime-text" />
@@ -178,14 +180,6 @@
 								{:else}
 									<div class="px-2.5 py-3 text-center text-[12.5px] text-text-mute">No tags match.</div>
 								{/each}
-							</div>
-							<div class="mt-2 border-t border-border-soft pt-2">
-								<button
-									type="button"
-									class="flex w-full items-center gap-2 rounded-[10px] border-none bg-transparent px-2.5 py-[7px] text-[13px] font-semibold text-lime-text"
-								>
-									<PlusIcon size={13} /> Create new tag
-								</button>
 							</div>
 						</Popover.Content>
 					</Popover.Root>
@@ -240,7 +234,7 @@
 			>
 				<div class="flex items-baseline gap-2">
 					<span class="font-display text-[22px] font-bold tracking-[-0.02em] text-background">
-						{fmt.format(completeTotal)}
+						{formatMoney(completeTotal)}
 					</span>
 					<span class="text-[13px] text-background/60">
 						{completeRows.length} payment{completeRows.length === 1 ? '' : 's'} ready
@@ -269,6 +263,7 @@
 						}).updates(getPayments())
 						paymentsForms.splice(0, paymentsForms.length, blank())
 						open = false
+						onsaved?.()
 					}}
 				>
 					<CheckIcon size={15} />

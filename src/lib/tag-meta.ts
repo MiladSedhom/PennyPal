@@ -102,62 +102,19 @@ export const ICON_CHOICES = [
 	'Tag'
 ] as const
 
-type TagPreset = { color: TagColor; iconName: keyof typeof ICON_LIBRARY; icon: Component }
+export const DEFAULT_TAG_COLOR: TagColor = 'sage'
+export const DEFAULT_TAG_ICON = 'Tag'
 
-const PRESET_RAW: Record<string, { color: TagColor; iconName: keyof typeof ICON_LIBRARY }> = {
-	groceries: { color: 'sage', iconName: 'ShoppingBasket' },
-	dining: { color: 'sand', iconName: 'UtensilsCrossed' },
-	restaurant: { color: 'sand', iconName: 'UtensilsCrossed' },
-	food: { color: 'sand', iconName: 'UtensilsCrossed' },
-	coffee: { color: 'sand', iconName: 'Coffee' },
-	transport: { color: 'sky', iconName: 'Bus' },
-	transit: { color: 'sky', iconName: 'Bus' },
-	travel: { color: 'sky', iconName: 'Plane' },
-	fuel: { color: 'clay', iconName: 'Fuel' },
-	gas: { color: 'clay', iconName: 'Fuel' },
-	rent: { color: 'lilac', iconName: 'House' },
-	home: { color: 'lilac', iconName: 'House' },
-	utilities: { color: 'olive', iconName: 'Plug' },
-	internet: { color: 'teal', iconName: 'Wifi' },
-	health: { color: 'rose', iconName: 'HeartPulse' },
-	medical: { color: 'rose', iconName: 'Pill' },
-	fitness: { color: 'olive', iconName: 'Dumbbell' },
-	gym: { color: 'olive', iconName: 'Dumbbell' },
-	subscriptions: { color: 'rose', iconName: 'Repeat' },
-	shopping: { color: 'teal', iconName: 'ShoppingBag' },
-	entertainment: { color: 'rose', iconName: 'Film' },
-	music: { color: 'rose', iconName: 'Music' },
-	phone: { color: 'teal', iconName: 'Smartphone' },
-	savings: { color: 'sage', iconName: 'PiggyBank' },
-	work: { color: 'sky', iconName: 'Briefcase' },
-	gift: { color: 'rose', iconName: 'Gift' },
-	books: { color: 'sand', iconName: 'Book' }
+function isTagColor(value: string): value is TagColor {
+	return value in TAG_PALETTE
 }
 
-const PRESETS: Record<string, TagPreset> = Object.fromEntries(
-	Object.entries(PRESET_RAW).map(([k, v]) => [k, { ...v, icon: ICON_LIBRARY[v.iconName] }])
-)
-
-const FALLBACK_ICON_NAMES: (keyof typeof ICON_LIBRARY)[] = ['Tag', 'Receipt', 'ShoppingBag']
-
-function hash(s: string): number {
-	let h = 0
-	for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0
-	return Math.abs(h)
+/** Resolve a stored color id to its swatch, falling back to the default. */
+export function getSwatch(color: string): TagSwatch {
+	return TAG_PALETTE[isTagColor(color) ? color : DEFAULT_TAG_COLOR]
 }
 
-export function getTagMeta(name: string): TagPreset {
-	const key = name.trim().toLowerCase()
-	if (PRESETS[key]) return PRESETS[key]
-	const h = hash(key || 'tag')
-	const iconName = FALLBACK_ICON_NAMES[h % FALLBACK_ICON_NAMES.length]
-	return {
-		color: TAG_COLOR_LIST[h % TAG_COLOR_LIST.length],
-		iconName,
-		icon: ICON_LIBRARY[iconName]
-	}
-}
-
-export function getTagSwatch(name: string): TagSwatch {
-	return TAG_PALETTE[getTagMeta(name).color]
+/** Resolve a stored icon name to its component, falling back to the default. */
+export function getIcon(iconName: string): Component {
+	return ICON_LIBRARY[iconName] ?? ICON_LIBRARY[DEFAULT_TAG_ICON]
 }
