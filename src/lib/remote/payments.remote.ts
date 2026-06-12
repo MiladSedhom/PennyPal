@@ -73,6 +73,51 @@ export const createPayments = command(paymentsSchema, async ({ payments }) => {
 	})
 })
 
+const paymentUpdateSchema = v.object({
+	id: v.number(),
+	amount: v.pipe(v.number(), v.minValue(0)),
+	note: v.string(),
+	tags: v.array(v.number()),
+	date: v.date()
+})
+
+export const updatePayment = command(paymentUpdateSchema, async ({ id, amount, note, tags, date }) => {
+	const user = await getLoggedInUser()
+
+	await db.transaction(async (tx) => {
+		const updated = await tx
+			.update(payment)
+			.set({ amount: Math.round(amount), note, createdAt: date })
+			.where(and(eq(payment.id, id), eq(payment.userId, user.id)))
+			.returning({ id: payment.id })
+		if (updated.length === 0) return
+
+		await tx.delete(paymentsToTags).where(eq(paymentsToTags.paymentId, id))
+		if (tags.length > 0) {
+			await tx.insert(paymentsToTags).values(tags.map((tagId) => ({ paymentId: id, tagId })))
+		}
+	})
+
+	getPayments().refresh()
+})
+
+export const deletePayment = command(v.number(), async (id) => {
+	const user = await getLoggedInUser()
+
+	await db.transaction(async (tx) => {
+		const owned = await tx
+			.select({ id: payment.id })
+			.from(payment)
+			.where(and(eq(payment.id, id), eq(payment.userId, user.id)))
+		if (owned.length === 0) return
+
+		await tx.delete(paymentsToTags).where(eq(paymentsToTags.paymentId, id))
+		await tx.delete(payment).where(eq(payment.id, id))
+	})
+
+	getPayments().refresh()
+})
+
 const pageArgsSchema = v.object({
 	page: v.pipe(v.number(), v.integer(), v.minValue(0)),
 	pageSize: v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(200)),

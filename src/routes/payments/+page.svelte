@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { untrack } from 'svelte'
-	import { getPaymentsPage, getPaymentsMeta } from '$lib/remote/payments.remote'
+	import { getPaymentsPage, getPaymentsMeta, deletePayment } from '$lib/remote/payments.remote'
 	import { getTags } from '$lib/remote/tags.remote'
 	import PaymentsForm from '$lib/components/payments-form.svelte'
+	import PaymentEditDialog from '$lib/components/payment-edit-dialog.svelte'
+	import { dialogs } from '$lib/components/pp/confirm-dialog'
 	import { SvelteDate, SvelteMap, SvelteSet } from 'svelte/reactivity'
 	import { Debounced } from 'runed'
 
@@ -31,6 +33,8 @@
 	import ArrowUpRightIcon from '@lucide/svelte/icons/arrow-up-right'
 	import ChevronLeftIcon from '@lucide/svelte/icons/chevron-left'
 	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right'
+	import PencilIcon from '@lucide/svelte/icons/pencil'
+	import Trash2Icon from '@lucide/svelte/icons/trash-2'
 
 	type Row = {
 		id: number
@@ -103,7 +107,8 @@
 			? [columnHelper.accessor('createdAt', { id: 'date', header: 'Date', enableSorting: false })]
 			: []),
 		columnHelper.display({ id: 'tags', header: 'Tags', enableSorting: false }),
-		columnHelper.display({ id: 'note', header: 'Note', enableSorting: false })
+		columnHelper.display({ id: 'note', header: 'Note', enableSorting: false }),
+		columnHelper.display({ id: 'actions', header: '', enableSorting: false })
 	])
 
 	const table = createSvelteTable({
@@ -137,6 +142,31 @@
 			pagination = typeof updater === 'function' ? updater(pagination) : updater
 		}
 	})
+
+	// --- row actions ---
+	let editing = $state<Row | null>(null)
+
+	function refreshPayments() {
+		getPaymentsPage(args).refresh()
+		getPaymentsMeta().refresh()
+	}
+
+	function confirmDelete(r: Row) {
+		dialogs.danger(
+			async () => {
+				// Deleting the last row of a non-first page steps back so the user isn't left on an empty page.
+				const willEmptyPage = pageData.rows.length === 1 && pagination.pageIndex > 0
+				await deletePayment(r.id)
+				if (willEmptyPage) pagination.pageIndex -= 1
+				refreshPayments()
+			},
+			{
+				title: 'Delete this payment?',
+				message: `${formatMoney(r.amount)} on ${formatRowDate(r.createdAt)}${r.note ? ` — “${r.note}”` : ''}. This can't be undone.`,
+				confirmText: 'Delete payment'
+			}
+		)
+	}
 
 	// --- helpers ---
 	function toggleTag(id: number) {
@@ -273,12 +303,7 @@
 			>
 				<ArrowUpRightIcon size={15} /> Export
 			</Button>
-			<PaymentsForm
-				onsaved={() => {
-					getPaymentsPage(args).refresh()
-					getPaymentsMeta().refresh()
-				}}
-			/>
+			<PaymentsForm onsaved={refreshPayments} />
 		</div>
 	</div>
 
@@ -555,7 +580,9 @@
 									? 'w-[130px]'
 									: header.column.id === 'date'
 										? 'w-[150px]'
-										: ''}"
+										: header.column.id === 'actions'
+											? 'w-[92px]'
+											: ''}"
 							>
 								<span class="font-mono text-[11px] font-semibold uppercase tracking-[0.04em] text-text-mute">
 									<FlexRender content={header.column.columnDef.header} context={header.getContext()} />
@@ -587,7 +614,7 @@
 							</Table.Row>
 						{:else}
 							{@const r = item.row}
-							<Table.Row class="border-border-soft">
+							<Table.Row class="group border-border-soft">
 								<Table.Cell class="px-6 py-[13px] text-[14.5px] font-semibold tabular-nums">
 									{formatMoney(r.amount)}
 								</Table.Cell>
@@ -609,6 +636,28 @@
 								</Table.Cell>
 								<Table.Cell class="px-6 py-[13px] text-[13px] {r.note ? 'text-text-dim' : 'text-text-mute'}">
 									{r.note || '—'}
+								</Table.Cell>
+								<Table.Cell class="px-6 py-[13px]">
+									<span
+										class="flex items-center justify-end gap-0.5 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100"
+									>
+										<button
+											type="button"
+											onclick={() => (editing = r)}
+											class="flex h-7 w-7 items-center justify-center rounded-full border-none bg-transparent text-text-mute hover:bg-bg-warm hover:text-foreground"
+											aria-label="Edit payment"
+										>
+											<PencilIcon size={14} />
+										</button>
+										<button
+											type="button"
+											onclick={() => confirmDelete(r)}
+											class="flex h-7 w-7 items-center justify-center rounded-full border-none bg-transparent text-text-mute hover:bg-bg-warm hover:text-(--danger)"
+											aria-label="Delete payment"
+										>
+											<Trash2Icon size={14} />
+										</button>
+									</span>
 								</Table.Cell>
 							</Table.Row>
 						{/if}
@@ -650,3 +699,5 @@
 		</div>
 	</Card>
 </div>
+
+<PaymentEditDialog payment={editing} {tags} onclose={() => (editing = null)} onsaved={refreshPayments} />
