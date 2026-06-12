@@ -73,9 +73,6 @@ export const createPayments = command(paymentsSchema, async ({ payments }) => {
 	})
 })
 
-// ---------------------------------------------------------------------------
-// Server-side paginated / filtered / sorted payments for the Payments page.
-// ---------------------------------------------------------------------------
 const pageArgsSchema = v.object({
 	page: v.pipe(v.number(), v.integer(), v.minValue(0)),
 	pageSize: v.pipe(v.number(), v.integer(), v.minValue(1), v.maxValue(200)),
@@ -85,7 +82,6 @@ const pageArgsSchema = v.object({
 	tagIds: v.array(v.number()),
 	amountMin: v.nullable(v.number()),
 	amountMax: v.nullable(v.number()),
-	// Inclusive day bounds as ISO 'YYYY-MM-DD', or null.
 	dateStart: v.nullable(v.string()),
 	dateEnd: v.nullable(v.string())
 })
@@ -93,38 +89,30 @@ const pageArgsSchema = v.object({
 export const getPaymentsPage = query(pageArgsSchema, async (args) => {
 	const user = await getLoggedInUser()
 
-	const conds = [eq(payment.userId, user.id)]
+	const filters = [eq(payment.userId, user.id)]
 
-	if (args.amountMin != null) conds.push(gte(payment.amount, Math.round(args.amountMin)))
-	if (args.amountMax != null) conds.push(lte(payment.amount, Math.round(args.amountMax)))
-	if (args.dateStart) conds.push(gte(payment.createdAt, new Date(args.dateStart + 'T00:00:00')))
-	if (args.dateEnd) conds.push(lte(payment.createdAt, new Date(args.dateEnd + 'T23:59:59.999')))
-
+	if (args.amountMin != null) filters.push(gte(payment.amount, Math.round(args.amountMin)))
+	if (args.amountMax != null) filters.push(lte(payment.amount, Math.round(args.amountMax)))
+	if (args.dateStart) filters.push(gte(payment.createdAt, new Date(args.dateStart + 'T00:00:00')))
+	if (args.dateEnd) filters.push(lte(payment.createdAt, new Date(args.dateEnd + 'T23:59:59.999')))
 	if (args.search.trim()) {
 		const like = `%${args.search.trim()}%`
-		// Payment ids whose tag name matches the search term.
 		const tagMatch = db
 			.select({ id: paymentsToTags.paymentId })
 			.from(paymentsToTags)
 			.innerJoin(tag, eq(tag.id, paymentsToTags.tagId))
 			.where(ilike(tag.name, like))
-		conds.push(or(ilike(payment.note, like), inArray(payment.id, tagMatch))!)
+		filters.push(or(ilike(payment.note, like), inArray(payment.id, tagMatch))!)
 	}
-
 	if (args.tagIds.length) {
 		const tagged = db
 			.select({ id: paymentsToTags.paymentId })
 			.from(paymentsToTags)
 			.where(inArray(paymentsToTags.tagId, args.tagIds))
-		conds.push(inArray(payment.id, tagged))
+		filters.push(inArray(payment.id, tagged))
 	}
 
-	const where = and(...conds)
-
-	const [agg] = await db
-		.select({ total: sql<number>`count(*)::int`, sum: sql<number>`coalesce(sum(${payment.amount}), 0)::int` })
-		.from(payment)
-		.where(where)
+	const where = and(...filters)
 
 	const orderCol = args.sort === 'amount' ? payment.amount : payment.createdAt
 	const orderBy = args.dir === 'asc' ? asc(orderCol) : desc(orderCol)
@@ -136,6 +124,11 @@ export const getPaymentsPage = query(pageArgsSchema, async (args) => {
 		offset: args.page * args.pageSize,
 		with: { paymentsToTags: { with: { tag: true } } }
 	})
+
+	const [{ sum, total }] = await db
+		.select({ total: sql<number>`count(*)::int`, sum: sql<number>`coalesce(sum(${payment.amount}), 0)::int` })
+		.from(payment)
+		.where(where)
 
 	return {
 		rows: rows.map((p) => ({
@@ -150,8 +143,8 @@ export const getPaymentsPage = query(pageArgsSchema, async (args) => {
 				icon: ptt.tag.icon
 			}))
 		})),
-		total: agg.total,
-		sum: agg.sum
+		sum: sum,
+		total: total
 	}
 })
 

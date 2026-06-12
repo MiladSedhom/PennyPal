@@ -14,13 +14,14 @@
 	interface Props extends Omit<ButtonProps, 'value'> {
 		value?: DateValue
 		class: ClassValue
+		ref?: HTMLElement | null
 	}
 
-	let { value = $bindable(), class: className, ...restProps }: Props = $props()
+	let { value = $bindable(), class: className, ref = $bindable(null), ...restProps }: Props = $props()
 </script>
 
 <Popover.Root>
-	<Popover.Trigger>
+	<Popover.Trigger bind:ref>
 		{#snippet child({ props })}
 			<Button
 				variant="outline"

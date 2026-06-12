@@ -261,7 +261,7 @@
 
 @layer base {
 	* {
-		@apply border-border outline-ring/50;
+		@apply border-border;
 	}
 	html,
 	body {
@@ -276,6 +276,14 @@
 	}
 	::selection {
 		background: var(--mint-deep);
+	}
+	/* Unified, app-wide focus indicator. `:focus-visible` so it only shows for
+	   keyboard/programmatic focus (not mouse clicks); `outline` so it never causes
+	   layout shift and follows each element's border-radius. Applied to every
+	   interactive element for a single, consistent ring across the app. */
+	:is(button, input, textarea, select, a, [tabindex], [role='button']):focus-visible {
+		outline: 2px solid var(--ring);
+		outline-offset: 2px;
 	}
 }
 

@@ -5,55 +5,118 @@
 	import XIcon from '@lucide/svelte/icons/x'
 	import PlusIcon from '@lucide/svelte/icons/plus'
 	import CheckIcon from '@lucide/svelte/icons/check'
-	import SearchIcon from '@lucide/svelte/icons/search'
 	import MoreHorizontalIcon from '@lucide/svelte/icons/more-horizontal'
 	import DatePicker from '$lib/components/ui/date-picker/date-picker.svelte'
+	import { tick } from 'svelte'
 	import { type DateValue, getLocalTimeZone, today } from '@internationalized/date'
-	import * as Popover from '$lib/components/ui/popover'
 	import * as Dialog from '$lib/components/ui/dialog'
 	import Caption from '$lib/components/pp/caption.svelte'
-	import Kbd from '$lib/components/pp/kbd.svelte'
-	import TagChip from '$lib/components/pp/tag-chip.svelte'
-	import TagIconChip from '$lib/components/pp/tag-icon-chip.svelte'
+	import * as Kbd from '$lib/components/ui/kbd/index.js'
+	import TagMultiSelect from '$lib/components/pp/tag-multiselect.svelte'
 	import { formatMoney } from '$lib/utils'
 
 	const { onsaved }: { onsaved?: () => void } = $props()
 
 	let open = $state(false)
-	let pickerSearch = $state('')
 
 	type PaymentRow = { amount: number; tags: number[]; note: string; date: DateValue }
 
-	const blank = (): PaymentRow => ({
+	const blankPayment = (): PaymentRow => ({
 		amount: 0,
 		tags: [],
 		note: '',
 		date: today(getLocalTimeZone())
 	})
-	const paymentsForms = $state<PaymentRow[]>([blank()])
+	const paymentsForms = $state<PaymentRow[]>([blankPayment()])
+
+	const refs = $state<Record<keyof PaymentRow, (HTMLInputElement | null)[]>>({
+		amount: [null],
+		tags: [null],
+		date: [null],
+		note: [null]
+	})
 
 	const tags = $derived(await getTags())
 
-	const isComplete = (r: PaymentRow) => r.amount > 0 && r.date
-	const completeRows = $derived(paymentsForms.filter(isComplete))
-	const completeTotal = $derived(completeRows.reduce((a, r) => a + r.amount, 0))
+	const isPaymentComplete = (p: PaymentRow) => p.amount > 0 && p.date
+	const completeRows = $derived(paymentsForms.filter(isPaymentComplete))
+	const completeAmountTotal = $derived(completeRows.reduce((a, r) => a + r.amount, 0))
 
-	function toggleTag(row: PaymentRow, id: number) {
-		row.tags = row.tags.includes(id) ? row.tags.filter((t) => t !== id) : [...row.tags, id]
+	async function focusDate(index: number) {
+		await tick()
+		refs.date[index]?.focus()
 	}
 
-	function filteredTags() {
-		const s = pickerSearch.trim().toLowerCase()
-		if (!s) return tags
-		return tags.filter((t) => t.name.toLowerCase().includes(s))
+	function addRow() {
+		const lastDate = paymentsForms.at(-1)?.date ?? today(getLocalTimeZone())
+		paymentsForms.push({ amount: 0, tags: [], note: '', date: lastDate })
+
+		for (const key in refs) refs[key as keyof typeof refs].push(null)
+
+		focusDate(paymentsForms.length - 1)
+	}
+
+	function removeRow(index: number) {
+		if (paymentsForms.length <= 1) return
+		paymentsForms.splice(index, 1)
+		for (const key in refs) refs[key as keyof typeof refs].splice(index, 1)
+	}
+
+	function addRowOnTab(e: KeyboardEvent, index: number) {
+		if (e.key === 'Tab' && !e.shiftKey && index === paymentsForms.length - 1) {
+			e.preventDefault()
+			addRow()
+		}
+	}
+
+	function noteKeydown(e: KeyboardEvent, index: number, hasTrailingButton: boolean) {
+		if (!hasTrailingButton) addRowOnTab(e, index)
+		// Backspace on an empty note steps focus back to the tags field.
+		if (e.key === 'Backspace' && paymentsForms[index].note === '') {
+			e.preventDefault()
+			refs.tags[index]?.focus()
+		}
+	}
+
+	// Backspace on an empty amount deletes the whole row
+	function amountKeydown(e: KeyboardEvent, index: number) {
+		if (e.key === 'Backspace' && (!paymentsForms[index].amount || paymentsForms[index].amount === 0)) {
+			if (index === 0) return // never delete the first row
+			e.preventDefault()
+			const prev = index - 1
+			removeRow(index)
+			queueMicrotask(() => refs.amount[prev]?.focus())
+		}
+	}
+
+	async function saveAllCompleted() {
+		if (completeRows.length === 0) return
+		await createPayments({
+			payments: completeRows.map((pf) => ({
+				amount: pf.amount,
+				note: pf.note,
+				tags: pf.tags,
+				date: pf.date.toDate(getLocalTimeZone())
+			}))
+		}).updates(getPayments())
+		paymentsForms.splice(0, paymentsForms.length, blankPayment())
+		for (const key in refs) refs[key as keyof typeof refs].splice(0, refs[key as keyof typeof refs].length, null)
+		open = false
+		onsaved?.()
 	}
 </script>
 
 <svelte:window
-	on:keydown={(e) => {
+	onkeydown={(e) => {
 		if (e.key === 'n' && e.altKey) {
 			open = !open
 			e.preventDefault()
+			return
+		}
+		// Ctrl/⌘+Enter commits every complete row, from anywhere in the dialog.
+		if (open && e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+			e.preventDefault()
+			saveAllCompleted()
 		}
 	}}
 />
@@ -68,8 +131,12 @@
 
 <Dialog.Root bind:open>
 	<Dialog.Content
-		class="!max-w-[1100px] gap-0 rounded-2xl border-none bg-card p-0 shadow-2xl sm:!max-w-[1100px]"
+		class="max-w-[1100px]! gap-0 rounded-2xl border-none bg-card p-0 shadow-2xl sm:max-w-[1100px]!"
 		showCloseButton={false}
+		onOpenAutoFocus={(e) => {
+			e.preventDefault()
+			focusDate(0)
+		}}
 	>
 		<div class="flex items-center justify-between border-b border-border-soft px-7 py-5">
 			<div class="flex items-baseline gap-3">
@@ -77,9 +144,10 @@
 				<Caption>Enter several at once</Caption>
 			</div>
 			<div class="flex items-center gap-3">
-				<span class="hidden items-center gap-1.5 text-[12px] text-text-mute sm:inline-flex">
-					<Kbd>Tab</Kbd> next
-					<span class="ml-2"></span><Kbd>↵</Kbd> add row
+				<span class="hidden items-center gap-4 text-[12px] text-text-mute sm:inline-flex">
+					<span><Kbd.Root class="px-2">Tab</Kbd.Root> add row</span>
+					<span><Kbd.Root class="px-2">⌫</Kbd.Root> remove</span>
+					<span><Kbd.Root class="px-2">⌘ + ↵</Kbd.Root> save</span>
 				</span>
 				<button
 					type="button"
@@ -104,100 +172,64 @@
 			<span></span>
 		</div>
 
-		<div class="max-h-[55vh] overflow-y-auto">
-			{#each paymentsForms as p, idx (idx)}
-				{@const complete = isComplete(p)}
-				<form
+		<div class="max-h-[55vh] h-[35vh] overflow-y-auto">
+			{#each paymentsForms as p, index (index)}
+				{@const complete = isPaymentComplete(p)}
+				{@const hasRemoveButton = !complete && paymentsForms.length > 1}
+				<div
 					class="grid items-center gap-3 border-b border-border-soft px-7 py-2"
 					style:grid-template-columns="32px 150px 130px 1.4fr 1fr 32px"
 				>
 					<span class="text-center font-mono text-[11px] tracking-[0.04em] text-text-mute">
-						{String(idx + 1).padStart(2, '0')}
+						{String(index + 1).padStart(2, '0')}
 					</span>
 
 					<DatePicker
 						bind:value={p.date}
-						class="w-full !rounded-[10px] !border-transparent !bg-transparent !px-2.5 hover:!bg-bg-warm focus:!border-primary"
+						bind:ref={refs.date[index]}
+						class="w-full rounded-sm! border-transparent bg-transparent! px-2.5! hover:bg-bg-warm!"
 						title={p.date.toString()}
 					/>
 
 					<input
 						type="number"
 						bind:value={p.amount}
+						bind:this={refs.amount[index]}
 						placeholder="0"
 						step="1"
 						min="0"
-						class="w-full rounded-[10px] border border-transparent bg-transparent px-2.5 py-2 text-right font-mono text-[13.5px] font-medium text-foreground outline-none hover:bg-bg-warm focus:border-primary"
+						onkeydown={(e) => amountKeydown(e, index)}
+						class="w-full rounded-sm border border-transparent bg-transparent px-2.5 py-2 text-right font-mono text-[13.5px] font-medium text-foreground hover:bg-bg-warm"
 					/>
 
-					<Popover.Root>
-						<Popover.Trigger>
-							{#snippet child({ props })}
-								<button
-									{...props}
-									type="button"
-									class="flex w-full items-center gap-1.5 rounded-[10px] border border-transparent bg-transparent px-2.5 py-2 text-left text-foreground hover:bg-bg-warm focus:border-primary"
-								>
-									{#if p.tags.length > 0}
-										<span class="flex flex-wrap items-center gap-1.5">
-											{#each tags.filter((t) => p.tags.includes(t.id)) as tg (tg.id)}
-												<TagChip name={tg.name} color={tg.color} icon={tg.icon} size="sm" />
-											{/each}
-										</span>
-									{:else}
-										<span class="inline-flex items-center gap-1.5 text-[13px] text-text-mute">
-											<PlusIcon size={11} /> Add tags
-										</span>
-									{/if}
-								</button>
-							{/snippet}
-						</Popover.Trigger>
-						<Popover.Content class="w-[300px] rounded-2xl border-none bg-card p-2.5 shadow-xl" align="start">
-							<div class="mb-2 flex items-center gap-2 rounded-[10px] bg-bg-warm px-2.5 py-1.5">
-								<SearchIcon size={13} class="text-text-mute" />
-								<input
-									bind:value={pickerSearch}
-									placeholder="Search tags…"
-									class="flex-1 border-none bg-transparent text-[13px] text-foreground outline-none placeholder:text-text-mute"
-								/>
-							</div>
-							<div class="flex max-h-[260px] flex-col gap-0.5 overflow-y-auto">
-								{#each filteredTags() as tg (tg.id)}
-									{@const sel = p.tags.includes(tg.id)}
-									<button
-										type="button"
-										onclick={() => toggleTag(p, tg.id)}
-										class="flex w-full items-center gap-2.5 rounded-[10px] border-none px-2.5 py-2 text-left text-foreground"
-										class:bg-bg-warm={sel}
-										class:bg-transparent={!sel}
-									>
-										<TagIconChip color={tg.color} icon={tg.icon} size={26} />
-										<span class="flex-1 text-[13.5px] font-semibold">{tg.name}</span>
-										{#if sel}
-											<CheckIcon size={15} class="text-lime-text" />
-										{/if}
-									</button>
-								{:else}
-									<div class="px-2.5 py-3 text-center text-[12.5px] text-text-mute">No tags match.</div>
-								{/each}
-							</div>
-						</Popover.Content>
-					</Popover.Root>
+					<TagMultiSelect
+						{tags}
+						bind:selected={p.tags}
+						bind:trigger={refs.tags[index]}
+						triggerProps={{
+							onkeydown: (e) => {
+								if (e.key === 'Backspace') refs.amount[index]?.focus()
+							}
+						}}
+					/>
 
 					<input
 						bind:value={p.note}
+						bind:this={refs.note[index]}
 						placeholder="—"
-						class="w-full rounded-[10px] border border-transparent bg-transparent px-2.5 py-2 text-[13.5px] text-foreground outline-none hover:bg-bg-warm focus:border-primary"
+						onkeydown={(e) => noteKeydown(e, index, hasRemoveButton)}
+						class="w-full rounded-sm border border-transparent bg-transparent px-2.5 py-2 text-[13.5px] text-foreground hover:bg-bg-warm"
 					/>
 
 					<span class="flex items-center justify-center" class:text-lime-text={complete}>
 						{#if complete}
 							<CheckIcon size={16} />
-						{:else if paymentsForms.length > 1}
+						{:else if hasRemoveButton}
 							<button
 								type="button"
-								onclick={() => paymentsForms.splice(idx, 1)}
-								class="flex border-none bg-transparent p-1 text-text-mute"
+								onclick={() => removeRow(index)}
+								onkeydown={(e) => addRowOnTab(e, index)}
+								class="flex h-6 w-6 items-center justify-center rounded-full text-text-mute hover:bg-bg-warm hover:text-foreground"
 								aria-label="Remove row"
 							>
 								<XIcon size={13} />
@@ -206,25 +238,19 @@
 							<span class="text-text-mute"><MoreHorizontalIcon size={14} /></span>
 						{/if}
 					</span>
-				</form>
+				</div>
 			{/each}
 
-			<button
-				type="button"
-				onclick={() =>
-					paymentsForms.push({
-						amount: 0,
-						tags: [],
-						note: '',
-						date: paymentsForms.at(-1)!.date
-					})}
-				class="flex w-full items-center gap-2 border-none bg-transparent px-7 py-4 text-left text-[13.5px] font-semibold text-text-dim hover:text-foreground"
-			>
-				<span class="inline-flex h-[22px] w-[22px] items-center justify-center rounded-[7px] bg-mint text-foreground">
+			<div class="px-7 pb-4 pt-3">
+				<button
+					type="button"
+					onclick={addRow}
+					class="inline-flex items-center gap-1.5 rounded-full bg-bg-warm px-3.5 py-1.5 text-[12.5px] font-semibold text-text-dim transition-colors hover:bg-mint hover:text-foreground"
+				>
 					<PlusIcon size={13} />
-				</span>
-				Add another payment
-			</button>
+					Add another payment
+				</button>
+			</div>
 		</div>
 
 		<!-- Sticky commit bar -->
@@ -234,10 +260,10 @@
 			>
 				<div class="flex items-baseline gap-2">
 					<span class="font-display text-[22px] font-bold tracking-[-0.02em] text-background">
-						{formatMoney(completeTotal)}
+						{formatMoney(completeAmountTotal)}
 					</span>
 					<span class="text-[13px] text-background/60">
-						{completeRows.length} payment{completeRows.length === 1 ? '' : 's'} ready
+						{completeRows.length} payment{completeRows.length === 1 ? '' : 's'} ready to be saved
 					</span>
 				</div>
 				<div class="flex-1"></div>
@@ -252,19 +278,7 @@
 					type="button"
 					class="h-[36px] gap-2 rounded-full bg-mint px-[18px] text-[13.5px] font-semibold text-foreground hover:bg-mint-deep"
 					disabled={completeRows.length === 0}
-					onclick={async () => {
-						await createPayments({
-							payments: completeRows.map((pf) => ({
-								amount: pf.amount,
-								note: pf.note,
-								tags: pf.tags,
-								date: pf.date.toDate(getLocalTimeZone())
-							}))
-						}).updates(getPayments())
-						paymentsForms.splice(0, paymentsForms.length, blank())
-						open = false
-						onsaved?.()
-					}}
+					onclick={saveAllCompleted}
 				>
 					<CheckIcon size={15} />
 					Save {completeRows.length} payment{completeRows.length === 1 ? '' : 's'}

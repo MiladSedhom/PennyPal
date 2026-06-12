@@ -269,18 +269,18 @@
 					{/if}
 				</div>
 				<div class="inline-flex gap-1 rounded-full bg-bg-warm p-1">
-					{#each [['name', 'Name'], ['count', 'Usage'], ['budget', 'Budget']] as const as [k, lbl] (k)}
+					{#each [['name', 'Name'], ['count', 'Usage'], ['budget', 'Budget']] as const as [key, label] (key)}
 						<button
 							type="button"
-							onclick={() => (sort = k)}
+							onclick={() => (sort = key)}
 							class="rounded-full border-none px-[14px] py-1.5 text-[12.5px] font-semibold"
-							class:bg-card={sort === k}
-							class:text-foreground={sort === k}
-							class:shadow-xs={sort === k}
-							class:bg-transparent={sort !== k}
-							class:text-text-mute={sort !== k}
+							class:bg-card={sort === key}
+							class:text-foreground={sort === key}
+							class:shadow-xs={sort === key}
+							class:bg-transparent={sort !== key}
+							class:text-text-mute={sort !== key}
 						>
-							{lbl}
+							{label}
 						</button>
 					{/each}
 				</div>
