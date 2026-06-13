@@ -16,6 +16,7 @@
 	import Trash2Icon from '@lucide/svelte/icons/trash-2'
 	import SearchIcon from '@lucide/svelte/icons/search'
 	import XIcon from '@lucide/svelte/icons/x'
+	import { toTitleCase } from '$lib/utils/index'
 
 	const tags = $derived(await getTags())
 	const payments = $derived(await getPayments())
@@ -171,20 +172,21 @@
 				<!-- Icon -->
 				<div class="mb-[26px]">
 					<Caption class="mb-2.5 block">Icon</Caption>
-					<div class="grid grid-cols-8 gap-2">
-						{#each ICON_CHOICES as ic (ic)}
-							{@const Ico = ICON_LIBRARY[ic]}
-							{@const on = fields.icon.value() === ic}
+					<div class="flex flex-wrap gap-2">
+						{#each ICON_CHOICES as icon (icon)}
+							{@const IconComponent = ICON_LIBRARY[icon]}
+							{@const selected = fields.icon.value() === icon}
 							<button
 								type="button"
-								onclick={() => fields.icon.set(ic)}
-								class="inline-flex aspect-square items-center justify-center rounded-[11px]"
-								style:background={on ? sw.bg : 'var(--bg-warm)'}
-								style:color={on ? sw.ink : 'var(--text-dim)'}
-								style:border={on ? `1px solid ${sw.ink}` : '1px solid transparent'}
-								aria-label={ic}
+								onclick={() => fields.icon.set(icon)}
+								class="inline-flex aspect-square items-center justify-center rounded-[8px] size-12"
+								style:background={selected ? sw.bg : 'var(--bg-warm)'}
+								style:color={selected ? sw.ink : 'var(--text-dim)'}
+								style:border={selected ? `1px solid ${sw.ink}` : '1px solid transparent'}
+								aria-label={icon}
+								title={toTitleCase(icon)}
 							>
-								<Ico size={17} />
+								<IconComponent size={15} />
 							</button>
 						{/each}
 					</div>

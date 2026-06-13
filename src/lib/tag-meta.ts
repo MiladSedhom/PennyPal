@@ -25,6 +25,60 @@ import Briefcase from '@lucide/svelte/icons/briefcase'
 import CreditCard from '@lucide/svelte/icons/credit-card'
 import Bell from '@lucide/svelte/icons/bell'
 import Pill from '@lucide/svelte/icons/pill'
+import Car from '@lucide/svelte/icons/car'
+import Pizza from '@lucide/svelte/icons/pizza'
+import Wine from '@lucide/svelte/icons/wine'
+import Beer from '@lucide/svelte/icons/beer'
+import Cake from '@lucide/svelte/icons/cake'
+import IceCreamCone from '@lucide/svelte/icons/ice-cream-cone'
+import Shirt from '@lucide/svelte/icons/shirt'
+import Footprints from '@lucide/svelte/icons/footprints'
+import Baby from '@lucide/svelte/icons/baby'
+import PawPrint from '@lucide/svelte/icons/paw-print'
+import Dog from '@lucide/svelte/icons/dog'
+import Cat from '@lucide/svelte/icons/cat'
+import Scissors from '@lucide/svelte/icons/scissors'
+import Stethoscope from '@lucide/svelte/icons/stethoscope'
+import Glasses from '@lucide/svelte/icons/glasses'
+import GraduationCap from '@lucide/svelte/icons/graduation-cap'
+import Laptop from '@lucide/svelte/icons/laptop'
+import Gamepad2 from '@lucide/svelte/icons/gamepad-2'
+import Tv from '@lucide/svelte/icons/tv'
+import Headphones from '@lucide/svelte/icons/headphones'
+import Camera from '@lucide/svelte/icons/camera'
+import Palette from '@lucide/svelte/icons/palette'
+import Wrench from '@lucide/svelte/icons/wrench'
+import Hammer from '@lucide/svelte/icons/hammer'
+import Leaf from '@lucide/svelte/icons/leaf'
+import TreePine from '@lucide/svelte/icons/tree-pine'
+import Sun from '@lucide/svelte/icons/sun'
+import Umbrella from '@lucide/svelte/icons/umbrella'
+import Bike from '@lucide/svelte/icons/bike'
+import Ship from '@lucide/svelte/icons/ship'
+import Ticket from '@lucide/svelte/icons/ticket'
+import Trophy from '@lucide/svelte/icons/trophy'
+import Sparkles from '@lucide/svelte/icons/sparkles'
+import Star from '@lucide/svelte/icons/star'
+import Banknote from '@lucide/svelte/icons/banknote'
+import Wallet from '@lucide/svelte/icons/wallet'
+import Landmark from '@lucide/svelte/icons/landmark'
+import Coins from '@lucide/svelte/icons/coins'
+import TrendingUp from '@lucide/svelte/icons/trending-up'
+import Calendar from '@lucide/svelte/icons/calendar'
+import Phone from '@lucide/svelte/icons/phone'
+import Mail from '@lucide/svelte/icons/mail'
+import Cloud from '@lucide/svelte/icons/cloud'
+import Droplet from '@lucide/svelte/icons/droplet'
+import Flame from '@lucide/svelte/icons/flame'
+import Zap from '@lucide/svelte/icons/zap'
+import Lightbulb from '@lucide/svelte/icons/lightbulb'
+import Bath from '@lucide/svelte/icons/bath'
+import BedDouble from '@lucide/svelte/icons/bed-double'
+import Sofa from '@lucide/svelte/icons/sofa'
+import Key from '@lucide/svelte/icons/key'
+import Shield from '@lucide/svelte/icons/shield'
+import MapPin from '@lucide/svelte/icons/map-pin'
+import Globe from '@lucide/svelte/icons/globe'
 import type { Component } from 'svelte'
 
 // Sage swatch system — each color is a soft chip bg + readable ink, all in the sage family
@@ -72,6 +126,60 @@ export const ICON_LIBRARY: Record<string, Component> = {
 	Bell,
 	Pill,
 	Receipt,
+	Car,
+	Pizza,
+	Wine,
+	Beer,
+	Cake,
+	IceCreamCone,
+	Shirt,
+	Footprints,
+	Baby,
+	PawPrint,
+	Dog,
+	Cat,
+	Scissors,
+	Stethoscope,
+	Glasses,
+	GraduationCap,
+	Laptop,
+	Gamepad2,
+	Tv,
+	Headphones,
+	Camera,
+	Palette,
+	Wrench,
+	Hammer,
+	Leaf,
+	TreePine,
+	Sun,
+	Umbrella,
+	Bike,
+	Ship,
+	Ticket,
+	Trophy,
+	Sparkles,
+	Star,
+	Banknote,
+	Wallet,
+	Landmark,
+	Coins,
+	TrendingUp,
+	Calendar,
+	Phone,
+	Mail,
+	Cloud,
+	Droplet,
+	Flame,
+	Zap,
+	Lightbulb,
+	Bath,
+	BedDouble,
+	Sofa,
+	Key,
+	Shield,
+	MapPin,
+	Globe,
 	Tag
 }
 
@@ -99,6 +207,62 @@ export const ICON_CHOICES = [
 	'CreditCard',
 	'Bell',
 	'Pill',
+	'Receipt',
+	'Car',
+	'Pizza',
+	'Wine',
+	'Beer',
+	'Cake',
+	'IceCreamCone',
+	'Shirt',
+	'Footprints',
+	'Baby',
+	'PawPrint',
+	'Dog',
+	'Cat',
+	'Scissors',
+	'Stethoscope',
+	'Glasses',
+	'GraduationCap',
+	'Laptop',
+	'Gamepad2',
+	'Tv',
+	'Headphones',
+	'Camera',
+	'Palette',
+	'Wrench',
+	'Hammer',
+	'Leaf',
+	'TreePine',
+	'Sun',
+	'Umbrella',
+	'Bike',
+	'Ship',
+	'Ticket',
+	'Trophy',
+	'Sparkles',
+	'Star',
+	'Banknote',
+	'Wallet',
+	'Landmark',
+	'Coins',
+	'TrendingUp',
+	'Calendar',
+	'Phone',
+	'Mail',
+	'Cloud',
+	'Droplet',
+	'Flame',
+	'Zap',
+	'Lightbulb',
+	'Bath',
+	'BedDouble',
+	'Sofa',
+	'Key',
+	'Shield',
+	'MapPin',
+	'Globe',
+	'HeartPulse',
 	'Tag'
 ] as const
 
