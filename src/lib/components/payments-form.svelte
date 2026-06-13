@@ -6,6 +6,7 @@
 	import PlusIcon from '@lucide/svelte/icons/plus'
 	import CheckIcon from '@lucide/svelte/icons/check'
 	import MoreHorizontalIcon from '@lucide/svelte/icons/more-horizontal'
+	import LoaderIcon from '@lucide/svelte/icons/loader-circle'
 	import DatePicker from '$lib/components/ui/date-picker/date-picker.svelte'
 	import { tick } from 'svelte'
 	import { type DateValue, getLocalTimeZone, today } from '@internationalized/date'
@@ -90,7 +91,9 @@
 	}
 
 	async function saveAllCompleted() {
-		if (completeRows.length === 0) return
+		// createPayments.pending is the command's built-in in-flight counter; it increments
+		// synchronously on call, so it also guards against double-submit (e.g. holding Ctrl+Enter).
+		if (createPayments.pending > 0 || completeRows.length === 0) return
 		await createPayments({
 			payments: completeRows.map((pf) => ({
 				amount: pf.amount,
@@ -277,11 +280,16 @@
 				<Button
 					type="button"
 					class="h-[36px] gap-2 rounded-full bg-mint px-[18px] text-[13.5px] font-semibold text-foreground hover:bg-mint-deep"
-					disabled={completeRows.length === 0}
+					disabled={completeRows.length === 0 || createPayments.pending > 0}
 					onclick={saveAllCompleted}
 				>
-					<CheckIcon size={15} />
-					Save {completeRows.length} payment{completeRows.length === 1 ? '' : 's'}
+					{#if createPayments.pending > 0}
+						<LoaderIcon size={15} class="animate-spin" />
+						Saving…
+					{:else}
+						<CheckIcon size={15} />
+						Save {completeRows.length} payment{completeRows.length === 1 ? '' : 's'}
+					{/if}
 				</Button>
 			</div>
 		</div>

@@ -87,16 +87,15 @@
 	<div class="grid items-start gap-4 lg:grid-cols-[1fr_1.15fr]">
 		<Card pad="xl" class="lg:sticky lg:top-4">
 			<form
-				{...createOrUpdateTag.enhance(async ({ submit, element }) => {
+				{...createOrUpdateTag.enhance(async ({ submit }) => {
 					if (await submit()) {
-						if (createOrUpdateTag.result?.ok) element.reset()
+						if (createOrUpdateTag.result?.ok) resetForm()
 					}
 				})}
 			>
-				<!-- hidden inputs -->
-				<input type="hidden" name="id" />
-				<input type="hidden" name="color" value="sage" />
-				<input type="hidden" name="icon" value="Tag" />
+				<input type="hidden" name="id" value={fields.id.value() ?? ''} />
+				<input type="hidden" name="color" value={fields.color.value() ?? 'sage'} />
+				<input type="hidden" name="icon" value={fields.icon.value() ?? 'Tag'} />
 
 				<!-- Live preview -->
 				<div class="mb-6 flex items-center gap-4 rounded-2xl bg-bg-warm p-5">

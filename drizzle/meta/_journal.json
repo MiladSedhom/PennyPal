@@ -15,6 +15,27 @@
       "when": 1780272635460,
       "tag": "0001_giant_whizzer",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1781306349276,
+      "tag": "0002_nebulous_blue_blade",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1781308163979,
+      "tag": "0003_long_titania",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1781309497913,
+      "tag": "0004_fuzzy_solo",
+      "breakpoints": true
     }
   ]
 }
