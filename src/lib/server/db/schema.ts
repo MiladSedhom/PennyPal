@@ -12,6 +12,9 @@ export const timestamps = {
 export const user = pgTable('User', {
 	id: uuid('id').primaryKey().defaultRandom(),
 	username: varchar('username', { length: 255 }).notNull().unique(),
+	// Nullable: set only on OAuth-created accounts (from a verified provider email) and
+	// used to auto-link OAuth logins. Password accounts have no email.
+	email: varchar('email', { length: 255 }).unique(),
 	passwordHash: varchar('passwordHash', { length: 255 }),
 	...timestamps
 })
@@ -109,13 +112,21 @@ export const budgetsRelations = relations(budget, ({ one }) => ({
 	})
 }))
 
-export const oauthAccount = pgTable('Oauth_account', {
-	providerId: uuid('provider_id').primaryKey().defaultRandom(),
-	providerUserId: varchar('provider_user_id', { length: 255 }).notNull().unique(),
-	userId: uuid('userId')
-		.notNull()
-		.references(() => user.id)
-})
+// One row per (provider, account) pair. A user may link several providers, so the
+// identity is the composite (provider, providerUserId) — not a synthetic id.
+export const oauthAccount = pgTable(
+	'Oauth_account',
+	{
+		provider: varchar('provider', { length: 32 }).notNull(), // 'google' | 'github'
+		providerUserId: varchar('provider_user_id', { length: 255 }).notNull(),
+		userId: uuid('userId')
+			.notNull()
+			.references(() => user.id, { onDelete: 'cascade' })
+	},
+	(table) => ({
+		pk: primaryKey({ columns: [table.provider, table.providerUserId] })
+	})
+)
 export const oauthAccountsRelations = relations(oauthAccount, ({ one }) => ({
 	user: one(user, {
 		fields: [oauthAccount.userId],

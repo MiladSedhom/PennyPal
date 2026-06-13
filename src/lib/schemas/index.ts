@@ -11,14 +11,21 @@ export const tagUpsertSchema = v.object({
 	budget: v.optional(v.string(), '')
 })
 
+export const usernameSchema = v.pipe(
+	v.string(),
+	v.nonEmpty('Please enter your username.'),
+	v.minLength(3, 'Username must be at least 3 characters long.'),
+	v.maxLength(31, 'Username cannot be longer than 31 characters.'),
+	v.regex(/^[a-zA-Z0-9_]+$/, 'Username can only contain alphanumeric characters and underscores.')
+)
+
+// Picking a username after a first-time OAuth sign-in.
+export const chooseUsernameSchema = v.object({
+	username: usernameSchema
+})
+
 export const loginOrRegisterSchema = v.object({
-	username: v.pipe(
-		v.string(),
-		v.nonEmpty('Please enter your username.'),
-		v.minLength(3, 'Username must be at least 3 characters long.'),
-		v.maxLength(31, 'Username cannot be longer than 31 characters.'),
-		v.regex(/^[a-zA-Z0-9_]+$/, 'Username can only contain alphanumeric characters and underscores.')
-	),
+	username: usernameSchema,
 	password: v.pipe(
 		v.string(),
 		v.nonEmpty('Please enter your password.'),

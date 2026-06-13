@@ -57,6 +57,7 @@
 	},
 	"dependencies": {
 		"@node-rs/argon2": "^2.0.2",
+		"arctic": "^3.7.0",
 		"mode-watcher": "^1.1.0",
 		"postgres": "^3.4.9",
 		"runed": "^0.37.1",

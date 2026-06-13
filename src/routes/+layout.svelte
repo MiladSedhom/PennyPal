@@ -100,12 +100,13 @@
 							<LogOutIcon class="h-[1rem] w-[1rem]" />
 						</button>
 					</form>
-					<span
-						class="inline-flex h-[38px] w-[38px] items-center justify-center rounded-full bg-mint text-[13px] font-bold text-foreground"
+					<a
+						href={resolve('/account')}
+						class="inline-flex h-[38px] w-[38px] items-center justify-center rounded-full bg-mint text-[13px] font-bold text-foreground no-underline"
 						aria-label="Account"
 					>
 						{initials}
-					</span>
+					</a>
 				</div>
 			</div>
 		</header>
