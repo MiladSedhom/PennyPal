@@ -91,8 +91,6 @@
 	}
 
 	async function saveAllCompleted() {
-		// createPayments.pending is the command's built-in in-flight counter; it increments
-		// synchronously on call, so it also guards against double-submit (e.g. holding Ctrl+Enter).
 		if (createPayments.pending > 0 || completeRows.length === 0) return
 		await createPayments({
 			payments: completeRows.map((pf) => ({
