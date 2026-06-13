@@ -7,6 +7,7 @@
 	import CheckIcon from '@lucide/svelte/icons/check'
 	import type { PopoverTriggerProps } from 'bits-ui'
 	import { focusAdjacentTabbable } from '$lib/utils'
+	import { quickCreateTag } from '$lib/remote/tags.remote'
 	import { tick } from 'svelte'
 
 	type Tag = { id: number; name: string; color: string; icon: string }
@@ -26,11 +27,33 @@
 	} = $props()
 
 	let open = $state(false)
+	let search = $state('')
+	let creating = $state(false)
 
 	const selectedTags = $derived(tags.filter((t) => selected.includes(t.id)))
 
+	// Offer to create a tag when the search has text that doesn't already name one.
+	const trimmedSearch = $derived(search.trim())
+	const canCreate = $derived(
+		trimmedSearch.length > 0 && !tags.some((t) => t.name.toLowerCase() === trimmedSearch.toLowerCase())
+	)
+
 	function toggle(id: number) {
 		selected = selected.includes(id) ? selected.filter((t) => t !== id) : [...selected, id]
+		// Clear the search so the next pick starts from the full list.
+		search = ''
+	}
+
+	async function create() {
+		if (!canCreate || creating) return
+		creating = true
+		try {
+			const created = await quickCreateTag(trimmedSearch)
+			if (created && !selected.includes(created.id)) selected = [...selected, created.id]
+			search = ''
+		} finally {
+			creating = false
+		}
 	}
 
 	// Tabbing out of the open palette mimics native Tab on the trigger: the palette closes and
@@ -80,12 +103,15 @@
 	>
 		<Command.Root class="flex flex-col">
 			<Command.Input
+				bind:value={search}
 				placeholder="Search Tags..."
 				onkeydown={paletteKeydown}
 				class="m-2.5 rounded-sm border border-transparent bg-bg-warm px-2.5 py-1.5 text-[13px] text-foreground placeholder:text-text-mute"
 			/>
 			<Command.List class="max-h-[260px] overflow-y-auto px-2.5 pb-2.5">
-				<Command.Empty class="px-2.5 py-3 text-center text-[12.5px] text-text-mute">No tags match.</Command.Empty>
+				{#if !canCreate}
+					<Command.Empty class="px-2.5 py-3 text-center text-[12.5px] text-text-mute">No tags match.</Command.Empty>
+				{/if}
 				{#each tags as tg (tg.id)}
 					{@const isSelected = selected.includes(tg.id)}
 					<Command.Item
@@ -100,6 +126,21 @@
 						{/if}
 					</Command.Item>
 				{/each}
+				{#if canCreate}
+					<Command.Item
+						value={search}
+						forceMount
+						onSelect={create}
+						class="flex w-full cursor-pointer items-center gap-2.5 rounded-sm px-2.5 py-2 text-left text-foreground data-selected:bg-bg-warm"
+					>
+						<span class="inline-flex size-[26px] shrink-0 items-center justify-center rounded-lg bg-bg-warm text-text-mute">
+							<PlusIcon size={14} />
+						</span>
+						<span class="flex-1 text-[13.5px]">
+							Create <span class="font-semibold">“{trimmedSearch}”</span>
+						</span>
+					</Command.Item>
+				{/if}
 			</Command.List>
 		</Command.Root>
 	</Popover.Content>
