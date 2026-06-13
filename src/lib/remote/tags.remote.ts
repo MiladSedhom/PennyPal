@@ -4,6 +4,7 @@ import { tag, paymentsToTags } from '$lib/server/db/schema'
 import { and, eq, ne } from 'drizzle-orm'
 import { getLoggedInUser } from './auth.remote'
 import { tagUpsertSchema } from '$lib/schemas'
+import { DEFAULT_TAG_COLOR, DEFAULT_TAG_ICON } from '$lib/tag-meta'
 import * as v from 'valibot'
 import { invalid } from '@sveltejs/kit'
 
@@ -39,6 +40,26 @@ export const createOrUpdateTag = form(tagUpsertSchema, async (data, issue) => {
 
 	getTags().refresh()
 	return { ok: true as const }
+})
+
+const quickCreateTagSchema = v.pipe(v.string(), v.trim(), v.minLength(1), v.maxLength(255))
+
+export const quickCreateTag = command(quickCreateTagSchema, async (name) => {
+	const user = await getLoggedInUser()
+
+	const [existing] = await db
+		.select()
+		.from(tag)
+		.where(and(eq(tag.userId, user.id), eq(tag.name, name)))
+	if (existing) return existing
+
+	const [created] = await db
+		.insert(tag)
+		.values({ name, color: DEFAULT_TAG_COLOR, icon: DEFAULT_TAG_ICON, userId: user.id })
+		.returning()
+
+	getTags().refresh()
+	return created
 })
 
 export const deleteTag = command(v.number(), async (id) => {
