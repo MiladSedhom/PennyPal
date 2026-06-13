@@ -14,7 +14,7 @@
 	import Caption from '$lib/components/pp/caption.svelte'
 	import * as Kbd from '$lib/components/ui/kbd/index.js'
 	import TagMultiSelect from '$lib/components/pp/tag-multiselect.svelte'
-	import { formatMoney } from '$lib/utils'
+	import { formatMoney } from '$lib/utils/index'
 
 	const { onsaved }: { onsaved?: () => void } = $props()
 

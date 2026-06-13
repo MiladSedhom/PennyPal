@@ -1,31 +1,45 @@
-export function toTitleCase(input: string): string {
-	if (!input) return ''
+import { clsx, type ClassValue } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 
-	// Detect whether the input contains camelCase / PascalCase transitions
-	// (i.e. mixed-case letters without separators).  Only in that situation do
-	// we treat all-caps tokens as acronyms worth preserving.
-	const hasCamelOrPascal = /[a-z][A-Z]/.test(input) || /[A-Z]{2,}[a-z]/.test(input)
+export function cn(...inputs: ClassValue[]) {
+	return twMerge(clsx(inputs))
+}
 
-	// Step 1: Insert spaces at camelCase / PascalCase boundaries.
-	const withSpaces = input
-		// "HTTPSRequest" → "HTTPS Request"
-		.replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
-		// "camelCase" → "camel Case"
-		.replace(/([a-z\d])([A-Z])/g, '$1 $2')
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type WithoutChild<T> = T extends { child?: any } ? Omit<T, 'child'> : T
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type WithoutChildren<T> = T extends { children?: any } ? Omit<T, 'children'> : T
+export type WithoutChildrenOrChild<T> = WithoutChildren<WithoutChild<T>>
+export type WithElementRef<T, U extends HTMLElement = HTMLElement> = T & { ref?: U | null }
 
-	// Step 2: Split on any non-alphanumeric separator and drop empty tokens.
-	const words = withSpaces.split(/[\s_\-\.]+/).filter((word) => word.length > 0)
+const usd = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })
 
-	// Step 3: Title-case each word.
-	//   • If the original string had camelCase/PascalCase AND this token is all
-	//     uppercase with 2+ chars, treat it as an acronym and preserve it.
-	//   • Otherwise, standard Title Case (first letter up, rest down).
-	return words
-		.map((word) => {
-			if (hasCamelOrPascal && /^[A-Z]{2,}$/.test(word)) {
-				return word // preserve embedded acronyms: HTTPS, API, URL …
-			}
-			return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-		})
-		.join(' ')
+/** Format a whole-dollar amount as USD, e.g. 2150 -> "$2,150". */
+export function formatMoney(dollars: number): string {
+	return usd.format(Math.round(dollars))
+}
+
+export function formatRelativeTime(date: Date, locale: string = 'en'): string {
+	const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' })
+
+	const diffMs = date.getTime() - Date.now()
+
+	const seconds = Math.round(diffMs / 1000)
+	const minutes = Math.round(seconds / 60)
+	const hours = Math.round(minutes / 60)
+	const days = Math.round(hours / 24)
+
+	if (Math.abs(seconds) < 60) {
+		return rtf.format(seconds, 'second')
+	}
+
+	if (Math.abs(minutes) < 60) {
+		return rtf.format(minutes, 'minute')
+	}
+
+	if (Math.abs(hours) < 24) {
+		return rtf.format(hours, 'hour')
+	}
+
+	return rtf.format(days, 'day')
 }

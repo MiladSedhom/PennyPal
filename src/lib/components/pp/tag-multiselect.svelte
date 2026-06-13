@@ -6,7 +6,7 @@
 	import PlusIcon from '@lucide/svelte/icons/plus'
 	import CheckIcon from '@lucide/svelte/icons/check'
 	import type { PopoverTriggerProps } from 'bits-ui'
-	import { focusAdjacentTabbable } from '$lib/utils'
+	import { focusAdjacentTabbable } from '$lib/utils/focus-adjacent-tabbable'
 	import { quickCreateTag } from '$lib/remote/tags.remote'
 	import { tick } from 'svelte'
 

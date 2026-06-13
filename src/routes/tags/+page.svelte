@@ -16,7 +16,7 @@
 	import Trash2Icon from '@lucide/svelte/icons/trash-2'
 	import SearchIcon from '@lucide/svelte/icons/search'
 	import XIcon from '@lucide/svelte/icons/x'
-	import { toTitleCase } from '$lib/utils/index'
+	import { toTitleCase } from '$lib/utils/to-title-case'
 
 	const tags = $derived(await getTags())
 	const payments = $derived(await getPayments())
