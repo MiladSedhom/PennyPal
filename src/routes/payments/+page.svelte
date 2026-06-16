@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { untrack } from 'svelte'
+	import { onMount, untrack } from 'svelte'
 	import { getPaymentsPage, getPaymentsMeta, deletePayment } from '$lib/remote/payments.remote'
 	import { getTags } from '$lib/remote/tags.remote'
 	import PaymentsForm from '$lib/components/payments-form.svelte'
 	import PaymentEditDialog from '$lib/components/payment-edit-dialog.svelte'
 	import { dialogs } from '$lib/components/pp/confirm-dialog'
 	import { SvelteDate, SvelteMap, SvelteSet } from 'svelte/reactivity'
-	import { Debounced } from 'runed'
+	import { Debounced, PersistedState, watch } from 'runed'
 
 	import Card from '$lib/components/pp/card.svelte'
 	import Caption from '$lib/components/pp/caption.svelte'
@@ -21,7 +21,7 @@
 	import { Slider } from '$lib/components/ui/slider'
 	import { createSvelteTable, FlexRender } from '$lib/components/ui/data-table'
 	import { createColumnHelper, getCoreRowModel, type SortingState, type PaginationState } from '@tanstack/table-core'
-	import { DateFormatter } from '@internationalized/date'
+	import { DateFormatter, parseDate } from '@internationalized/date'
 	import { type DateRange } from 'bits-ui'
 
 	import SearchIcon from '@lucide/svelte/icons/search'
@@ -44,9 +44,30 @@
 		tags: { id: number; name: string; color: string; icon: string }[]
 	}
 
-	// --- filter / sort / paging state ---
-	let q = $state('')
-	const qDebounced = new Debounced(() => q, 300)
+	type FilterSnapshot = {
+		q: string
+		tags: number[]
+		min: number | null
+		max: number | null
+		from: string | null
+		to: string | null
+		sort: 'date' | 'amount'
+		dir: 'asc' | 'desc'
+	}
+	const FILTER_DEFAULTS: FilterSnapshot = {
+		q: '',
+		tags: [],
+		min: null,
+		max: null,
+		from: null,
+		to: null,
+		sort: 'date',
+		dir: 'desc'
+	}
+	const storedFilters = new PersistedState<FilterSnapshot>('pp:payment-filters', FILTER_DEFAULTS)
+
+	let search = $state('')
+	const debouncedSearch = new Debounced(() => search, 300)
 	let activeTagIds = $state<number[]>([])
 	let amountMin = $state<number | null>(null)
 	let amountMax = $state<number | null>(null)
@@ -64,7 +85,7 @@
 		pageSize: pagination.pageSize,
 		sort: sortKey as 'date' | 'amount',
 		dir: sortDir as 'asc' | 'desc',
-		search: qDebounced.current,
+		search: debouncedSearch.current,
 		tagIds: activeTagIds,
 		amountMin,
 		amountMax,
@@ -79,7 +100,7 @@
 	// Reset to first page whenever a filter or sort changes (not on page change).
 	const filterKey = $derived(
 		JSON.stringify([
-			qDebounced.current,
+			debouncedSearch.current,
 			activeTagIds,
 			amountMin,
 			amountMax,
@@ -89,12 +110,46 @@
 			sortDir
 		])
 	)
-	$effect(() => {
-		// reference filterKey so this effect re-runs on any filter/sort change
-		void filterKey
-		untrack(() => {
+
+	watch(
+		() => filterKey,
+		() => {
 			pagination.pageIndex = 0
-		})
+		}
+	)
+
+	// Apply the saved filters once, after mount (localStorage isn't available during SSR).
+	let filtersHydrated = false
+	onMount(() => {
+		search = storedFilters.current.q
+		activeTagIds = storedFilters.current.tags
+		amountMin = storedFilters.current.min
+		amountMax = storedFilters.current.max
+		range = {
+			start: storedFilters.current.from ? parseDate(storedFilters.current.from) : undefined,
+			end: storedFilters.current.to ? parseDate(storedFilters.current.to) : undefined
+		}
+		sorting = [
+			{ id: storedFilters.current.sort === 'amount' ? 'amount' : 'date', desc: storedFilters.current.dir !== 'asc' }
+		]
+		filtersHydrated = true
+	})
+
+	// Persist filters whenever they change. Skip writes until the saved values have been
+	// applied, so the initial defaults don't clobber what's already in storage.
+	$effect(() => {
+		const snapshot: FilterSnapshot = {
+			q: search,
+			tags: activeTagIds,
+			min: amountMin,
+			max: amountMax,
+			from: range.start ? range.start.toString() : null,
+			to: range.end ? range.end.toString() : null,
+			sort: sortKey,
+			dir: sortDir
+		}
+		if (!filtersHydrated) return
+		storedFilters.current = snapshot
 	})
 
 	// --- TanStack table (manual everything; server owns filter/sort/page) ---
@@ -313,14 +368,14 @@
 			<div class="flex min-w-[200px] flex-1 items-center gap-2 rounded-full bg-bg-warm px-[14px] py-2">
 				<SearchIcon size={14} class="text-text-mute" />
 				<input
-					bind:value={q}
+					bind:value={search}
 					placeholder="Search notes, tags…"
 					class="flex-1 border-none bg-transparent text-[13.5px] font-medium text-foreground outline-none placeholder:text-text-mute"
 				/>
-				{#if q}
+				{#if search}
 					<button
 						type="button"
-						onclick={() => (q = '')}
+						onclick={() => (search = '')}
 						class="flex border-none bg-transparent p-0 text-text-mute"
 						aria-label="Clear search"
 					>
@@ -438,7 +493,7 @@
 									amountMin = val === '' ? null : Math.max(0, Math.round(Number(val)))
 								}}
 								placeholder="Min"
-								class="w-full rounded-[10px] border border-border bg-bg-warm py-[8px] pl-[24px] pr-[10px] font-mono text-[13px] font-medium text-foreground outline-none focus:border-primary"
+								class="w-full rounded-sm border border-border bg-bg-warm py-[8px] pl-[24px] pr-[10px] font-mono text-[13px] font-medium text-foreground outline-none focus:border-primary"
 							/>
 						</div>
 						<span class="text-text-mute">–</span>
@@ -452,7 +507,7 @@
 									amountMax = val === '' ? null : Math.max(0, Math.round(Number(val)))
 								}}
 								placeholder="Max"
-								class="w-full rounded-[10px] border border-border bg-bg-warm py-[8px] pl-[24px] pr-[10px] font-mono text-[13px] font-medium text-foreground outline-none focus:border-primary"
+								class="w-full rounded-sm border border-border bg-bg-warm py-[8px] pl-[24px] pr-[10px] font-mono text-[13px] font-medium text-foreground outline-none focus:border-primary"
 							/>
 						</div>
 					</div>
@@ -524,7 +579,7 @@
 						{/snippet}
 					</Popover.Trigger>
 					<Popover.Content class="w-[280px] rounded-2xl border-none bg-card p-2.5 shadow-xl" align="start">
-						<div class="mb-2 flex items-center gap-2 rounded-[10px] bg-bg-warm px-2.5 py-1.5">
+						<div class="mb-2 flex items-center gap-2 rounded-sm bg-bg-warm px-2.5 py-1.5">
 							<SearchIcon size={13} class="text-text-mute" />
 							<input
 								bind:value={tagSearch}
@@ -538,7 +593,7 @@
 								<button
 									type="button"
 									onclick={() => toggleTag(t.id)}
-									class="flex w-full items-center gap-2.5 rounded-[10px] border-none px-2.5 py-2 text-left text-foreground"
+									class="flex w-full items-center gap-2.5 rounded-sm border-none px-2.5 py-2 text-left text-foreground"
 									class:bg-bg-warm={on}
 									class:bg-transparent={!on}
 								>
@@ -606,7 +661,7 @@
 							<Table.Row class="border-border-soft bg-bg-warm hover:bg-bg-warm">
 								<Table.Cell colspan={colCount} class="px-6 py-2.5">
 									<div class="flex items-center gap-3">
-										<Caption class="!font-bold !text-foreground">{item.label}</Caption>
+										<Caption class="font-bold! text-foreground!">{item.label}</Caption>
 										<div class="flex-1"></div>
 										<Caption>{formatMoney(item.subtotal)}</Caption>
 									</div>
