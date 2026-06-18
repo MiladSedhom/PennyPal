@@ -1,23 +1,29 @@
 {
-	"version": 1,
-	"skills": {
-		"sveltekit-data-flow": {
-			"source": "spences10/svelte-skills-kit",
-			"sourceType": "github",
-			"skillPath": "plugins/svelte-skills/skills/sveltekit-data-flow/SKILL.md",
-			"computedHash": "03bbb59bc50ddaf40a054c725e9a8eb74be13d04434f9b0e4e905731ce0f4f23"
-		},
-		"sveltekit-remote-functions": {
-			"source": "spences10/svelte-skills-kit",
-			"sourceType": "github",
-			"skillPath": "plugins/svelte-skills/skills/sveltekit-remote-functions/SKILL.md",
-			"computedHash": "6b623633b7cbb7c45e54971fb5f0188f4b2bde71f1f71f7e603151fe2e39b82b"
-		},
-		"sveltekit-structure": {
-			"source": "spences10/svelte-skills-kit",
-			"sourceType": "github",
-			"skillPath": "plugins/svelte-skills/skills/sveltekit-structure/SKILL.md",
-			"computedHash": "9d39127b632fc26b5d8e6cd64131d6f131dbf26b0574dc6482b10d8a3276ee07"
-		}
-	}
+  "version": 1,
+  "skills": {
+    "code-readability": {
+      "source": "baz-scm/awesome-reviewers",
+      "sourceType": "github",
+      "skillPath": "_skills/code-readability/SKILL.md",
+      "computedHash": "8311c4e28da81a1e2f962793c94324ecbebf701d851a2d2fefa1822270c77a71"
+    },
+    "sveltekit-data-flow": {
+      "source": "spences10/svelte-skills-kit",
+      "sourceType": "github",
+      "skillPath": "plugins/svelte-skills/skills/sveltekit-data-flow/SKILL.md",
+      "computedHash": "03bbb59bc50ddaf40a054c725e9a8eb74be13d04434f9b0e4e905731ce0f4f23"
+    },
+    "sveltekit-remote-functions": {
+      "source": "spences10/svelte-skills-kit",
+      "sourceType": "github",
+      "skillPath": "plugins/svelte-skills/skills/sveltekit-remote-functions/SKILL.md",
+      "computedHash": "6b623633b7cbb7c45e54971fb5f0188f4b2bde71f1f71f7e603151fe2e39b82b"
+    },
+    "sveltekit-structure": {
+      "source": "spences10/svelte-skills-kit",
+      "sourceType": "github",
+      "skillPath": "plugins/svelte-skills/skills/sveltekit-structure/SKILL.md",
+      "computedHash": "9d39127b632fc26b5d8e6cd64131d6f131dbf26b0574dc6482b10d8a3276ee07"
+    }
+  }
 }
