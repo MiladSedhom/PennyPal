@@ -161,8 +161,7 @@
 		{/if}
 	</div>
 
-	<!-- Date range -->
-	<Popover.Root>
+	<Popover.Root onOpenChange={(open) => !open && filters.commitRange()}>
 		<Popover.Trigger>
 			{#snippet child({ props })}
 				<button

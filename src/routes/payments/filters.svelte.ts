@@ -45,15 +45,30 @@ export class PaymentFilters {
 	sortDir = $state<SortDir>(DEFAULTS.dir)
 
 	#debouncedSearch = new Debounced(() => this.search, 300)
-	// Dragging the amount slider streams values continuously; debounce before they reach the
-	// server query so a drag doesn't fire a request (and table re-render) on every pixel.
 	#debouncedAmount = new Debounced(() => ({ min: this.amountMin, max: this.amountMax }), 300)
+	// seprate range for query so we contorl when they trigger a refetch.
+	#queryStart = $state<string | null>(DEFAULTS.from)
+	#queryEnd = $state<string | null>(DEFAULTS.to)
 	#store = new PersistedState<FilterSnapshot>(STORAGE_KEY, DEFAULTS)
 
 	constructor() {
 		// Restore once, after mount: localStorage is unavailable during SSR, so deferring
 		// keeps the server render and the first client render identical (no hydration flash).
 		onMount(() => this.#restore())
+		// Commit the picked range to the query only when it's a complete start+end pair (or fully
+		// cleared); ignore the start-only state the calendar passes through during re-selection.
+		watch(
+			() => [this.range.start, this.range.end] as const,
+			([start, end]) => {
+				if (start && end) {
+					this.#queryStart = start.toString()
+					this.#queryEnd = end.toString()
+				} else if (!start && !end) {
+					this.#queryStart = null
+					this.#queryEnd = null
+				}
+			}
+		)
 		// Persist on change. `lazy` skips the initial run so the defaults can't overwrite
 		// what's already stored before #restore() applies it.
 		watch(
@@ -69,17 +84,15 @@ export class PaymentFilters {
 		return this.#debouncedSearch.current
 	}
 
-	/** Debounced amount bounds — use these for server queries, not `amountMin`/`amountMax`. */
 	get debouncedAmount(): { min: number | null; max: number | null } {
 		return this.#debouncedAmount.current
 	}
 
-	/** Date range as `YYYY-MM-DD` strings for the server query. */
 	get dateStart(): string | null {
-		return this.range.start ? this.range.start.toString() : null
+		return this.#queryStart
 	}
 	get dateEnd(): string | null {
-		return this.range.end ? this.range.end.toString() : null
+		return this.#queryEnd
 	}
 
 	/** Serializable view of the filters; also the change signal for persistence. */
@@ -128,6 +141,16 @@ export class PaymentFilters {
 
 	clearRange() {
 		this.range = { start: undefined, end: undefined }
+	}
+
+	/**
+	 * Commit the current selection to the query, including a start-only "from" date. Call when the
+	 * date picker closes so a half-picked range still takes effect (a complete range already commits
+	 * on its own via the constructor's watch).
+	 */
+	commitRange() {
+		this.#queryStart = this.range.start ? this.range.start.toString() : null
+		this.#queryEnd = this.range.end ? this.range.end.toString() : null
 	}
 
 	setSort(key: SortKey) {
