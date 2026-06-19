@@ -1,5 +1,14 @@
 <script lang="ts">
-	import { DateFormatter } from '@internationalized/date'
+	import {
+		DateFormatter,
+		getLocalTimeZone,
+		today,
+		startOfMonth,
+		endOfMonth,
+		startOfYear,
+		endOfYear,
+		type DateValue
+	} from '@internationalized/date'
 
 	import Caption from '$lib/components/pp/caption.svelte'
 	import TagIconChip from '$lib/components/pp/tag-icon-chip.svelte'
@@ -68,9 +77,25 @@
 	const amountActive = $derived(filters.amountMin != null || filters.amountMax != null)
 	const amountLabel = $derived(formatAmountLabel(filters.amountMin, filters.amountMax))
 
-	// --- date range ---
 	const dateRangeFormatter = new DateFormatter('en-US', { month: 'short', day: 'numeric' })
 	const rangeLabel = $derived(formatRangeLabel(filters.range))
+
+	type DatePreset = { label: string; start: DateValue; end: DateValue }
+	const now = today(getLocalTimeZone())
+	const lastMonth = now.subtract({ months: 1 })
+	const datePresets: DatePreset[] = [
+		{ label: 'This month', start: startOfMonth(now), end: endOfMonth(now) },
+		{ label: 'Last month', start: startOfMonth(lastMonth), end: endOfMonth(lastMonth) },
+		{ label: 'Last 3 months', start: startOfMonth(now.subtract({ months: 2 })), end: endOfMonth(now) },
+		{ label: 'Last 6 months', start: startOfMonth(now.subtract({ months: 5 })), end: endOfMonth(now) },
+		{ label: 'This year', start: startOfYear(now), end: endOfYear(now) }
+	]
+	function applyDatePreset(preset: DatePreset) {
+		filters.range = { start: preset.start, end: preset.end }
+	}
+	const isDatePresetActive = (preset: DatePreset) =>
+		filters.range.start?.toString() === preset.start.toString() &&
+		filters.range.end?.toString() === preset.end.toString()
 
 	// --- sort ---
 	const SORT_OPTIONS: { key: SortKey; label: string }[] = [
@@ -181,6 +206,22 @@
 		</Popover.Trigger>
 		<Popover.Content class="w-auto rounded-2xl border-none bg-card p-2 shadow-xl" align="end">
 			<RangeCalendar bind:value={filters.range} numberOfMonths={2} />
+			<div class="mt-2 flex flex-wrap gap-2 px-1 pb-1">
+				{#each datePresets as preset (preset.label)}
+					{@const isActive = isDatePresetActive(preset)}
+					<button
+						type="button"
+						onclick={() => applyDatePreset(preset)}
+						class="rounded-full px-3 py-[6px] text-[12.5px] font-semibold"
+						class:bg-mint={isActive}
+						class:text-foreground={isActive}
+						class:bg-bg-warm={!isActive}
+						class:text-text-dim={!isActive}
+					>
+						{preset.label}
+					</button>
+				{/each}
+			</div>
 		</Popover.Content>
 	</Popover.Root>
 
