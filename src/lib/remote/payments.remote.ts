@@ -3,6 +3,7 @@ import { db } from '$lib/server/db'
 import { payment, paymentsToTags, tag } from '$lib/server/db/schema'
 import { and, asc, desc, eq, gte, ilike, inArray, isNotNull, lte, or, sql } from 'drizzle-orm'
 import { getLoggedInUser } from '$lib/remote/auth.remote'
+import { reanchorRollingRule } from '$lib/server/recurring'
 import * as v from 'valibot'
 
 export const getPayments = query(async () => {
@@ -86,19 +87,24 @@ const paymentUpdateSchema = v.object({
 export const updatePayment = command(paymentUpdateSchema, async ({ id, amount, note, tags, date }) => {
 	const user = await getLoggedInUser()
 
+	let recurringId: number | null = null
 	await db.transaction(async (tx) => {
-		const updated = await tx
+		const [updated] = await tx
 			.update(payment)
 			.set({ amount: Math.round(amount), note, createdAt: date })
 			.where(and(eq(payment.id, id), eq(payment.userId, user.id)))
-			.returning({ id: payment.id })
-		if (updated.length === 0) return
+			.returning({ id: payment.id, recurringPaymentId: payment.recurringPaymentId })
+		if (!updated) return
+		recurringId = updated.recurringPaymentId
 
 		await tx.delete(paymentsToTags).where(eq(paymentsToTags.paymentId, id))
 		if (tags.length > 0) {
 			await tx.insert(paymentsToTags).values(tags.map((tagId) => ({ paymentId: id, tagId })))
 		}
 	})
+
+	// Editing a rolling rule's payment date moves its cycle (no-op for fixed rules).
+	if (recurringId != null) await reanchorRollingRule(recurringId)
 
 	getPayments().refresh()
 })
@@ -128,16 +134,21 @@ export const confirmAllPendingPayments = command(async () => {
 export const deletePayment = command(v.number(), async (id) => {
 	const user = await getLoggedInUser()
 
+	let recurringId: number | null = null
 	await db.transaction(async (tx) => {
-		const owned = await tx
-			.select({ id: payment.id })
+		const [owned] = await tx
+			.select({ id: payment.id, recurringPaymentId: payment.recurringPaymentId })
 			.from(payment)
 			.where(and(eq(payment.id, id), eq(payment.userId, user.id)))
-		if (owned.length === 0) return
+		if (!owned) return
+		recurringId = owned.recurringPaymentId
 
 		await tx.delete(paymentsToTags).where(eq(paymentsToTags.paymentId, id))
 		await tx.delete(payment).where(eq(payment.id, id))
 	})
+
+	// Deleting a rolling rule's latest payment rolls its cycle back (no-op for fixed rules).
+	if (recurringId != null) await reanchorRollingRule(recurringId)
 
 	getPayments().refresh()
 })

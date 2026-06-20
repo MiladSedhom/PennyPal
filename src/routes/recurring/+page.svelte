@@ -2,11 +2,11 @@
 	import { getRecurringPayments, deleteRecurringPayment, setRecurringPaused } from '$lib/remote/recurring.remote'
 	import { getTags } from '$lib/remote/tags.remote'
 	import RecurringEditDialog from '$lib/components/recurring-edit-dialog.svelte'
+	import RecurringRenewDialog from '$lib/components/recurring-renew-dialog.svelte'
 
 	import Card from '$lib/components/pp/card.svelte'
 	import Caption from '$lib/components/pp/caption.svelte'
 	import TagChip from '$lib/components/pp/tag-chip.svelte'
-	import TagIconChip from '$lib/components/pp/tag-icon-chip.svelte'
 	import { Button } from '$lib/components/ui/button'
 	import { dialogs } from '$lib/components/pp/confirm-dialog'
 	import { formatCadence } from '$lib/recurrence'
@@ -18,6 +18,7 @@
 	import Trash2Icon from '@lucide/svelte/icons/trash-2'
 	import PauseIcon from '@lucide/svelte/icons/pause'
 	import PlayIcon from '@lucide/svelte/icons/play'
+	import CheckIcon from '@lucide/svelte/icons/check'
 
 	const rules = $derived(await getRecurringPayments())
 	const tags = $derived(await getTags())
@@ -25,14 +26,21 @@
 	type Rule = (typeof rules)[number]
 
 	let editing = $state<Rule | 'new' | null>(null)
+	let paying = $state<Rule | null>(null)
 
 	const dateFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 
 	const isCompleted = (r: Rule) => r.endDate !== null && new Date(r.nextRunAt) > new Date(r.endDate)
+	const canPayNow = (r: Rule) => r.rolling && !r.paused && !isCompleted(r)
 
 	function status(r: Rule) {
 		if (r.paused) return 'Paused'
 		if (isCompleted(r)) return 'Completed'
+		if (r.rolling) {
+			return new Date(r.nextRunAt).getTime() <= Date.now()
+				? 'Due now'
+				: `Due ${dateFormatter.format(new Date(r.nextRunAt))}`
+		}
 		return `Next: ${dateFormatter.format(new Date(r.nextRunAt))}`
 	}
 
@@ -76,35 +84,36 @@
 					class="group flex items-center gap-4 px-6 py-4 {i > 0 ? 'border-t border-border-soft' : ''}"
 					class:opacity-60={r.paused || completed}
 				>
-					{#if r.tags.length > 0}
-						<TagIconChip color={r.tags[0].color} icon={r.tags[0].icon} size={36} />
-					{:else}
-						<span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-bg-warm text-text-dim">
-							<RepeatIcon size={16} />
-						</span>
-					{/if}
+					<div class="w-[88px] shrink-0 text-[16.5px] font-bold tabular-nums">{formatMoney(r.amount)}</div>
 
-					<div class="min-w-0 flex-1">
-						<div class="truncate text-[14px] font-semibold">
-							{r.note || formatCadence(r.interval, r.intervalCount)}
-						</div>
-						<Caption>{formatCadence(r.interval, r.intervalCount)}</Caption>
-					</div>
-
-					<span class="hidden flex-wrap items-center gap-1.5 sm:flex">
+					<span class="flex shrink-0 flex-wrap items-center gap-1.5">
 						{#each r.tags as t (t.id)}
 							<TagChip name={t.name} color={t.color} icon={t.icon} size="sm" />
 						{/each}
 					</span>
 
-					<div class="w-[170px] text-right">
-						<div class="text-[14.5px] font-semibold tabular-nums">{formatMoney(r.amount)}</div>
-						<Caption class={r.paused || completed ? '' : 'text-lime-text!'}>{status(r)}</Caption>
+					<div class="min-w-0 flex-1">
+						<div class="truncate text-[15px] font-semibold">
+							{formatCadence(r.interval, r.intervalCount)}
+						</div>
+						{#if r.note}
+							<div class="truncate text-[12.5px] text-text-mute">{r.note}</div>
+						{/if}
 					</div>
 
-					<span
-						class="flex items-center gap-0.5 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100"
-					>
+					<Caption class="shrink-0 {r.paused || completed ? '' : 'text-lime-text!'}">{status(r)}</Caption>
+
+					{#if canPayNow(r)}
+						<button
+							type="button"
+							onclick={() => (paying = r)}
+							class="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-mint px-3.5 py-1.5 text-[12.5px] font-semibold text-foreground hover:bg-mint-deep"
+						>
+							<CheckIcon size={13} /> Pay now
+						</button>
+					{/if}
+
+					<span class="flex shrink-0 items-center gap-0.5">
 						{#if !completed}
 							<button
 								type="button"
@@ -139,3 +148,4 @@
 </div>
 
 <RecurringEditDialog rule={editing} {tags} onclose={() => (editing = null)} />
+<RecurringRenewDialog rule={paying} onclose={() => (paying = null)} />

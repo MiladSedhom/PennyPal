@@ -6,6 +6,7 @@
 	import { getRecurringPayments } from '$lib/remote/recurring.remote'
 	import { formatCadence } from '$lib/recurrence'
 	import PaymentsForm from '$lib/components/payments-form.svelte'
+	import RecurringRenewDialog from '$lib/components/recurring-renew-dialog.svelte'
 	import { resolve } from '$app/paths'
 	import { SvelteDate, SvelteSet, SvelteMap } from 'svelte/reactivity'
 
@@ -21,6 +22,7 @@
 	import TrendingDownIcon from '@lucide/svelte/icons/trending-down'
 	import PiggyBankIcon from '@lucide/svelte/icons/piggy-bank'
 	import RepeatIcon from '@lucide/svelte/icons/repeat'
+	import CheckIcon from '@lucide/svelte/icons/check'
 	import SparklesIcon from '@lucide/svelte/icons/sparkles'
 	import TriangleAlertIcon from '@lucide/svelte/icons/triangle-alert'
 	import GaugeIcon from '@lucide/svelte/icons/gauge'
@@ -30,6 +32,8 @@
 	const tags = $derived(await getTags())
 	const budget = $derived(await getCurrentBudget())
 	const recurringRules = $derived(await getRecurringPayments())
+
+	let paying = $state<{ id: number; amount: number; note: string | null } | null>(null)
 
 	const now = new SvelteDate()
 	const monthLabel = now.toLocaleString('en-US', { month: 'long', year: 'numeric' })
@@ -158,6 +162,8 @@
 				const diff = Math.round((next.getTime() - now.getTime()) / 86_400_000)
 				const due = diff <= 0 ? 'Due' : diff === 1 ? 'Tomorrow' : `in ${diff}d`
 				return {
+					id: r.id,
+					rolling: r.rolling,
 					note: r.note || formatCadence(r.interval, r.intervalCount),
 					color: r.tags[0]?.color ?? 'sage',
 					icon: r.tags[0]?.icon ?? 'Repeat',
@@ -335,6 +341,12 @@
 		</div>
 	</div>
 
+	<RecurringRenewDialog
+		rule={paying}
+		onclose={() => (paying = null)}
+		onsaved={() => getRecurringPayments().refresh()}
+	/>
+
 	<!-- Row 2: trend + insights -->
 	<div class="mb-4 grid gap-4 lg:grid-cols-[1.5fr_1fr]">
 		<Card>
@@ -451,10 +463,19 @@
 					{#each upcoming as b, i (i)}
 						<div class="flex items-center gap-3 py-3" class:border-t={i > 0} class:border-border-soft={i > 0}>
 							<TagIconChip color={b.color} icon={b.icon} size={32} />
-							<div class="flex-1">
-								<div class="text-[13.5px] font-semibold">{b.note}</div>
+							<div class="min-w-0 flex-1">
+								<div class="truncate text-[13.5px] font-semibold">{b.note}</div>
 								<Caption>{b.whenLabel}</Caption>
 							</div>
+							{#if b.rolling}
+								<button
+									type="button"
+									onclick={() => (paying = b)}
+									class="inline-flex items-center gap-1 rounded-full bg-mint px-3 py-1.5 text-[12px] font-semibold text-foreground hover:bg-mint-deep"
+								>
+									<CheckIcon size={12} /> Pay
+								</button>
+							{/if}
 							<div class="text-right">
 								<div class="text-[13.5px] font-semibold tabular-nums">{formatMoney(b.amount)}</div>
 								<Caption class={b.due === 'Due' ? '!text-[color:var(--danger)]' : ''}>{b.due}</Caption>

@@ -82,6 +82,10 @@ export const recurringPayment = pgTable(
 		nextRunAt: timestamp('nextRunAt').notNull(),
 		endDate: timestamp('endDate'),
 		paused: boolean('paused').notNull().default(false),
+		// Fixed (false): occurrences stay on the calendar anchor — rent on the 1st.
+		// Rolling (true): each cycle re-anchors to the actual payment date — quota subs;
+		// pay early/late and the schedule follows (see reanchorRollingRule).
+		rolling: boolean('rolling').notNull().default(false),
 		...timestamps,
 		userId: uuid('userId')
 			.notNull()

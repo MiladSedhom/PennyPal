@@ -28,6 +28,7 @@
 		intervalCount: number
 		startDate: string | Date
 		endDate: string | Date | null
+		rolling: boolean
 		tags: Tag[]
 	}
 
@@ -60,6 +61,7 @@
 	let intervalCount = $derived(editing?.intervalCount ?? 1)
 	let startDate = $derived<DateValue>(editing ? toCalendarDate(editing.startDate) : today())
 	let endDate = $derived<DateValue | undefined>(editing?.endDate ? toCalendarDate(editing.endDate) : undefined)
+	let rolling = $derived(editing?.rolling ?? false)
 
 	const schedule = $derived<Schedule>({
 		interval,
@@ -80,8 +82,9 @@
 		return nextOccurrences(schedule, new Date(), 3, endDateAsDate)
 	})
 	// How many payments a past start date will create immediately on save.
+	// Rolling rules only ever create one outstanding payment, so we don't preview a backfill.
 	const backfillCount = $derived.by(() => {
-		if (intervalCountInvalid || editing) return 0
+		if (intervalCountInvalid || editing || rolling) return 0
 		const now = Date.now()
 		let count = 0
 		while (count < 100) {
@@ -108,7 +111,8 @@
 				interval,
 				intervalCount,
 				startDate: schedule.startDate,
-				endDate: endDateAsDate
+				endDate: endDateAsDate,
+				rolling
 			}
 			if (editing) await updateRecurringPayment({ id: editing.id, ...payload })
 			else await createRecurringPayment(payload)
@@ -195,6 +199,31 @@
 						</Select.Content>
 					</Select.Root>
 				</div>
+			</div>
+
+			<div class="flex flex-col gap-1.5">
+				<Caption>Schedule</Caption>
+				<div class="inline-flex gap-1 self-start rounded-[10px] bg-bg-warm p-1">
+					{#each [{ v: false, label: 'Fixed dates' }, { v: true, label: 'Rolls from each payment' }] as opt (opt.label)}
+						<button
+							type="button"
+							onclick={() => (rolling = opt.v)}
+							class="rounded-[7px] border-none px-3 py-1.5 text-[12.5px] font-semibold"
+							class:bg-card={rolling === opt.v}
+							class:text-foreground={rolling === opt.v}
+							class:shadow-xs={rolling === opt.v}
+							class:bg-transparent={rolling !== opt.v}
+							class:text-text-mute={rolling !== opt.v}
+						>
+							{opt.label}
+						</button>
+					{/each}
+				</div>
+				<span class="text-[12px] text-text-mute">
+					{rolling
+						? 'Each cycle starts from when you actually pay — pay early or late and the schedule follows.'
+						: 'Payments land on the same calendar dates regardless of when you pay.'}
+				</span>
 			</div>
 
 			<div class="flex flex-col gap-1.5">

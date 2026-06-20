@@ -1,0 +1,1 @@
+ALTER TABLE "RecurringPayment" ADD COLUMN "rolling" boolean DEFAULT false NOT NULL;
