@@ -1,6 +1,12 @@
 <script lang="ts">
 	import { watch } from 'runed'
-	import { getPaymentsPage, getPaymentsMeta, deletePayment } from '$lib/remote/payments.remote'
+	import {
+		getPaymentsPage,
+		getPaymentsMeta,
+		deletePayment,
+		confirmPayment,
+		confirmAllPendingPayments
+	} from '$lib/remote/payments.remote'
 	import { getTags } from '$lib/remote/tags.remote'
 	import { dialogs } from '$lib/components/pp/confirm-dialog'
 	import { type PaginationState } from '@tanstack/table-core'
@@ -31,7 +37,9 @@
 		amountMin: filters.debouncedAmount.min,
 		amountMax: filters.debouncedAmount.max,
 		dateStart: filters.dateStart,
-		dateEnd: filters.dateEnd
+		dateEnd: filters.dateEnd,
+		confirmed: filters.status,
+		recurringOnly: filters.recurringOnly
 	})
 
 	const pageData = $derived(await getPaymentsPage(args))
@@ -52,6 +60,16 @@
 	function refreshPayments() {
 		getPaymentsPage(args).refresh()
 		getPaymentsMeta().refresh()
+	}
+
+	async function confirmRow(r: Row) {
+		await confirmPayment(r.id)
+		refreshPayments()
+	}
+
+	async function confirmAllPending() {
+		await confirmAllPendingPayments()
+		refreshPayments()
 	}
 
 	function confirmDelete(r: Row) {
@@ -92,11 +110,24 @@
 	</div>
 
 	<Card pad="md" class="mb-4">
-		<PaymentsFilterBar {filters} {tags} {meta} />
+		<PaymentsFilterBar
+			{filters}
+			{tags}
+			{meta}
+			pendingCount={filters.status === 'pending' ? pageData.total : 0}
+			onconfirmAll={confirmAllPending}
+		/>
 	</Card>
 
 	<Card pad="none" class="overflow-hidden">
-		<PaymentsTable {filters} {pageData} bind:pagination onedit={(r) => (editing = r)} ondelete={confirmDelete} />
+		<PaymentsTable
+			{filters}
+			{pageData}
+			bind:pagination
+			onedit={(r) => (editing = r)}
+			ondelete={confirmDelete}
+			onconfirm={confirmRow}
+		/>
 	</Card>
 </div>
 

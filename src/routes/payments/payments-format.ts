@@ -7,6 +7,8 @@ export type Row = {
 	amount: number
 	note: string | null
 	createdAt: string | Date
+	recurringPaymentId: number | null
+	confirmed: boolean
 	tags: Tag[]
 }
 

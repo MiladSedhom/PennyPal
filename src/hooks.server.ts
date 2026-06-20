@@ -1,5 +1,6 @@
 import type { Handle } from '@sveltejs/kit'
 import * as auth from '$lib/server/auth'
+import { catchUpRecurringPayments } from '$lib/server/recurring'
 
 const handleAuth: Handle = async ({ event, resolve }) => {
 	const sessionToken = event.cookies.get(auth.sessionCookieName)
@@ -16,6 +17,14 @@ const handleAuth: Handle = async ({ event, resolve }) => {
 		auth.setSessionTokenCookie(event, sessionToken, session.expiresAt)
 	} else {
 		auth.deleteSessionTokenCookie(event)
+	}
+
+	if (user) {
+		try {
+			await catchUpRecurringPayments(user.id)
+		} catch (e) {
+			console.error('recurring catch-up failed', e)
+		}
 	}
 
 	event.locals.user = user

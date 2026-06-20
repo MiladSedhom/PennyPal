@@ -1,7 +1,7 @@
 import { command, query } from '$app/server'
 import { db } from '$lib/server/db'
 import { payment, paymentsToTags, tag } from '$lib/server/db/schema'
-import { and, asc, desc, eq, gte, ilike, inArray, lte, or, sql } from 'drizzle-orm'
+import { and, asc, desc, eq, gte, ilike, inArray, isNotNull, lte, or, sql } from 'drizzle-orm'
 import { getLoggedInUser } from '$lib/remote/auth.remote'
 import * as v from 'valibot'
 
@@ -24,6 +24,8 @@ export const getPayments = query(async () => {
 		amount: p.amount,
 		note: p.note,
 		createdAt: p.createdAt,
+		recurringPaymentId: p.recurringPaymentId,
+		confirmed: p.confirmed,
 		tags: p.paymentsToTags.map((ptt) => ({
 			id: ptt.tag.id,
 			name: ptt.tag.name,
@@ -101,6 +103,28 @@ export const updatePayment = command(paymentUpdateSchema, async ({ id, amount, n
 	getPayments().refresh()
 })
 
+export const confirmPayment = command(v.number(), async (id) => {
+	const user = await getLoggedInUser()
+
+	await db
+		.update(payment)
+		.set({ confirmed: true })
+		.where(and(eq(payment.id, id), eq(payment.userId, user.id)))
+
+	getPayments().refresh()
+})
+
+export const confirmAllPendingPayments = command(async () => {
+	const user = await getLoggedInUser()
+
+	await db
+		.update(payment)
+		.set({ confirmed: true })
+		.where(and(eq(payment.userId, user.id), eq(payment.confirmed, false)))
+
+	getPayments().refresh()
+})
+
 export const deletePayment = command(v.number(), async (id) => {
 	const user = await getLoggedInUser()
 
@@ -128,7 +152,9 @@ const pageArgsSchema = v.object({
 	amountMin: v.nullable(v.number()),
 	amountMax: v.nullable(v.number()),
 	dateStart: v.nullable(v.string()),
-	dateEnd: v.nullable(v.string())
+	dateEnd: v.nullable(v.string()),
+	confirmed: v.picklist(['all', 'pending', 'confirmed']),
+	recurringOnly: v.boolean()
 })
 
 export const getPaymentsPage = query(pageArgsSchema, async (args) => {
@@ -156,6 +182,8 @@ export const getPaymentsPage = query(pageArgsSchema, async (args) => {
 			.where(inArray(paymentsToTags.tagId, args.tagIds))
 		filters.push(inArray(payment.id, tagged))
 	}
+	if (args.confirmed !== 'all') filters.push(eq(payment.confirmed, args.confirmed === 'confirmed'))
+	if (args.recurringOnly) filters.push(isNotNull(payment.recurringPaymentId))
 
 	const where = and(...filters)
 
@@ -181,6 +209,8 @@ export const getPaymentsPage = query(pageArgsSchema, async (args) => {
 			amount: p.amount,
 			note: p.note,
 			createdAt: p.createdAt,
+			recurringPaymentId: p.recurringPaymentId,
+			confirmed: p.confirmed,
 			tags: p.paymentsToTags.map((ptt) => ({
 				id: ptt.tag.id,
 				name: ptt.tag.name,

@@ -3,6 +3,8 @@
 	import { getPayments } from '$lib/remote/payments.remote'
 	import { getTags } from '$lib/remote/tags.remote'
 	import { getCurrentBudget } from '$lib/remote/budgets.remote'
+	import { getRecurringPayments } from '$lib/remote/recurring.remote'
+	import { formatCadence } from '$lib/recurrence'
 	import PaymentsForm from '$lib/components/payments-form.svelte'
 	import { resolve } from '$app/paths'
 	import { SvelteDate, SvelteSet, SvelteMap } from 'svelte/reactivity'
@@ -27,6 +29,7 @@
 	const payments = $derived(await getPayments())
 	const tags = $derived(await getTags())
 	const budget = $derived(await getCurrentBudget())
+	const recurringRules = $derived(await getRecurringPayments())
 
 	const now = new SvelteDate()
 	const monthLabel = now.toLocaleString('en-US', { month: 'long', year: 'numeric' })
@@ -99,7 +102,9 @@
 		const top = byTag.slice(0, 3)
 		const other = byTag.slice(3).reduce((a, s) => a + s.val, 0)
 		const segs = top.map((s) => ({ name: s.name, val: s.val, color: getSwatch(s.color).ink }))
-		if (other > 0) segs.push({ name: 'Other', val: other, color: 'rgba(255,255,255,0.28)' })
+		// Theme-adaptive faint segment: contrasts with the ink card's bg in both light and dark mode.
+		if (other > 0)
+			segs.push({ name: 'Other', val: other, color: 'color-mix(in srgb, var(--background) 32%, transparent)' })
 		return segs
 	})
 
@@ -144,38 +149,23 @@
 	})
 	const trendMax = $derived(Math.max(...trend.map((d) => d.total), 1))
 
-	// Upcoming — predicted from the most recent payment per recurring-looking tag.
-	// (Placeholder until a dedicated recurring-payments model lands.)
-	const RECURRING = new SvelteSet(['rent', 'internet', 'utilities', 'subscriptions', 'fitness'])
+	// Upcoming — the next occurrence of each active recurring rule.
 	const upcoming = $derived.by(() => {
-		const latest = new SvelteMap<
-			string,
-			{ note: string; tagName: string; color: string; icon: string; amount: number; date: Date }
-		>()
-		for (const p of payments) {
-			const rec = p.tags.find((t) => RECURRING.has(t.name.toLowerCase()))
-			if (!rec) continue
-			const key = `${rec.name}-${p.amount}`
-			const d = new SvelteDate(p.createdAt)
-			const prev = latest.get(key)
-			if (!prev || d.getTime() > prev.date.getTime()) {
-				latest.set(key, {
-					note: p.note || rec.name,
-					tagName: rec.name,
-					color: rec.color,
-					icon: rec.icon,
-					amount: p.amount,
-					date: d
-				})
-			}
-		}
-		return [...latest.values()]
-			.map((b) => {
-				const next = new SvelteDate(b.date)
-				next.setMonth(next.getMonth() + 1)
+		return recurringRules
+			.filter((r) => !r.paused && !(r.endDate && new SvelteDate(r.nextRunAt) > new SvelteDate(r.endDate)))
+			.map((r) => {
+				const next = new SvelteDate(r.nextRunAt)
 				const diff = Math.round((next.getTime() - now.getTime()) / 86_400_000)
 				const due = diff <= 0 ? 'Due' : diff === 1 ? 'Tomorrow' : `in ${diff}d`
-				return { ...b, whenLabel: next.toLocaleString('en-US', { month: 'short', day: 'numeric' }), due, diff }
+				return {
+					note: r.note || formatCadence(r.interval, r.intervalCount),
+					color: r.tags[0]?.color ?? 'sage',
+					icon: r.tags[0]?.icon ?? 'Repeat',
+					amount: r.amount,
+					whenLabel: next.toLocaleString('en-US', { month: 'short', day: 'numeric' }),
+					due,
+					diff
+				}
 			})
 			.sort((a, b) => a.diff - b.diff)
 			.slice(0, 4)
@@ -268,7 +258,7 @@
 
 		<!-- Dark donut card -->
 		<Card tone="ink" class="flex min-h-[260px] flex-col">
-			<span class="inline-flex items-center gap-2 text-[13.5px] font-semibold text-white/85">
+			<span class="inline-flex items-center gap-2 text-[13.5px] font-semibold text-background/85">
 				<PieChartIcon size={15} /> Where it went
 			</span>
 			{#if donutPaths.length > 0}
@@ -288,8 +278,14 @@
 								/>
 							{/each}
 						</g>
-						<text x="52" y="58" text-anchor="middle" font-size="12" font-weight="700" fill="#fff" font-family="Inter"
-							>{monthShort}</text
+						<text
+							x="52"
+							y="58"
+							text-anchor="middle"
+							font-size="12"
+							font-weight="700"
+							fill="currentColor"
+							font-family="Inter">{monthShort}</text
 						>
 					</svg>
 					<div class="flex flex-1 flex-col gap-[9px]">
@@ -297,14 +293,16 @@
 							{@const pct = total > 0 ? (p.val / total) * 100 : 0}
 							<div class="flex items-center gap-[9px] text-[13px]">
 								<span class="inline-block h-[9px] w-[9px] rounded-full" style:background={p.color}></span>
-								<span class="flex-1 text-white/80">{p.name}</span>
+								<span class="flex-1 text-background/80">{p.name}</span>
 								<span class="font-semibold">{pct.toFixed(0)}%</span>
 							</div>
 						{/each}
 					</div>
 				</div>
 			{:else}
-				<div class="flex flex-1 items-center justify-center text-[13px] text-white/50">No spending yet this period</div>
+				<div class="flex flex-1 items-center justify-center text-[13px] text-background/55">
+					No spending yet this period
+				</div>
 			{/if}
 		</Card>
 
@@ -441,8 +439,12 @@
 			<span class="mb-4 font-display text-[19px] font-semibold tracking-[-0.02em]">Upcoming</span>
 			{#if upcoming.length === 0}
 				<div class="flex flex-1 items-center justify-center py-6 text-[13px] text-text-mute">
-					<span class="inline-flex items-center gap-2"><RepeatIcon size={14} /> No recurring payments detected yet</span
+					<a
+						href={resolve('/recurring')}
+						class="inline-flex items-center gap-2 text-text-mute no-underline hover:text-foreground"
 					>
+						<RepeatIcon size={14} /> No recurring payments — add one
+					</a>
 				</div>
 			{:else}
 				<div class="flex flex-col">

@@ -11,6 +11,8 @@
 	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right'
 	import PencilIcon from '@lucide/svelte/icons/pencil'
 	import Trash2Icon from '@lucide/svelte/icons/trash-2'
+	import RepeatIcon from '@lucide/svelte/icons/repeat'
+	import CheckIcon from '@lucide/svelte/icons/check'
 
 	import { groupByDay, formatRowDate, type Row, type BodyItem } from './payments-format'
 	import type { PaymentFilters } from './filters.svelte'
@@ -20,13 +22,15 @@
 		pageData,
 		pagination = $bindable(),
 		onedit,
-		ondelete
+		ondelete,
+		onconfirm
 	}: {
 		filters: PaymentFilters
 		pageData: { rows: Row[]; total: number; sum: number }
 		pagination: PaginationState
 		onedit: (row: Row) => void
 		ondelete: (row: Row) => void
+		onconfirm: (row: Row) => void
 	} = $props()
 
 	const columnHelper = createColumnHelper<Row>()
@@ -130,7 +134,7 @@
 					</Table.Row>
 				{:else}
 					{@const r = item.row}
-					<Table.Row class="group border-border-soft">
+					<Table.Row class="group border-border-soft {r.confirmed ? '' : 'bg-warn/5 hover:bg-warn/10'}">
 						<Table.Cell class="px-6 py-[13px] text-[14.5px] font-semibold tabular-nums">
 							{formatMoney(r.amount)}
 						</Table.Cell>
@@ -151,28 +155,49 @@
 							</span>
 						</Table.Cell>
 						<Table.Cell class="px-6 py-[13px] text-[13px] {r.note ? 'text-text-dim' : 'text-text-mute'}">
-							{r.note || '—'}
+							<span class="inline-flex items-center gap-1.5">
+								{#if r.recurringPaymentId}
+									<span
+										class="inline-flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full bg-mint text-foreground"
+										title="Created by a recurring payment"
+									>
+										<RepeatIcon size={12} />
+									</span>
+								{/if}
+								{r.note || '—'}
+							</span>
 						</Table.Cell>
 						<Table.Cell class="px-6 py-[13px]">
-							<span
-								class="flex items-center justify-end gap-0.5 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100"
-							>
-								<button
-									type="button"
-									onclick={() => onedit(r)}
-									class="flex h-7 w-7 items-center justify-center rounded-full border-none bg-transparent text-text-mute hover:bg-bg-warm hover:text-foreground"
-									aria-label="Edit payment"
+							<span class="flex items-center justify-end gap-0.5">
+								{#if !r.confirmed}
+									<button
+										type="button"
+										onclick={() => onconfirm(r)}
+										class="mr-1 inline-flex items-center gap-1 rounded-full bg-mint px-2.5 py-1 text-[11.5px] font-semibold text-foreground hover:bg-mint-deep"
+									>
+										<CheckIcon size={12} /> Confirm
+									</button>
+								{/if}
+								<span
+									class="flex items-center gap-0.5 opacity-0 transition-opacity focus-within:opacity-100 group-hover:opacity-100"
 								>
-									<PencilIcon size={14} />
-								</button>
-								<button
-									type="button"
-									onclick={() => ondelete(r)}
-									class="flex h-7 w-7 items-center justify-center rounded-full border-none bg-transparent text-text-mute hover:bg-bg-warm hover:text-(--danger)"
-									aria-label="Delete payment"
-								>
-									<Trash2Icon size={14} />
-								</button>
+									<button
+										type="button"
+										onclick={() => onedit(r)}
+										class="flex h-7 w-7 items-center justify-center rounded-full border-none bg-transparent text-text-mute hover:bg-bg-warm hover:text-foreground"
+										aria-label="Edit payment"
+									>
+										<PencilIcon size={14} />
+									</button>
+									<button
+										type="button"
+										onclick={() => ondelete(r)}
+										class="flex h-7 w-7 items-center justify-center rounded-full border-none bg-transparent text-text-mute hover:bg-bg-warm hover:text-(--danger)"
+										aria-label="Delete payment"
+									>
+										<Trash2Icon size={14} />
+									</button>
+								</span>
 							</span>
 						</Table.Cell>
 					</Table.Row>

@@ -18,6 +18,7 @@
 	const nav = [
 		{ id: 'dashboard', label: 'Dashboard', path: '/' as const },
 		{ id: 'payments', label: 'Payments', path: '/payments' as const },
+		{ id: 'recurring', label: 'Recurring', path: '/recurring' as const },
 		{ id: 'tags', label: 'Tags', path: '/tags' as const }
 	]
 

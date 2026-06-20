@@ -1,6 +1,6 @@
 import { command, form, query } from '$app/server'
 import { db } from '$lib/server/db'
-import { tag, paymentsToTags } from '$lib/server/db/schema'
+import { tag, paymentsToTags, recurringPaymentsToTags } from '$lib/server/db/schema'
 import { and, eq, ne } from 'drizzle-orm'
 import { getLoggedInUser } from './auth.remote'
 import { tagUpsertSchema } from '$lib/schemas'
@@ -71,6 +71,7 @@ export const deleteTag = command(v.number(), async (id) => {
 	if (owned.length === 0) return
 
 	await db.delete(paymentsToTags).where(eq(paymentsToTags.tagId, id))
+	await db.delete(recurringPaymentsToTags).where(eq(recurringPaymentsToTags.tagId, id))
 	await db.delete(tag).where(eq(tag.id, id))
 	getTags().refresh()
 })

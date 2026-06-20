@@ -24,21 +24,32 @@
 	import CalendarIcon from '@lucide/svelte/icons/calendar'
 	import WalletIcon from '@lucide/svelte/icons/wallet'
 	import TagIcon from '@lucide/svelte/icons/tag'
+	import RepeatIcon from '@lucide/svelte/icons/repeat'
 
 	import type { DateRange } from 'bits-ui'
-	import type { PaymentFilters, SortKey } from './filters.svelte'
+	import type { PaymentFilters, SortKey, StatusFilter } from './filters.svelte'
 	import type { Tag } from './payments-format'
 
 	type TagStat = Tag & { count: number; spend: number }
 	let {
 		filters,
 		tags,
-		meta
+		meta,
+		pendingCount,
+		onconfirmAll
 	}: {
 		filters: PaymentFilters
 		tags: Tag[]
 		meta: { topTags: TagStat[]; maxAmount: number }
+		pendingCount: number
+		onconfirmAll: () => void
 	} = $props()
+
+	const STATUS_OPTIONS: { key: StatusFilter; label: string }[] = [
+		{ key: 'all', label: 'All' },
+		{ key: 'pending', label: 'Pending' },
+		{ key: 'confirmed', label: 'Confirmed' }
+	]
 
 	let tagSearch = $state('')
 
@@ -326,6 +337,46 @@
 			{/each}
 		</div>
 	</div>
+</div>
+
+<div class="mt-3.5 flex flex-wrap items-center gap-2">
+	<Caption class="mr-0.5">Show</Caption>
+	<div class="inline-flex gap-1 rounded-full bg-bg-warm p-1">
+		{#each STATUS_OPTIONS as { key, label } (key)}
+			<button
+				type="button"
+				onclick={() => (filters.status = key)}
+				class="rounded-full border-none px-[14px] py-1.5 text-[12.5px] font-semibold"
+				class:bg-card={filters.status === key}
+				class:text-foreground={filters.status === key}
+				class:shadow-xs={filters.status === key}
+				class:bg-transparent={filters.status !== key}
+				class:text-text-mute={filters.status !== key}
+			>
+				{label}
+			</button>
+		{/each}
+	</div>
+	<button
+		type="button"
+		onclick={() => (filters.recurringOnly = !filters.recurringOnly)}
+		class="inline-flex items-center gap-1.5 rounded-full px-3 py-[6px] text-[12.5px] font-semibold"
+		class:bg-mint={filters.recurringOnly}
+		class:text-foreground={filters.recurringOnly}
+		class:bg-bg-warm={!filters.recurringOnly}
+		class:text-text-mute={!filters.recurringOnly}
+	>
+		<RepeatIcon size={12} /> Recurring
+	</button>
+	{#if filters.status === 'pending' && pendingCount > 0}
+		<button
+			type="button"
+			onclick={onconfirmAll}
+			class="inline-flex items-center gap-1.5 rounded-full bg-mint px-3 py-[6px] text-[12.5px] font-semibold text-foreground hover:bg-mint-deep"
+		>
+			<CheckIcon size={13} /> Confirm all ({pendingCount})
+		</button>
+	{/if}
 </div>
 
 <div class="mt-3.5 flex flex-wrap items-center gap-2">

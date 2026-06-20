@@ -5,6 +5,7 @@ import type { DateRange } from 'bits-ui'
 
 export type SortKey = 'date' | 'amount'
 export type SortDir = 'asc' | 'desc'
+export type StatusFilter = 'all' | 'pending' | 'confirmed'
 
 type FilterSnapshot = {
 	search: string
@@ -15,6 +16,8 @@ type FilterSnapshot = {
 	to: string | null
 	sort: SortKey
 	dir: SortDir
+	status: StatusFilter
+	recurringOnly: boolean
 }
 
 const DEFAULTS: FilterSnapshot = {
@@ -25,7 +28,9 @@ const DEFAULTS: FilterSnapshot = {
 	from: null,
 	to: null,
 	sort: 'date',
-	dir: 'desc'
+	dir: 'desc',
+	status: 'all',
+	recurringOnly: false
 }
 
 const STORAGE_KEY = 'pp:payment-filters'
@@ -43,6 +48,8 @@ export class PaymentFilters {
 	range = $state<DateRange>({ start: undefined, end: undefined })
 	sortKey = $state<SortKey>(DEFAULTS.sort)
 	sortDir = $state<SortDir>(DEFAULTS.dir)
+	status = $state<StatusFilter>(DEFAULTS.status)
+	recurringOnly = $state(DEFAULTS.recurringOnly)
 
 	#debouncedSearch = new Debounced(() => this.search, 300)
 	#debouncedAmount = new Debounced(() => ({ min: this.amountMin, max: this.amountMax }), 300)
@@ -105,7 +112,9 @@ export class PaymentFilters {
 			from: this.dateStart,
 			to: this.dateEnd,
 			sort: this.sortKey,
-			dir: this.sortDir
+			dir: this.sortDir,
+			status: this.status,
+			recurringOnly: this.recurringOnly
 		}
 	}
 
@@ -121,6 +130,8 @@ export class PaymentFilters {
 		}
 		this.sortKey = stored.sort ?? DEFAULTS.sort
 		this.sortDir = stored.dir ?? DEFAULTS.dir
+		this.status = stored.status ?? DEFAULTS.status
+		this.recurringOnly = stored.recurringOnly ?? DEFAULTS.recurringOnly
 	}
 
 	toggleTag(id: number) {
