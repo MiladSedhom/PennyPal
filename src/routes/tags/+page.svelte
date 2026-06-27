@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { getTags, createOrUpdateTag, deleteTag } from '$lib/remote/tags.remote'
+	import { getTags, createOrUpdateTag, deleteTag, mergeTags } from '$lib/remote/tags.remote'
 	import { getPayments } from '$lib/remote/payments.remote'
 
 	import Card from '$lib/components/pp/card.svelte'
 	import Caption from '$lib/components/pp/caption.svelte'
 	import TagIconChip from '$lib/components/pp/tag-icon-chip.svelte'
+	import TagMergeMenu from '$lib/components/pp/tag-merge-menu.svelte'
 	import { Button } from '$lib/components/ui/button'
 	import { dialogs } from '$lib/components/pp/confirm-dialog'
 	import { TAG_PALETTE, TAG_COLOR_LIST, ICON_CHOICES, ICON_LIBRARY, getSwatch, getIcon } from '$lib/tag-meta'
@@ -73,6 +74,26 @@
 			title: `Delete “${t.name}”?`,
 			message: `This can't be undone.${t.count > 0 ? ` It will be removed from ${t.count} payment${t.count === 1 ? '' : 's'}.` : ''}`,
 			confirmText: 'Delete tag'
+		})
+	}
+
+	async function merge(sourceId: number, targetId: number) {
+		await mergeTags({ sourceId, targetId })
+		if (fields.id.value() === sourceId.toString()) resetForm()
+	}
+
+	function confirmMerge(source: (typeof tagsWithPaymentCount)[number], targetId: number) {
+		const target = tagsWithPaymentCount.find((t) => t.id === targetId)
+		if (!target) return
+		const moved =
+			source.count > 0
+				? `“${source.name}”’s ${source.count} payment${source.count === 1 ? '' : 's'} will move to “${target.name}”, and `
+				: ''
+		dialogs.confirm(() => merge(source.id, target.id), {
+			title: `Merge into “${target.name}”?`,
+			message: `${moved}“${source.name}” will be deleted. This can't be undone.`,
+			confirmText: 'Merge tags',
+			tone: 'warning'
 		})
 	}
 </script>
@@ -319,6 +340,9 @@
 						>
 							<PencilIcon size={16} />
 						</button>
+						{#if tagsWithPaymentCount.length > 1}
+							<TagMergeMenu source={t} tags={tags} onpick={(targetId) => confirmMerge(t, targetId)} />
+						{/if}
 						<button
 							type="button"
 							onclick={() => confirmRemove(t)}

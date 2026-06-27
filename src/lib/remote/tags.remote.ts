@@ -1,8 +1,9 @@
 import { command, form, query } from '$app/server'
 import { db } from '$lib/server/db'
 import { tag, paymentsToTags, recurringPaymentsToTags } from '$lib/server/db/schema'
-import { and, eq, ne } from 'drizzle-orm'
+import { and, eq, inArray, ne } from 'drizzle-orm'
 import { getLoggedInUser } from './auth.remote'
+import { getPayments, getPaymentsMeta } from './payments.remote'
 import { tagUpsertSchema } from '$lib/schemas'
 import { DEFAULT_TAG_COLOR, DEFAULT_TAG_ICON } from '$lib/tag-meta'
 import * as v from 'valibot'
@@ -60,6 +61,62 @@ export const quickCreateTag = command(quickCreateTagSchema, async (name) => {
 
 	getTags().refresh()
 	return created
+})
+
+const mergeTagsSchema = v.object({ sourceId: v.number(), targetId: v.number() })
+
+// Fold `sourceId` into `targetId`: move every payment / recurring link from the
+// source tag onto the target, then delete the source. The target keeps its own
+// color, icon and budget.
+export const mergeTags = command(mergeTagsSchema, async ({ sourceId, targetId }) => {
+	const user = await getLoggedInUser()
+	if (sourceId === targetId) return
+
+	// Both tags must belong to the caller before we touch anything.
+	const owned = await db
+		.select({ id: tag.id })
+		.from(tag)
+		.where(and(eq(tag.userId, user.id), inArray(tag.id, [sourceId, targetId])))
+	if (owned.length !== 2) return
+
+	await db.transaction(async (tx) => {
+		// Drop source links whose payment already carries the target tag — re-pointing
+		// them would collide on the (paymentId, tagId) primary key — then move the rest.
+		await tx.delete(paymentsToTags).where(
+			and(
+				eq(paymentsToTags.tagId, sourceId),
+				inArray(
+					paymentsToTags.paymentId,
+					tx.select({ id: paymentsToTags.paymentId }).from(paymentsToTags).where(eq(paymentsToTags.tagId, targetId))
+				)
+			)
+		)
+		await tx.update(paymentsToTags).set({ tagId: targetId }).where(eq(paymentsToTags.tagId, sourceId))
+
+		// Same dedup-then-move for recurring-rule links.
+		await tx.delete(recurringPaymentsToTags).where(
+			and(
+				eq(recurringPaymentsToTags.tagId, sourceId),
+				inArray(
+					recurringPaymentsToTags.recurringPaymentId,
+					tx
+						.select({ id: recurringPaymentsToTags.recurringPaymentId })
+						.from(recurringPaymentsToTags)
+						.where(eq(recurringPaymentsToTags.tagId, targetId))
+				)
+			)
+		)
+		await tx
+			.update(recurringPaymentsToTags)
+			.set({ tagId: targetId })
+			.where(eq(recurringPaymentsToTags.tagId, sourceId))
+
+		await tx.delete(tag).where(and(eq(tag.id, sourceId), eq(tag.userId, user.id)))
+	})
+
+	getTags().refresh()
+	getPayments().refresh()
+	getPaymentsMeta().refresh()
 })
 
 export const deleteTag = command(v.number(), async (id) => {
