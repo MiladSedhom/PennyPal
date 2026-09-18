@@ -8,7 +8,6 @@
 	import MoonIcon from '@lucide/svelte/icons/moon'
 	import LogOutIcon from '@lucide/svelte/icons/log-out'
 	import SearchIcon from '@lucide/svelte/icons/search'
-	import WalletIcon from '@lucide/svelte/icons/wallet'
 	import { getLoggedInUser, logout } from '../lib/remote/auth.remote'
 	import { ConfirmDialog } from '$lib/components/pp/confirm-dialog'
 
@@ -54,12 +53,9 @@
 			<div class="flex items-center justify-between gap-6">
 				<div class="flex items-center gap-8">
 					<a href={resolve('/')} class="flex items-center gap-[11px] text-foreground no-underline">
-						<span
-							class="inline-flex h-[30px] w-[30px] items-center justify-center rounded-[9px] bg-foreground text-lime"
+						<span class="font-display text-2xl font-black tracking-[-0.04em] leading-none"
+							>Penny<span class="text-primary">Pal</span></span
 						>
-							<WalletIcon size={16} />
-						</span>
-						<span class="font-display text-[21px] font-bold tracking-[-0.04em] leading-none">PennyPal</span>
 					</a>
 					<nav class="flex gap-1 rounded-full bg-card p-1 shadow-xs">
 						{#each nav as n (n.id)}

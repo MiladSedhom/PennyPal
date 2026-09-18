@@ -3,39 +3,39 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* PennyPal v0.5 — Sage direction: soft mint canvas, white cards, deep forest ink, friendly rounding */
+/* PennyPal v0.5 — Notion direction: white canvas, warm-gray sidebar, near-black ink, quiet rounding */
 :root {
-	/* Sage · light (primary) */
-	--bg: #e4efe0;
-	--bg-warm: #eaf1e4;
+	/* Notion · light (primary) */
+	--bg: #ffffff;
+	--bg-warm: #f7f6f3;
 	--surface: #ffffff;
-	--surface-hi: #f3f7ef;
-	--surface-2: #ecf2e6;
-	--mint: #d5e7cb;
-	--mint-deep: #c3dcb4;
-	--border-color: #cbdbc2;
-	--border-soft: #dce7d5;
-	--text: #0f2a1c;
-	--text-ink-soft: #163a28;
-	--text-dim: #4f6356;
-	--text-mute: #7a8b7e;
-	--text-biege: #6b7263;
-	--accent-deep: #0e3d26;
-	--chart-bar: #c3dcb4;
+	--surface-hi: #fbfbfa;
+	--surface-2: #f1f1ef;
+	--mint: #efefed;
+	--mint-deep: #e3e2e0;
+	--border-color: #e9e9e7;
+	--border-soft: #edeceb;
+	--text: #37352f;
+	--text-ink-soft: #4a4842;
+	--text-dim: #6b6a67;
+	--text-mute: #9b9a97;
+	--text-biege: #91918e;
+	--accent-deep: #191919;
+	--chart-bar: #e3e2e0;
 
-	/* PennyPal green accent */
-	--accent: #1f8a4c;
-	--accent-dim: #197840;
-	--accent-soft: rgba(31, 138, 76, 0.1);
+	/* Notion blue accent */
+	--accent: #2383e2;
+	--accent-dim: #1a6fc4;
+	--accent-soft: rgba(35, 131, 226, 0.1);
 	--accent-ink: #ffffff;
-	--lime: #9bc76f;
-	--lime-text: #1b7a3d;
+	--lime: #2f9e44;
+	--lime-text: #2f7b3a;
 
-	--success: #1f8a4c;
-	--warn: #b07a14;
-	--danger: #c75d4f;
-	--info: #2a5c71;
-	--overlay: rgba(15, 42, 28, 0.55);
+	--success: #0f7b6c;
+	--warn: #d9730d;
+	--danger: #e03e3e;
+	--info: #337ea9;
+	--overlay: rgba(15, 15, 15, 0.45);
 
 	/* shadcn token bridge */
 	--background: var(--bg);
@@ -59,12 +59,12 @@
 	--ring: var(--accent);
 
 	--chart-1: var(--accent);
-	--chart-2: #6b8c1a;
-	--chart-3: #1f8f73;
-	--chart-4: #b07a14;
-	--chart-5: #2a5c71;
+	--chart-2: #d9730d;
+	--chart-3: #0f7b6c;
+	--chart-4: #ad1a72;
+	--chart-5: #6940a5;
 
-	--sidebar: var(--surface);
+	--sidebar: var(--bg-warm);
 	--sidebar-foreground: var(--text);
 	--sidebar-primary: var(--text);
 	--sidebar-primary-foreground: #ffffff;
@@ -73,61 +73,61 @@
 	--sidebar-border: var(--border-color);
 	--sidebar-ring: var(--accent);
 
-	--font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-	--font-display: 'Inter Display', 'Inter', system-ui, sans-serif;
-	--font-serif: Georgia, serif;
-	--font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+	--font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+	--font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+	--font-serif: Lyon-Text, Georgia, 'Liberation Serif', serif;
+	--font-mono: 'SFMono-Regular', 'JetBrains Mono', Consolas, 'Liberation Mono', Menlo, monospace;
 
-	/* Friendly rounding */
-	--radius: 16px;
-	--radius-card: 16px;
-	--radius-sm: 10px;
+	/* Quiet rounding */
+	--radius: 6px;
+	--radius-card: 8px;
+	--radius-sm: 4px;
 	--radius-pill: 9999px;
 	--spacing: 0.25rem;
-	--tracking-normal: -0.005em;
+	--tracking-normal: 0em;
 
-	--shadow-color: hsl(120 30% 10%);
-	--shadow-2xs: 0 1px 0 0 hsl(120 30% 10% / 0.04);
-	--shadow-xs: 0 1px 2px 0 hsl(120 30% 10% / 0.06);
-	--shadow-sm: 0 4px 12px -4px hsl(120 30% 10% / 0.08);
-	--shadow: 0 6px 20px -8px hsl(120 30% 10% / 0.1);
-	--shadow-md: 0 10px 28px -10px hsl(120 30% 10% / 0.14);
-	--shadow-lg: 0 14px 36px -12px hsl(120 30% 10% / 0.18);
-	--shadow-xl: 0 18px 44px -12px hsl(120 30% 10% / 0.22);
-	--shadow-2xl: 0 26px 64px -16px hsl(120 30% 10% / 0.32);
+	--shadow-color: hsl(0 0% 6%);
+	--shadow-2xs: 0 0 0 1px rgba(15, 15, 15, 0.03);
+	--shadow-xs: 0 1px 2px 0 rgba(15, 15, 15, 0.06);
+	--shadow-sm: 0 1px 3px 0 rgba(15, 15, 15, 0.08), 0 1px 2px -1px rgba(15, 15, 15, 0.06);
+	--shadow: 0 2px 6px -1px rgba(15, 15, 15, 0.1), 0 1px 3px -1px rgba(15, 15, 15, 0.08);
+	--shadow-md: 0 4px 12px -2px rgba(15, 15, 15, 0.12);
+	--shadow-lg: 0 8px 24px -6px rgba(15, 15, 15, 0.16);
+	--shadow-xl: 0 12px 36px -8px rgba(15, 15, 15, 0.2);
+	--shadow-2xl: 0 20px 56px -12px rgba(15, 15, 15, 0.28);
 }
 
 .dark {
-	/* Sage · dark (companion) */
-	--bg: #0e1410;
-	--bg-warm: #131a14;
-	--surface: #182019;
-	--surface-hi: #1c241d;
-	--surface-2: #1f2820;
-	--mint: #1f3024;
-	--mint-deep: #284a36;
-	--border-color: #2e3a2f;
-	--border-soft: #232c25;
-	--text: #f0f4ee;
-	--text-ink-soft: #d6dfd2;
-	--text-dim: rgba(240, 244, 238, 0.72);
-	--text-mute: #8c9a88;
-	--text-biege: #a4b29f;
-	--accent-deep: #0d2418;
-	--chart-bar: #2b3d2e;
+	/* Notion · dark (companion) */
+	--bg: #191919;
+	--bg-warm: #202020;
+	--surface: #202020;
+	--surface-hi: #252525;
+	--surface-2: #2f2f2f;
+	--mint: #2f2f2f;
+	--mint-deep: #373737;
+	--border-color: #2f2f2f;
+	--border-soft: #282828;
+	--text: #d4d4d4;
+	--text-ink-soft: #cfcfcf;
+	--text-dim: rgba(255, 255, 255, 0.65);
+	--text-mute: #999999;
+	--text-biege: #a1a1a1;
+	--accent-deep: #ededed;
+	--chart-bar: #373737;
 
-	--accent: #3db46d;
-	--accent-dim: #2f9659;
-	--accent-soft: rgba(61, 180, 109, 0.14);
-	--accent-ink: #08120c;
-	--lime: #9bc76f;
-	--lime-text: #74c285;
+	--accent: #529cca;
+	--accent-dim: #3b82c4;
+	--accent-soft: rgba(82, 156, 202, 0.15);
+	--accent-ink: #0d1117;
+	--lime: #4dab9a;
+	--lime-text: #6fc296;
 
-	--success: #3db46d;
-	--warn: #f4c152;
-	--danger: #f08070;
-	--info: #7db9ff;
-	--overlay: rgba(8, 12, 8, 0.78);
+	--success: #4dab9a;
+	--warn: #ffa344;
+	--danger: #ff7369;
+	--info: #6bb3e0;
+	--overlay: rgba(0, 0, 0, 0.72);
 
 	--background: var(--bg);
 	--foreground: var(--text);
@@ -135,8 +135,8 @@
 	--card-foreground: var(--text);
 	--popover: var(--surface);
 	--popover-foreground: var(--text);
-	--primary: #f0f4ee;
-	--primary-foreground: #08120c;
+	--primary: #ededed;
+	--primary-foreground: #0d1117;
 	--secondary: var(--mint);
 	--secondary-foreground: var(--text);
 	--muted: var(--surface-hi);
@@ -150,37 +150,37 @@
 	--ring: var(--accent);
 
 	--chart-1: var(--accent);
-	--chart-2: #92c43a;
-	--chart-3: #4dc6a8;
-	--chart-4: #f4c152;
-	--chart-5: #7db9ff;
+	--chart-2: #ffa344;
+	--chart-3: #4dab9a;
+	--chart-4: #e0a1c4;
+	--chart-5: #9d8cd6;
 
-	--sidebar: var(--surface);
+	--sidebar: var(--bg-warm);
 	--sidebar-foreground: var(--text);
 	--sidebar-primary: var(--text);
-	--sidebar-primary-foreground: #08120c;
+	--sidebar-primary-foreground: #0d1117;
 	--sidebar-accent: var(--mint);
 	--sidebar-accent-foreground: var(--text);
 	--sidebar-border: var(--border-color);
 	--sidebar-ring: var(--accent);
 
 	--shadow-color: hsl(0 0% 0%);
-	--shadow-2xs: 0 1px 0 0 hsl(0 0% 0% / 0.4);
-	--shadow-xs: 0 1px 0 0 hsl(0 0% 0% / 0.5);
-	--shadow-sm: 0 4px 12px -4px hsl(0 0% 0% / 0.5);
-	--shadow: 0 4px 16px -6px hsl(0 0% 0% / 0.55);
-	--shadow-md: 0 8px 24px -8px hsl(0 0% 0% / 0.6);
-	--shadow-lg: 0 12px 32px -10px hsl(0 0% 0% / 0.65);
-	--shadow-xl: 0 16px 40px -12px hsl(0 0% 0% / 0.7);
-	--shadow-2xl: 0 24px 64px -16px hsl(0 0% 0% / 0.85);
+	--shadow-2xs: 0 0 0 1px rgba(255, 255, 255, 0.05);
+	--shadow-xs: 0 1px 0 0 rgba(0, 0, 0, 0.4);
+	--shadow-sm: 0 2px 6px -2px rgba(0, 0, 0, 0.5);
+	--shadow: 0 3px 10px -3px rgba(0, 0, 0, 0.55);
+	--shadow-md: 0 6px 18px -6px rgba(0, 0, 0, 0.6);
+	--shadow-lg: 0 10px 26px -8px rgba(0, 0, 0, 0.65);
+	--shadow-xl: 0 14px 34px -10px rgba(0, 0, 0, 0.7);
+	--shadow-2xl: 0 22px 56px -14px rgba(0, 0, 0, 0.82);
 }
 
 @theme inline {
 	--spacing: var(--spacing);
-	--radius-sm: 10px;
-	--radius-md: 12px;
-	--radius-lg: 16px;
-	--radius-xl: 20px;
+	--radius-sm: 4px;
+	--radius-md: 6px;
+	--radius-lg: 8px;
+	--radius-xl: 10px;
 
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
@@ -305,7 +305,7 @@
 	@apply scale-0 -rotate-90 opacity-0 transition-all!;
 }
 
-/* Sage caption — soft sans, not mono */
+/* Notion caption — quiet sans, not mono */
 @utility caption {
 	font-family: var(--font-sans);
 	font-size: 12px;
@@ -320,7 +320,7 @@
 	padding: 2px 6px;
 	background: var(--bg-warm);
 	border: 1px solid var(--border-color);
-	border-radius: 6px;
+	border-radius: 4px;
 	color: var(--text-dim);
 	line-height: 1;
 	letter-spacing: 0.02em;
