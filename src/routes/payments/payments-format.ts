@@ -15,7 +15,7 @@ export type Row = {
 // Body rows are flat when sorted by amount, and day-grouped (with subtotals) when sorted by date.
 export type BodyItem = { kind: 'divider'; label: string; subtotal: number } | { kind: 'row'; row: Row }
 
-// Locale is pinned so the server render and the browser agree (no hydration mismatch).
+// Pinned locale so SSR and hydration output match.
 const weekdayFormat = new Intl.DateTimeFormat('en-US', { weekday: 'long' })
 const monthDayFormat = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' })
 const rowDateFormat = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' })

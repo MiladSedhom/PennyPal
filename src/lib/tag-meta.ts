@@ -81,8 +81,7 @@ import MapPin from '@lucide/svelte/icons/map-pin'
 import Globe from '@lucide/svelte/icons/globe'
 import type { Component } from 'svelte'
 
-// Tag swatches — soft chip bg + readable ink. Values live in layout.css (`--tag-<id>-bg|ink`)
-// so they follow light/dark mode; ids are stored in the DB, so keep them stable when retheming.
+// Ids are stored in the DB; colours come from --tag-<id>-bg/-ink in layout.css.
 export type TagColor = 'sage' | 'sand' | 'clay' | 'sky' | 'teal' | 'lilac' | 'rose' | 'olive'
 
 export type TagSwatch = { ink: string; bg: string; ring: string }
