@@ -22,7 +22,7 @@
 <div class="flex min-h-screen w-full flex-col bg-background text-foreground">
 	<Header />
 
-	<main class="flex-1 overflow-auto max-w-[1980px] mx-auto">
+	<main class="flex-1 overflow-auto w-full max-w-[1440px] mx-auto">
 		{@render children()}
 	</main>
 </div>
