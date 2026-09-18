@@ -32,71 +32,59 @@
 	)
 </script>
 
-<header class="px-10 py-4 border-b">
-	<div class="flex items-center justify-between gap-6">
-		<div class="flex items-center gap-8">
-			<a href={resolve('/')} class="flex items-center gap-[11px] text-foreground no-underline">
-				<span class="font-display text-2xl font-black tracking-[-0.04em] leading-none"
-					>Penny<span class="text-primary">Pal</span></span
-				>
-			</a>
-		</div>
-		<nav class="flex gap-1">
-			<span
-				class="
-				absolute
-				top-0
-				left-0
-				height-100
-				overflow-hidden
-				pointer-events-none
-				transition-transform
-				cubic-bezier(.65,0,.35,1)
-				transition-width
-				cubic-bezier(.65,0,.35,1)
-"
-			></span>
-			{#each nav as n (n.id)}
-				{@const active = isCurrentActivePath(n.path)}
-				<a
-					href={resolve(n.path)}
-					class={[
-						'rounded-full p-2 text-xs font-semibold no-underline transition-colors',
-						active ? 'text-primary' : ' hover:text-foreground text-text-dim'
-					]}
-				>
-					{n.label}
+{#if loggedInUser}
+	<header class="px-10 py-4 border-b">
+		<div class="flex items-center justify-between gap-6">
+			<div class="flex items-center gap-8">
+				<a href={resolve('/')} class="flex items-center gap-[11px] text-foreground no-underline">
+					<span class="font-display text-2xl font-black tracking-[-0.04em] leading-none"
+						>Penny<span class="text-primary">Pal</span></span
+					>
 				</a>
-			{/each}
-		</nav>
-		<div class="flex items-center gap-3">
-			<Button
-				variant="ghost"
-				onclick={toggleMode}
-				class="relative inline-flex h-[38px] w-[38px] items-center justify-center rounded-full bg-card text-foreground"
-				aria-label="Toggle theme"
-			>
-				<SunIcon class="h-[1rem] w-[1rem] scale-in dark:scale-out-reverse" />
-				<MoonIcon class="absolute h-[1rem] w-[1rem] scale-out dark:scale-in" />
-			</Button>
-			<form {...logout}>
+			</div>
+			<nav class="flex gap-1">
+				{#each nav as n (n.id)}
+					{@const active = isCurrentActivePath(n.path)}
+					<a
+						href={resolve(n.path)}
+						class={[
+							'rounded-full p-2 text-xs font-semibold no-underline transition-colors',
+							active ? 'text-primary' : ' hover:text-foreground text-text-dim'
+						]}
+					>
+						{n.label}
+					</a>
+				{/each}
+			</nav>
+			<div class="flex items-center gap-3">
 				<Button
 					variant="ghost"
-					type="submit"
-					class="inline-flex h-[38px] w-[38px] items-center justify-center rounded-full bg-card text-foreground"
-					aria-label="Log out"
+					onclick={toggleMode}
+					class="relative inline-flex h-[38px] w-[38px] items-center justify-center rounded-full bg-card text-foreground"
+					aria-label="Toggle theme"
 				>
-					<LogOutIcon class="h-[1rem] w-[1rem]" />
+					<SunIcon class="h-[1rem] w-[1rem] scale-in dark:scale-out-reverse" />
+					<MoonIcon class="absolute h-[1rem] w-[1rem] scale-out dark:scale-in" />
 				</Button>
-			</form>
-			<Button
-				variant="ghost"
-				href={resolve('/account')}
-				class="inline-flex h-[38px] w-[38px] items-center justify-center rounded-full bg-mint text-md font-bold text-foreground no-underline font-display"
-				aria-label="Account"
-			>
-				{initials}
-			</Button>
+				<form {...logout}>
+					<Button
+						variant="ghost"
+						type="submit"
+						class="inline-flex h-[38px] w-[38px] items-center justify-center rounded-full bg-card text-foreground"
+						aria-label="Log out"
+					>
+						<LogOutIcon class="h-[1rem] w-[1rem]" />
+					</Button>
+				</form>
+				<Button
+					variant="ghost"
+					href={resolve('/account')}
+					class="inline-flex h-[38px] w-[38px] items-center justify-center rounded-full bg-mint text-md font-bold text-foreground no-underline font-display"
+					aria-label="Account"
+				>
+					{initials}
+				</Button>
+			</div>
 		</div>
-	</div>
-</header>
+	</header>
+{/if}
