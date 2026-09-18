@@ -1,4 +1,8 @@
 <script lang="ts">
+	import ConstructionIcon from '@lucide/svelte/icons/construction'
+	import { resolve } from '$app/paths'
+	import { Button } from '$lib/components/ui/button'
+	/*
 	import { getLoggedInUser } from '$lib/remote/auth.remote'
 	import { getPayments } from '$lib/remote/payments.remote'
 	import { getTags } from '$lib/remote/tags.remote'
@@ -210,7 +214,19 @@
 	})
 
 	const totalDisplay = $derived(total.toLocaleString('en-US'))
+	*/
 </script>
+
+<div class="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-6 text-center">
+	<span class="flex size-14 items-center justify-center rounded-full bg-muted text-text-dim">
+		<ConstructionIcon class="size-7" />
+	</span>
+	<h1 class="m-0 font-display text-2xl font-bold tracking-[-0.03em]">This page is under construction</h1>
+	<p class="m-0 text-text-dim">Check out the payments page for now.</p>
+	<Button href={resolve('/payments')} class="rounded-full">Go to payments</Button>
+</div>
+
+<!--
 
 <div class="px-10 pb-12 pt-2">
 	<div class="mb-[22px] flex items-end justify-between">
@@ -231,9 +247,7 @@
 		</div>
 	</div>
 
-	<!-- Row 1: hero spend + dark donut + two stat cards -->
 	<div class="mb-4 grid gap-4 lg:grid-cols-[1.5fr_1.1fr_1fr]">
-		<!-- Mint hero -->
 		<Card tone="mint" class="flex min-h-[260px] flex-col justify-between">
 			<div class="flex items-center justify-between">
 				<span class="inline-flex items-center gap-2 text-[13.5px] font-semibold">
@@ -261,7 +275,6 @@
 			</div>
 		</Card>
 
-		<!-- Dark donut card -->
 		<Card tone="ink" class="flex min-h-[260px] flex-col">
 			<span class="inline-flex items-center gap-2 text-[13.5px] font-semibold text-background/85">
 				<PieChartIcon size={15} /> Where it went
@@ -311,7 +324,6 @@
 			{/if}
 		</Card>
 
-		<!-- Stacked stat cards -->
 		<div class="flex flex-col gap-4">
 			<Card class="flex min-h-[122px] flex-col justify-between" pad="lg">
 				<span class="inline-flex items-center gap-[7px] text-[12.5px] font-semibold text-text-dim">
@@ -346,7 +358,6 @@
 		onsaved={() => getRecurringPayments().refresh()}
 	/>
 
-	<!-- Row 2: trend + insights -->
 	<div class="mb-4 grid gap-4 lg:grid-cols-[1.5fr_1fr]">
 		<Card>
 			<div class="mb-5 flex items-center justify-between">
@@ -402,7 +413,6 @@
 		</Card>
 	</div>
 
-	<!-- Row 3: budgets by category + upcoming -->
 	<div class="grid gap-4 lg:grid-cols-[1.5fr_1fr]">
 		<Card>
 			<div class="mb-[18px] flex items-center justify-between">
@@ -486,3 +496,4 @@
 		</Card>
 	</div>
 </div>
+-->
