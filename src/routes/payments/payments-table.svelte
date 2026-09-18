@@ -89,7 +89,7 @@
 	const pageIndex = $derived(table.getState().pagination.pageIndex)
 </script>
 
-<div class="overflow-hidden rounded-card border border-border">
+<div class="overflow-hidden rounded-card border border-border bg-card">
 	<Table.Root>
 		<Table.Header>
 			{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}

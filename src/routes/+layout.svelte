@@ -6,7 +6,11 @@
 	import Header from '$lib/components/header.svelte'
 
 	let { children } = $props()
+
+	let pointerPosition = $state({ x: -9999, y: -9999 })
 </script>
+
+<svelte:window onpointermove={(event) => (pointerPosition = { x: event.clientX, y: event.clientY })} />
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
@@ -19,7 +23,13 @@
 </svelte:head>
 <ModeWatcher />
 
-<div class="flex min-h-screen w-full flex-col bg-background text-foreground">
+<div class="relative isolate flex min-h-screen w-full flex-col bg-background text-foreground">
+	<div
+		aria-hidden="true"
+		class="grid-backdrop pointer-events-none fixed inset-0 -z-10"
+		style:--pointer-x="{pointerPosition.x}px"
+		style:--pointer-y="{pointerPosition.y}px"
+	></div>
 	<Header />
 
 	<main class="flex-1 overflow-auto w-full max-w-[1440px] mx-auto">
