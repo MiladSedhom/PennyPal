@@ -86,7 +86,7 @@
 	--card-foreground: var(--text);
 	--popover: var(--surface);
 	--popover-foreground: var(--text);
-	--primary: var(--kit-foreground);
+	--primary: var(--kit-red);
 	--primary-foreground: var(--kit-bg);
 	--secondary: var(--kit-muted);
 	--secondary-foreground: var(--text);
