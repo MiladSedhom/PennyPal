@@ -127,12 +127,12 @@
 	onclick={() => (open = true)}
 	class="h-[40px] gap-2 rounded-full bg-primary px-[18px] text-[13.5px] font-semibold text-primary-foreground hover:bg-primary/90"
 >
-	<PlusIcon size={15} /> Add payments
+	<PlusIcon size={15} /> Add Payments
 </Button>
 
 <Dialog.Root bind:open>
 	<Dialog.Content
-		class="max-w-[1100px]! gap-0 rounded-2xl border-none bg-card p-0 shadow-2xl sm:max-w-[1100px]!"
+		class="max-w-[1100px]!  gap-0 rounded-2xl border-none bg-card p-0 shadow-2xl sm:max-w-[1100px]!"
 		showCloseButton={false}
 		onOpenAutoFocus={(e) => {
 			e.preventDefault()
@@ -141,8 +141,8 @@
 	>
 		<div class="flex items-center justify-between border-b border-border-soft px-7 py-5">
 			<div class="flex items-baseline gap-3">
-				<Dialog.Title class="m-0 font-display text-[22px] font-bold tracking-[-0.025em]">Add payments</Dialog.Title>
-				<Caption>Enter several at once</Caption>
+				<Dialog.Title class="m-0 font-display text-[22px] font-bold tracking-[-0.025em]">Add Payments</Dialog.Title>
+				<span class="caption">Enter several at once</span>
 			</div>
 			<div class="flex items-center gap-3">
 				<span class="hidden items-center gap-4 text-[12px] text-text-mute sm:inline-flex">
@@ -249,7 +249,7 @@
 					class="inline-flex items-center gap-1.5 rounded-full bg-bg-warm px-3.5 py-1.5 text-[12.5px] font-semibold text-text-dim transition-colors hover:bg-mint hover:text-foreground"
 				>
 					<PlusIcon size={13} />
-					Add another payment
+					Add Another Payment
 				</button>
 			</div>
 		</div>
