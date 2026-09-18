@@ -3,12 +3,14 @@
 	import { resolve } from '$app/paths'
 	import { loginOrRegister } from '$lib/remote/auth.remote'
 	import Card from '$lib/components/pp/card.svelte'
-	import WalletIcon from '@lucide/svelte/icons/wallet'
 	import EyeIcon from '@lucide/svelte/icons/eye'
 	import EyeOffIcon from '@lucide/svelte/icons/eye-off'
 	import LoaderIcon from '@lucide/svelte/icons/loader-circle'
 	import GoogleIcon from '$lib/components/icons/google.svelte'
 	import GithubIcon from '$lib/components/icons/github.svelte'
+	import { toggleMode } from 'mode-watcher'
+	import SunIcon from '@lucide/svelte/icons/sun'
+	import MoonIcon from '@lucide/svelte/icons/moon'
 
 	let mode = $state<'login' | 'register'>('login')
 	let showPassword = $state(false)
@@ -21,17 +23,20 @@
 		'text-[13.5px] font-semibold text-foreground transition-colors hover:bg-mint'
 </script>
 
-<Card pad="none" class="w-full max-w-[420px] overflow-hidden shadow-lg">
+<Card pad="none" class="w-full max-w-[420px] overflow-hidden shadow-lg border-border border">
 	<div class="border-b border-border-soft px-8 py-6">
-		<div class="flex items-center gap-[11px]">
-			<span class="inline-flex h-[30px] w-[30px] items-center justify-center rounded-[9px] bg-primary text-primary-foreground">
-				<WalletIcon size={16} />
-			</span>
-			<span class="font-display text-[21px] font-bold tracking-[-0.04em]">PennyPal</span>
+		<div class="flex items-center justify-between gap-3">
+			<span class="font-display text-3xl font-black leading-none">Penny<span class="text-primary">Pal</span></span>
+			<Button
+				variant="ghost"
+				onclick={toggleMode}
+				class="relative inline-flex h-[38px] w-[38px] items-center justify-center rounded-full bg-card text-foreground"
+				aria-label="Toggle theme"
+			>
+				<SunIcon class="h-[1rem] w-[1rem] scale-in dark:scale-out-reverse" />
+				<MoonIcon class="absolute h-[1rem] w-[1rem] scale-out dark:scale-in" />
+			</Button>
 		</div>
-		<span class="caption mt-3 block">
-			{mode === 'login' ? 'Welcome back — sign in to your account.' : 'Create your account to start tracking.'}
-		</span>
 	</div>
 
 	<div class="flex flex-col gap-5 px-8 py-7">
