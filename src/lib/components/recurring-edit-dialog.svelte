@@ -4,7 +4,6 @@
 	import { Button } from '$lib/components/ui/button'
 	import DatePicker from '$lib/components/ui/date-picker/date-picker.svelte'
 	import TagMultiSelect from '$lib/components/pp/tag-multiselect.svelte'
-	import Caption from '$lib/components/pp/caption.svelte'
 	import { createRecurringPayment, updateRecurringPayment } from '$lib/remote/recurring.remote'
 	import {
 		MAX_INTERVAL_COUNT,
@@ -154,7 +153,7 @@
 		>
 			<div class="grid grid-cols-2 gap-3">
 				<div class="flex flex-col gap-1.5">
-					<Caption>Amount</Caption>
+					<span class="caption">Amount</span>
 					<input
 						type="number"
 						bind:value={amount}
@@ -165,7 +164,7 @@
 					/>
 				</div>
 				<div class="flex flex-col gap-1.5">
-					<Caption>Starts</Caption>
+					<span class="caption">Starts</span>
 					<DatePicker
 						bind:value={startDate}
 						class="w-full rounded-[10px]! border-transparent bg-bg-warm! px-3!"
@@ -175,7 +174,7 @@
 			</div>
 
 			<div class="flex flex-col gap-1.5">
-				<Caption>Repeats every</Caption>
+				<span class="caption">Repeats every</span>
 				<div class="flex items-center gap-2">
 					<input
 						type="number"
@@ -202,7 +201,7 @@
 			</div>
 
 			<div class="flex flex-col gap-1.5">
-				<Caption>Schedule</Caption>
+				<span class="caption">Schedule</span>
 				<div class="inline-flex gap-1 self-start rounded-[10px] bg-bg-warm p-1">
 					{#each [{ v: false, label: 'Fixed dates' }, { v: true, label: 'Rolls from each payment' }] as opt (opt.label)}
 						<button
@@ -227,7 +226,7 @@
 			</div>
 
 			<div class="flex flex-col gap-1.5">
-				<Caption>Ends <span class="normal-case text-text-mute">(optional)</span></Caption>
+				<span class="caption">Ends <span class="normal-case text-text-mute">(optional)</span></span>
 				<div class="flex items-center gap-2">
 					<DatePicker
 						bind:value={endDate}
@@ -253,14 +252,14 @@
 			</div>
 
 			<div class="flex flex-col gap-1.5">
-				<Caption>Tags</Caption>
+				<span class="caption">Tags</span>
 				<div class="rounded-[10px] bg-bg-warm">
 					<TagMultiSelect {tags} bind:selected={selectedTags} />
 				</div>
 			</div>
 
 			<div class="flex flex-col gap-1.5">
-				<Caption>Note</Caption>
+				<span class="caption">Note</span>
 				<input
 					bind:value={note}
 					placeholder="—"

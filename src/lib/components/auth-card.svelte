@@ -3,7 +3,6 @@
 	import { resolve } from '$app/paths'
 	import { loginOrRegister } from '$lib/remote/auth.remote'
 	import Card from '$lib/components/pp/card.svelte'
-	import Caption from '$lib/components/pp/caption.svelte'
 	import WalletIcon from '@lucide/svelte/icons/wallet'
 	import EyeIcon from '@lucide/svelte/icons/eye'
 	import EyeOffIcon from '@lucide/svelte/icons/eye-off'
@@ -30,9 +29,9 @@
 			</span>
 			<span class="font-display text-[21px] font-bold tracking-[-0.04em]">PennyPal</span>
 		</div>
-		<Caption class="mt-3 block">
+		<span class="caption mt-3 block">
 			{mode === 'login' ? 'Welcome back — sign in to your account.' : 'Create your account to start tracking.'}
-		</Caption>
+		</span>
 	</div>
 
 	<div class="flex flex-col gap-5 px-8 py-7">
@@ -68,13 +67,13 @@
 
 		<div class="flex items-center gap-3">
 			<span class="h-px flex-1 bg-border-soft"></span>
-			<Caption>or with a username</Caption>
+			<span class="caption">or with a username</span>
 			<span class="h-px flex-1 bg-border-soft"></span>
 		</div>
 
 		<form {...loginOrRegister.enhance(async ({ submit }) => void (await submit()))} class="flex flex-col gap-4">
 			<label class="flex flex-col gap-2">
-				<Caption>Username</Caption>
+				<span class="caption">Username</span>
 				<input
 					{...loginOrRegister.fields.username.as('text')}
 					autocomplete="username"
@@ -82,7 +81,7 @@
 				/>
 			</label>
 			<label class="flex flex-col gap-2">
-				<Caption>Password</Caption>
+				<span class="caption">Password</span>
 				<div class="relative flex items-center">
 					<input
 						{...loginOrRegister.fields.password.as(showPassword ? 'text' : 'password')}

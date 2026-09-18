@@ -10,7 +10,6 @@
 		type DateValue
 	} from '@internationalized/date'
 
-	import Caption from '$lib/components/pp/caption.svelte'
 	import TagIconChip from '$lib/components/pp/tag-icon-chip.svelte'
 	import { getSwatch, getIcon } from '$lib/tag-meta'
 	import { formatMoney } from '$lib/utils'
@@ -256,7 +255,7 @@
 			{/snippet}
 		</Popover.Trigger>
 		<Popover.Content class="w-[280px] rounded-2xl border-none bg-card p-4 shadow-xl" align="end">
-			<Caption class="mb-2.5 block">Quick ranges</Caption>
+			<span class="caption mb-2.5 block">Quick ranges</span>
 			<div class="mb-4 flex flex-wrap gap-2">
 				{#each amountSliderBrackets as bracket (bracket.label)}
 					{@const isActive = isBracketActive(bracket)}
@@ -274,7 +273,7 @@
 				{/each}
 			</div>
 
-			<Caption class="mb-3 block">Custom</Caption>
+			<span class="caption mb-3 block">Custom</span>
 			<Slider type="multiple" value={sliderValue} onValueChange={onSliderChange} min={0} max={amountCeiling} step={1} />
 			<div class="mt-4 flex items-center gap-2">
 				<div class="relative flex flex-1 items-center">
@@ -319,7 +318,7 @@
 
 	<!-- Sort -->
 	<div class="inline-flex items-center gap-2">
-		<Caption>Sort</Caption>
+		<span class="caption">Sort</span>
 		<div class="inline-flex gap-1 rounded-full bg-bg-warm p-1">
 			{#each SORT_OPTIONS as { key, label } (key)}
 				<button
@@ -340,7 +339,7 @@
 </div>
 
 <div class="mt-3.5 flex flex-wrap items-center gap-2">
-	<Caption class="mr-0.5">Show</Caption>
+	<span class="caption mr-0.5">Show</span>
 	<div class="inline-flex gap-1 rounded-full bg-bg-warm p-1">
 		{#each STATUS_OPTIONS as { key, label } (key)}
 			<button
@@ -380,7 +379,7 @@
 </div>
 
 <div class="mt-3.5 flex flex-wrap items-center gap-2">
-	<Caption class="mr-0.5">Filter</Caption>
+	<span class="caption mr-0.5">Filter</span>
 	{#each primaryTags as tag (tag.id)}
 		{@const isSelected = filters.tagIds.includes(tag.id)}
 		{@const swatch = getSwatch(tag.color)}

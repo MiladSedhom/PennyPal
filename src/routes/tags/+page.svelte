@@ -3,7 +3,6 @@
 	import { getPayments } from '$lib/remote/payments.remote'
 
 	import Card from '$lib/components/pp/card.svelte'
-	import Caption from '$lib/components/pp/caption.svelte'
 	import TagIconChip from '$lib/components/pp/tag-icon-chip.svelte'
 	import TagMergeMenu from '$lib/components/pp/tag-merge-menu.svelte'
 	import { Button } from '$lib/components/ui/button'
@@ -129,7 +128,7 @@
 						<PreviewIcon size={26} />
 					</span>
 					<div class="flex-1">
-						<Caption>{fields.id.value() ? 'Editing' : 'New tag'}</Caption>
+						<span class="caption">{fields.id.value() ? 'Editing' : 'New tag'}</span>
 						<div class="mt-0.5 font-display text-[24px] font-bold tracking-[-0.03em]">
 							{fields.name.value() || 'Untitled'}
 						</div>
@@ -147,7 +146,7 @@
 				<!-- Name + budget -->
 				<div class="mb-[22px] grid gap-3 sm:grid-cols-[1.5fr_1fr]">
 					<label class="block">
-						<Caption class="mb-2 block">Name</Caption>
+						<span class="caption mb-2 block">Name</span>
 						<input
 							{...fields.name.as('text')}
 							placeholder="e.g. Groceries"
@@ -155,7 +154,7 @@
 						/>
 					</label>
 					<label class="block">
-						<Caption class="mb-2 block">Monthly budget</Caption>
+						<span class="caption mb-2 block">Monthly budget</span>
 						<div class="relative flex items-center">
 							<span class="absolute left-[14px] font-mono text-[14px] text-text-mute">$</span>
 							<input
@@ -170,7 +169,7 @@
 
 				<!-- Color -->
 				<div class="mb-[22px]">
-					<Caption class="mb-2.5 block">Color</Caption>
+					<span class="caption mb-2.5 block">Color</span>
 					<div class="flex flex-wrap gap-2.5">
 						{#each TAG_COLOR_LIST as id (id)}
 							{@const s = TAG_PALETTE[id]}
@@ -192,7 +191,7 @@
 
 				<!-- Icon -->
 				<div class="mb-[26px]">
-					<Caption class="mb-2.5 block">Icon</Caption>
+					<span class="caption mb-2.5 block">Icon</span>
 					<div class="flex flex-wrap gap-2">
 						{#each ICON_CHOICES as icon (icon)}
 							{@const IconComponent = ICON_LIBRARY[icon]}
@@ -326,7 +325,7 @@
 						<TagIconChip color={t.color} icon={t.icon} size={38} />
 						<button type="button" onclick={() => startEdit(t)} class="flex-1 border-none bg-transparent text-left">
 							<div class="text-[14.5px] font-semibold text-foreground">{t.name}</div>
-							<Caption>{t.count} payment{t.count === 1 ? '' : 's'}</Caption>
+							<span class="caption">{t.count} payment{t.count === 1 ? '' : 's'}</span>
 						</button>
 						{#if t.budget != null}
 							<span class="font-mono text-[12.5px] text-text-mute">{formatMoney(t.budget)}/mo</span>

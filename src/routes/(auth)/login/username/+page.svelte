@@ -2,7 +2,6 @@
 	import { Button } from '$lib/components/ui/button'
 	import { chooseUsername } from '$lib/remote/auth.remote'
 	import Card from '$lib/components/pp/card.svelte'
-	import Caption from '$lib/components/pp/caption.svelte'
 	import WalletIcon from '@lucide/svelte/icons/wallet'
 	import LoaderIcon from '@lucide/svelte/icons/loader-circle'
 	import GoogleIcon from '$lib/components/icons/google.svelte'
@@ -23,10 +22,10 @@
 				</span>
 				<span class="font-display text-[21px] font-bold tracking-[-0.04em]">PennyPal</span>
 			</div>
-			<Caption class="mt-3 flex items-center gap-1.5">
+			<span class="caption mt-3 flex items-center gap-1.5">
 				{#if data.provider === 'google'}<GoogleIcon size={13} />{:else}<GithubIcon size={13} />{/if}
 				Almost there — pick a username to finish.
-			</Caption>
+			</span>
 		</div>
 
 		<form
@@ -34,7 +33,7 @@
 			class="flex flex-col gap-4 px-8 py-7"
 		>
 			<label class="flex flex-col gap-2">
-				<Caption>Username</Caption>
+				<span class="caption">Username</span>
 				<input
 					{...chooseUsername.fields.username.as('text', data.suggestedName)}
 					autocomplete="username"

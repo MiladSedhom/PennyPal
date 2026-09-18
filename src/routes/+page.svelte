@@ -11,7 +11,6 @@
 	import { SvelteDate, SvelteSet, SvelteMap } from 'svelte/reactivity'
 
 	import Card from '$lib/components/pp/card.svelte'
-	import Caption from '$lib/components/pp/caption.svelte'
 	import TagIconChip from '$lib/components/pp/tag-icon-chip.svelte'
 	import { getSwatch } from '$lib/tag-meta'
 	import { formatMoney } from '$lib/utils'
@@ -216,7 +215,7 @@
 <div class="px-10 pb-12 pt-2">
 	<div class="mb-[22px] flex items-end justify-between">
 		<div>
-			<Caption>{dayLabel}</Caption>
+			<span class="caption">{dayLabel}</span>
 			<h1 class="m-0 mt-1.5 font-display text-[40px] font-bold leading-[1.05] tracking-[-0.04em] text-foreground">
 				Good evening, {user?.username}
 			</h1>
@@ -241,7 +240,7 @@
 					<WalletIcon size={15} /> Spent in {monthShort}
 				</span>
 				{#if budget}
-					<Caption>of {formatMoney(budget.amount)} budget</Caption>
+					<span class="caption">of {formatMoney(budget.amount)} budget</span>
 				{/if}
 			</div>
 			<div>
@@ -251,12 +250,12 @@
 						<div class="h-full rounded-full bg-primary" style:width="{pctUsed}%"></div>
 					</div>
 					<div class="mt-2 flex justify-between">
-						<Caption class="!text-text-ink-soft">{pctUsed.toFixed(0)}% used · {daysLeft} days left</Caption>
-						<Caption class="!text-lime-text">{formatMoney(remaining)} remaining</Caption>
+						<span class="caption !text-text-ink-soft">{pctUsed.toFixed(0)}% used · {daysLeft} days left</span>
+						<span class="caption !text-lime-text">{formatMoney(remaining)} remaining</span>
 					</div>
 				{:else}
 					<div class="mt-4">
-						<Caption class="!text-text-ink-soft">No active budget for this period</Caption>
+						<span class="caption !text-text-ink-soft">No active budget for this period</span>
 					</div>
 				{/if}
 			</div>
@@ -352,7 +351,7 @@
 		<Card>
 			<div class="mb-5 flex items-center justify-between">
 				<span class="font-display text-[19px] font-semibold tracking-[-0.02em]">Spending trend</span>
-				<Caption>Last 14 days</Caption>
+				<span class="caption">Last 14 days</span>
 			</div>
 			<div class="flex h-[150px] items-end gap-2">
 				{#each trend as d, i (i)}
@@ -368,8 +367,8 @@
 				{/each}
 			</div>
 			<div class="mt-2.5 flex justify-between">
-				<Caption>{trend[0].date.toLocaleString('en-US', { month: 'short', day: 'numeric' })}</Caption>
-				<Caption>Today</Caption>
+				<span class="caption">{trend[0].date.toLocaleString('en-US', { month: 'short', day: 'numeric' })}</span>
+				<span class="caption">Today</span>
 			</div>
 		</Card>
 
@@ -465,7 +464,7 @@
 							<TagIconChip color={b.color} icon={b.icon} size={32} />
 							<div class="min-w-0 flex-1">
 								<div class="truncate text-[13.5px] font-semibold">{b.note}</div>
-								<Caption>{b.whenLabel}</Caption>
+								<span class="caption">{b.whenLabel}</span>
 							</div>
 							{#if b.rolling}
 								<button
@@ -478,7 +477,7 @@
 							{/if}
 							<div class="text-right">
 								<div class="text-[13.5px] font-semibold tabular-nums">{formatMoney(b.amount)}</div>
-								<Caption class={b.due === 'Due' ? '!text-[color:var(--danger)]' : ''}>{b.due}</Caption>
+								<span class="caption {b.due === 'Due' ? '!text-[color:var(--danger)]' : ''}">{b.due}</span>
 							</div>
 						</div>
 					{/each}

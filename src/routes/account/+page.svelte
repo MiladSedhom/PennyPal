@@ -3,7 +3,6 @@
 	import { page } from '$app/state'
 	import { getAccountConnections, disconnectOAuth } from '$lib/remote/auth.remote'
 	import Card from '$lib/components/pp/card.svelte'
-	import Caption from '$lib/components/pp/caption.svelte'
 	import { Button } from '$lib/components/ui/button'
 	import { dialogs } from '$lib/components/pp/confirm-dialog'
 	import GoogleIcon from '$lib/components/icons/google.svelte'
@@ -47,7 +46,7 @@
 	<Card pad="none" class="max-w-[560px] overflow-hidden">
 		<div class="border-b border-border-soft px-6 pb-4 pt-5">
 			<span class="font-display text-[19px] font-semibold tracking-[-0.02em]">Connected accounts</span>
-			<Caption class="mt-1 block">Link a provider to sign in with one click.</Caption>
+			<span class="caption mt-1 block">Link a provider to sign in with one click.</span>
 		</div>
 
 		{#if linked}
@@ -82,9 +81,9 @@
 				</span>
 				<div class="flex-1">
 					<div class="text-[14.5px] font-semibold text-foreground">{p.label}</div>
-					<Caption class="flex items-center gap-1">
+					<span class="caption flex items-center gap-1">
 						{#if connected}<CheckIcon size={12} class="text-lime-text" /> Connected{:else}Not connected{/if}
-					</Caption>
+					</span>
 				</div>
 				{#if connected}
 					<Button

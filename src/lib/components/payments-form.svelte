@@ -11,7 +11,6 @@
 	import { tick } from 'svelte'
 	import { type DateValue, getLocalTimeZone, today } from '@internationalized/date'
 	import * as Dialog from '$lib/components/ui/dialog'
-	import Caption from '$lib/components/pp/caption.svelte'
 	import * as Kbd from '$lib/components/ui/kbd/index.js'
 	import TagMultiSelect from '$lib/components/pp/tag-multiselect.svelte'
 	import { formatMoney } from '$lib/utils/index'
@@ -166,10 +165,10 @@
 			style:grid-template-columns="32px 150px 130px 1.4fr 1fr 32px"
 		>
 			<span></span>
-			<Caption>Date</Caption>
-			<Caption class="text-right">Amount</Caption>
-			<Caption>Tags</Caption>
-			<Caption>Note</Caption>
+			<span class="caption">Date</span>
+			<span class="caption text-right">Amount</span>
+			<span class="caption">Tags</span>
+			<span class="caption">Note</span>
 			<span></span>
 		</div>
 
