@@ -81,20 +81,29 @@ import MapPin from '@lucide/svelte/icons/map-pin'
 import Globe from '@lucide/svelte/icons/globe'
 import type { Component } from 'svelte'
 
-// Sage swatch system — each color is a soft chip bg + readable ink, all in the sage family
+// Tag swatches — soft chip bg + readable ink. Values live in layout.css (`--tag-<id>-bg|ink`)
+// so they follow light/dark mode; ids are stored in the DB, so keep them stable when retheming.
 export type TagColor = 'sage' | 'sand' | 'clay' | 'sky' | 'teal' | 'lilac' | 'rose' | 'olive'
 
 export type TagSwatch = { ink: string; bg: string; ring: string }
 
+function cssSwatch(id: TagColor): TagSwatch {
+	return {
+		ink: `var(--tag-${id}-ink)`,
+		bg: `var(--tag-${id}-bg)`,
+		ring: `color-mix(in srgb, var(--tag-${id}-ink) 18%, transparent)`
+	}
+}
+
 export const TAG_PALETTE: Record<TagColor, TagSwatch> = {
-	sage: { ink: '#2c5a30', bg: '#d5e7cb', ring: 'rgba(44,90,48,0.18)' },
-	sand: { ink: '#8a5a1e', bg: '#f3e2c9', ring: 'rgba(138,90,30,0.18)' },
-	clay: { ink: '#9a4a3c', bg: '#ebd3ce', ring: 'rgba(154,74,60,0.18)' },
-	sky: { ink: '#2a5c71', bg: '#cfe0e8', ring: 'rgba(42,92,113,0.18)' },
-	teal: { ink: '#2c6657', bg: '#cde3dd', ring: 'rgba(44,102,87,0.18)' },
-	lilac: { ink: '#4f4488', bg: '#d9d5ec', ring: 'rgba(79,68,136,0.18)' },
-	rose: { ink: '#8a4670', bg: '#ecd8e4', ring: 'rgba(138,70,112,0.18)' },
-	olive: { ink: '#5a6233', bg: '#dce0ca', ring: 'rgba(90,98,51,0.18)' }
+	sage: cssSwatch('sage'),
+	sand: cssSwatch('sand'),
+	clay: cssSwatch('clay'),
+	sky: cssSwatch('sky'),
+	teal: cssSwatch('teal'),
+	lilac: cssSwatch('lilac'),
+	rose: cssSwatch('rose'),
+	olive: cssSwatch('olive')
 }
 
 export const TAG_COLOR_LIST: TagColor[] = ['sage', 'sand', 'clay', 'sky', 'teal', 'lilac', 'rose', 'olive']

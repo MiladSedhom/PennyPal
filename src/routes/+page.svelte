@@ -277,7 +277,7 @@
 									cy="52"
 									r={R}
 									fill="none"
-									stroke={p.color}
+									style:stroke={p.color}
 									stroke-width="16"
 									stroke-dasharray={p.dasharray}
 									stroke-dashoffset={p.dashoffset}

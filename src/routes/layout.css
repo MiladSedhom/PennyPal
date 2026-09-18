@@ -1,180 +1,196 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap');
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
-/* PennyPal v0.6 — Bits UI kit base.
-   Source: Figma "Bits UI kit" (Pavel Stianko, CC BY 4.0), Collection 1, modes Light / Dark.
-   `--kit-*` mirrors the Figma variables one-to-one; retheme by editing those.
-   Everything after the kit block derives from it. */
 :root {
-	/* Kit · Basic */
-	--kit-bg: #ffffff;
-	--kit-bg-black: #18181b;
-	--kit-foreground: #171717;
-	--kit-foreground-alt: #525252;
-	--kit-muted: #f4f4f5;
-	--kit-bg-black-10: rgb(24 24 27 / 0.1);
+	--bits-ui-bg: #ffffff;
+	--bits-ui-bg-black: #18181b;
+	--bits-ui-foreground: #171717;
+	--bits-ui-foreground-alt: #525252;
+	--bits-ui-muted: #f4f4f5;
+	--bits-ui-bg-black-10: rgb(24 24 27 / 0.1);
 
-	/* Kit · Inputs */
-	--kit-input-border: rgb(24 24 27 / 0.17);
-	--kit-input-border-hover: rgb(24 24 27 / 0.4);
-	--kit-input-height: 48px;
-	--kit-input-height-small: 40px;
+	--bits-ui-input-border: rgb(24 24 27 / 0.17);
+	--bits-ui-input-border-hover: rgb(24 24 27 / 0.4);
+	--bits-ui-input-height: 48px;
+	--bits-ui-input-height-small: 40px;
 
-	/* Kit · Other */
-	--kit-muted-text: rgb(23 23 23 / 0.4);
-	--kit-border-card: rgb(24 24 27 / 0.1);
-	--kit-focus: var(--kit-foreground);
-	--kit-depth: rgb(255 255 255 / 0);
+	--bits-ui-muted-text: rgb(23 23 23 / 0.4);
+	--bits-ui-border-card: rgb(24 24 27 / 0.1);
+	--bits-ui-focus: var(--bits-ui-foreground);
+	--bits-ui-depth: rgb(255 255 255 / 0);
 
-	/* Kit · TW colors (mode-independent) */
-	--kit-blue: #e0f2fe;
-	--kit-violet: #1e1b4b;
-	--kit-pink: #fae8ff;
-	--kit-red: #f43f5e;
-	--kit-navy: #1e40af;
+	--bits-ui-blue: #e0f2fe;
+	--bits-ui-violet: #1e1b4b;
+	--bits-ui-pink: #fae8ff;
+	--bits-ui-red: #f43f5e;
+	--bits-ui-navy: #1e40af;
 
-	/* Kit · Radius */
-	--kit-radius-card: 16px;
-	--kit-radius-card-big: 20px;
-	--kit-radius-small: 10px;
-	--kit-radius-input: 9px;
+	--bits-ui-radius-card: 16px;
+	--bits-ui-radius-card-big: 20px;
+	--bits-ui-radius-small: 10px;
+	--bits-ui-radius-input: 9px;
 
-	/* Kit · Effect styles */
-	--kit-shadow-popup: 0 7px 16px 10px rgb(24 24 27 / 0.05);
-	--kit-shadow-card: 0 2px 0 1px rgb(0 0 0 / 0.04);
-	--kit-shadow-mini: 0 1px 0 1px rgb(0 0 0 / 0.04);
+	--bits-ui-shadow-popup: 0 7px 16px 10px rgb(24 24 27 / 0.05);
+	--bits-ui-shadow-card: 0 2px 0 1px rgb(0 0 0 / 0.04);
+	--bits-ui-shadow-mini: 0 1px 0 1px rgb(0 0 0 / 0.04);
 
-	/* App tokens — names kept so existing markup keeps working, values derived from the kit */
-	--bg: var(--kit-bg);
-	--bg-warm: var(--kit-muted);
-	--surface: var(--kit-bg);
-	--surface-hi: color-mix(in srgb, var(--kit-foreground) 3%, var(--kit-bg));
-	--surface-2: var(--kit-muted);
-	--mint: var(--kit-muted);
-	--mint-deep: color-mix(in srgb, var(--kit-foreground) 10%, var(--kit-bg));
-	--border-color: var(--kit-border-card);
-	--border-soft: var(--kit-border-card);
-	--text: var(--kit-foreground);
-	--text-ink-soft: var(--kit-foreground-alt);
-	--text-dim: var(--kit-foreground-alt);
-	--text-mute: var(--kit-muted-text);
-	--text-biege: var(--kit-muted-text);
-	--accent-deep: var(--kit-bg-black);
-	--chart-bar: var(--kit-muted);
+	--bg: var(--bits-ui-bg);
+	--bg-warm: var(--bits-ui-muted);
+	--surface: var(--bits-ui-bg);
+	--surface-hi: color-mix(in srgb, var(--bits-ui-foreground) 3%, var(--bits-ui-bg));
+	--surface-2: var(--bits-ui-muted);
+	--mint: var(--bits-ui-muted);
+	--mint-deep: color-mix(in srgb, var(--bits-ui-foreground) 10%, var(--bits-ui-bg));
+	--border-color: var(--bits-ui-border-card);
+	--border-soft: var(--bits-ui-border-card);
+	--text: var(--bits-ui-foreground);
+	--text-ink-soft: var(--bits-ui-foreground-alt);
+	--text-dim: var(--bits-ui-foreground-alt);
+	--text-mute: var(--bits-ui-muted-text);
+	--text-biege: var(--bits-ui-muted-text);
+	--accent-deep: var(--bits-ui-bg-black);
+	--chart-bar: var(--bits-ui-muted);
 
-	/* Monochrome accent: the kit's focus/primary colour is the foreground itself */
-	--accent: var(--kit-foreground);
-	--accent-dim: var(--kit-foreground-alt);
-	--accent-soft: var(--kit-bg-black-10);
-	--accent-ink: var(--kit-bg);
-	--lime: var(--kit-blue);
-	--lime-text: var(--kit-navy);
+	--accent: var(--bits-ui-foreground);
+	--accent-dim: var(--bits-ui-foreground-alt);
+	--accent-soft: var(--bits-ui-bg-black-10);
+	--accent-ink: var(--bits-ui-bg);
+	--lime: var(--bits-ui-blue);
+	--lime-text: var(--bits-ui-navy);
 
-	/* Status. Only red is in the kit; success/warn are Tailwind picks from the same family. */
 	--success: #059669;
 	--warn: #f59e0b;
-	--danger: var(--kit-red);
-	--info: var(--kit-navy);
+	--danger: var(--bits-ui-red);
+	--info: var(--bits-ui-navy);
 	--overlay: rgb(24 24 27 / 0.5);
 
-	/* shadcn token bridge */
 	--background: var(--bg);
 	--foreground: var(--text);
 	--card: var(--surface);
 	--card-foreground: var(--text);
 	--popover: var(--surface);
 	--popover-foreground: var(--text);
-	--primary: var(--kit-red);
-	--primary-foreground: var(--kit-bg);
-	--secondary: var(--kit-muted);
+	--primary: #19c874;
+	--primary-foreground: var(--bits-ui-bg);
+	--secondary: var(--bits-ui-muted);
 	--secondary-foreground: var(--text);
-	--muted: var(--kit-muted);
-	--muted-foreground: var(--kit-foreground-alt);
-	--accent-bg: var(--kit-muted);
+	--muted: var(--bits-ui-muted);
+	--muted-foreground: var(--bits-ui-foreground-alt);
+	--accent-bg: var(--bits-ui-muted);
 	--accent-foreground: var(--text);
-	--destructive: var(--kit-red);
+	--destructive: var(--bits-ui-red);
 	--destructive-foreground: #ffffff;
-	--border: var(--kit-border-card);
-	--input: var(--kit-input-border);
-	--ring: var(--kit-focus);
+	--border: var(--bits-ui-border-card);
+	--input: var(--bits-ui-input-border);
+	--ring: var(--bits-ui-focus);
 
-	--chart-1: var(--kit-foreground);
-	--chart-2: var(--kit-navy);
-	--chart-3: var(--kit-red);
-	--chart-4: var(--kit-violet);
-	--chart-5: var(--kit-foreground-alt);
+	--chart-1: var(--bits-ui-foreground);
+	--chart-2: var(--bits-ui-navy);
+	--chart-3: var(--bits-ui-red);
+	--chart-4: var(--bits-ui-violet);
+	--chart-5: var(--bits-ui-foreground-alt);
 
 	--sidebar: var(--surface);
 	--sidebar-foreground: var(--text);
 	--sidebar-primary: var(--text);
-	--sidebar-primary-foreground: var(--kit-bg);
-	--sidebar-accent: var(--kit-muted);
+	--sidebar-primary-foreground: var(--bits-ui-bg);
+	--sidebar-accent: var(--bits-ui-muted);
 	--sidebar-accent-foreground: var(--text);
-	--sidebar-border: var(--kit-border-card);
-	--sidebar-ring: var(--kit-focus);
+	--sidebar-border: var(--bits-ui-border-card);
+	--sidebar-ring: var(--bits-ui-focus);
 
-	/* Kit uses Inter throughout; display face is the same family */
 	--font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-	--font-display: 'Inter', system-ui, -apple-system, sans-serif;
+	--font-display: 'Bricolage Grotesque', system-ui, -apple-system, sans-serif;
 	--font-serif: Georgia, serif;
 	--font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-	--radius: var(--kit-radius-input);
-	--radius-card: var(--kit-radius-card);
+	--radius: var(--bits-ui-radius-input);
+	--radius-card: var(--bits-ui-radius-card);
 	--radius-pill: 9999px;
 	--spacing: 0.25rem;
 	--tracking-normal: 0em;
 
-	--shadow-2xs: var(--kit-shadow-mini);
-	--shadow-xs: var(--kit-shadow-mini);
-	--shadow-sm: var(--kit-shadow-card);
-	--shadow: var(--kit-shadow-card);
-	--shadow-md: var(--kit-shadow-popup);
-	--shadow-lg: var(--kit-shadow-popup);
-	--shadow-xl: var(--kit-shadow-popup);
-	--shadow-2xl: var(--kit-shadow-popup);
+	--shadow-2xs: var(--bits-ui-shadow-mini);
+	--shadow-xs: var(--bits-ui-shadow-mini);
+	--shadow-sm: var(--bits-ui-shadow-card);
+	--shadow: var(--bits-ui-shadow-card);
+	--shadow-md: var(--bits-ui-shadow-popup);
+	--shadow-lg: var(--bits-ui-shadow-popup);
+	--shadow-xl: var(--bits-ui-shadow-popup);
+	--shadow-2xl: var(--bits-ui-shadow-popup);
+
+	--tag-sage-bg: #d4ead0;
+	--tag-sage-ink: #2b5321;
+	--tag-sand-bg: #f8e0c8;
+	--tag-sand-ink: #6c4002;
+	--tag-clay-bg: #ffddcf;
+	--tag-clay-ink: #743a20;
+	--tag-sky-bg: #cbe8fd;
+	--tag-sky-ink: #054f75;
+	--tag-teal-bg: #cbebd8;
+	--tag-teal-ink: #005636;
+	--tag-lilac-bg: #dfe2ff;
+	--tag-lilac-ink: #43457c;
+	--tag-rose-bg: #fadbef;
+	--tag-rose-ink: #6d375c;
+	--tag-olive-bg: #e6e6c6;
+	--tag-olive-ink: #504c00;
 }
 
 .dark {
-	/* Kit · Dark mode. Note the kit flattens foreground-alt to pure white here. */
-	--kit-bg: #171717;
-	--kit-bg-black: #171717;
-	--kit-foreground: #ffffff;
-	--kit-foreground-alt: #ffffff;
-	--kit-muted: #27272a;
-	--kit-bg-black-10: rgb(245 245 245 / 0.1);
-	--kit-input-border: rgb(245 245 245 / 0.17);
-	--kit-input-border-hover: rgb(244 244 245 / 0.4);
-	--kit-muted-text: rgb(255 255 255 / 0.4);
-	--kit-border-card: rgb(245 245 245 / 0.1);
-	--kit-focus: #ffffff;
-	--kit-depth: rgb(255 255 255 / 0.03);
+	--bits-ui-bg: #171717;
+	--bits-ui-bg-black: #171717;
+	--bits-ui-foreground: #ffffff;
+	--bits-ui-foreground-alt: #b5b3b3;
+	--bits-ui-muted: #27272a;
+	--bits-ui-bg-black-10: rgb(245 245 245 / 0.1);
+	--bits-ui-input-border: rgb(245 245 245 / 0.17);
+	--bits-ui-input-border-hover: rgb(244 244 245 / 0.4);
+	--bits-ui-muted-text: rgb(255 255 255 / 0.4);
+	--bits-ui-border-card: rgb(245 245 245 / 0.1);
+	--bits-ui-focus: #ffffff;
+	--bits-ui-depth: rgb(255 255 255 / 0.03);
 
 	--success: #34d399;
 	--warn: #fbbf24;
 	--info: #60a5fa;
 	--overlay: rgb(0 0 0 / 0.7);
+
+	--tag-sage-bg: #193413;
+	--tag-sage-ink: #b2d9a9;
+	--tag-sand-bg: #442701;
+	--tag-sand-ink: #f4c79a;
+	--tag-clay-bg: #4a2211;
+	--tag-clay-ink: #fec1a8;
+	--tag-sky-bg: #03314a;
+	--tag-sky-ink: #9fd5fc;
+	--tag-teal-bg: #003520;
+	--tag-teal-ink: #9fdcba;
+	--tag-lilac-bg: #292a4f;
+	--tag-lilac-ink: #c6ccff;
+	--tag-rose-bg: #45223a;
+	--tag-rose-ink: #f6bfe2;
+	--tag-olive-bg: #322f00;
+	--tag-olive-ink: #d3d296;
 }
 
 @theme inline {
 	--spacing: var(--spacing);
-	/* h-input / h-input-sm: the kit's control heights */
-	--spacing-input: var(--kit-input-height);
-	--spacing-input-sm: var(--kit-input-height-small);
+	--spacing-input: var(--bits-ui-input-height);
+	--spacing-input-sm: var(--bits-ui-input-height-small);
 
-	/* Tailwind scale mapped onto the kit's radii */
 	--radius-sm: 6px;
-	--radius-md: var(--kit-radius-input);
-	--radius-lg: var(--kit-radius-card);
-	--radius-xl: var(--kit-radius-card-big);
+	--radius-md: var(--bits-ui-radius-input);
+	--radius-lg: var(--bits-ui-radius-card);
+	--radius-xl: var(--bits-ui-radius-card-big);
 	--radius-2xl: 24px;
-	/* Named kit radii: rounded-input, rounded-small, rounded-card, rounded-card-big */
-	--radius-input: var(--kit-radius-input);
-	--radius-small: var(--kit-radius-small);
-	--radius-card: var(--kit-radius-card);
-	--radius-card-big: var(--kit-radius-card-big);
+	--radius-input: var(--bits-ui-radius-input);
+	--radius-small: var(--bits-ui-radius-small);
+	--radius-card: var(--bits-ui-radius-card);
+	--radius-card-big: var(--bits-ui-radius-card-big);
 
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
@@ -194,7 +210,7 @@
 	--color-destructive-foreground: var(--destructive-foreground);
 	--color-border: var(--border);
 	--color-input: var(--input);
-	--color-input-hover: var(--kit-input-border-hover);
+	--color-input-hover: var(--bits-ui-input-border-hover);
 	--color-ring: var(--ring);
 
 	--color-surface: var(--surface);
@@ -218,13 +234,12 @@
 	--color-success: var(--success);
 	--color-info: var(--info);
 
-	/* Kit palette exposed directly: bg-kit-blue, text-kit-navy, … */
-	--color-kit-blue: var(--kit-blue);
-	--color-kit-violet: var(--kit-violet);
-	--color-kit-pink: var(--kit-pink);
-	--color-kit-red: var(--kit-red);
-	--color-kit-navy: var(--kit-navy);
-	--color-kit-muted-text: var(--kit-muted-text);
+	--color-kit-blue: var(--bits-ui-blue);
+	--color-kit-violet: var(--bits-ui-violet);
+	--color-kit-pink: var(--bits-ui-pink);
+	--color-kit-red: var(--bits-ui-red);
+	--color-kit-navy: var(--bits-ui-navy);
+	--color-kit-muted-text: var(--bits-ui-muted-text);
 
 	--color-chart-1: var(--chart-1);
 	--color-chart-2: var(--chart-2);
@@ -260,10 +275,9 @@
 	--shadow-lg: var(--shadow-lg);
 	--shadow-xl: var(--shadow-xl);
 	--shadow-2xl: var(--shadow-2xl);
-	/* Named kit effects: shadow-popup, shadow-card, shadow-mini */
-	--shadow-popup: var(--kit-shadow-popup);
-	--shadow-card: var(--kit-shadow-card);
-	--shadow-mini: var(--kit-shadow-mini);
+	--shadow-popup: var(--bits-ui-shadow-popup);
+	--shadow-card: var(--bits-ui-shadow-card);
+	--shadow-mini: var(--bits-ui-shadow-mini);
 }
 
 @layer base {
@@ -278,15 +292,12 @@
 		-webkit-font-smoothing: antialiased;
 	}
 	::placeholder {
-		color: var(--kit-muted-text);
+		color: var(--bits-ui-muted-text);
 	}
 	::selection {
 		background: var(--mint-deep);
 	}
-	/* Unified, app-wide focus indicator. `:focus-visible` so it only shows for
-	   keyboard/programmatic focus (not mouse clicks); `outline` so it never causes
-	   layout shift and follows each element's border-radius. Applied to every
-	   interactive element for a single, consistent ring across the app. */
+
 	:is(button, input, textarea, select, a, [tabindex], [role='button']):focus-visible {
 		outline: 2px solid var(--ring);
 		outline-offset: 2px;
@@ -311,7 +322,6 @@
 	@apply scale-0 -rotate-90 opacity-0 transition-all!;
 }
 
-/* Caption — quiet sans, not mono */
 @utility caption {
 	font-family: var(--font-sans);
 	font-size: 12px;
