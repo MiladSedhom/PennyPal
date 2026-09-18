@@ -18,7 +18,7 @@
 	<Card pad="none" class="w-full max-w-[420px] overflow-hidden shadow-lg">
 		<div class="border-b border-border-soft px-8 py-6">
 			<div class="flex items-center gap-[11px]">
-				<span class="inline-flex h-[30px] w-[30px] items-center justify-center rounded-[9px] bg-foreground text-lime">
+				<span class="inline-flex h-[30px] w-[30px] items-center justify-center rounded-[9px] bg-primary text-primary-foreground">
 					<WalletIcon size={16} />
 				</span>
 				<span class="font-display text-[21px] font-bold tracking-[-0.04em]">PennyPal</span>
@@ -39,7 +39,7 @@
 					{...chooseUsername.fields.username.as('text', data.suggestedName)}
 					autocomplete="username"
 					placeholder="e.g. {data.suggestedName || 'penny_saver'}"
-					class="rounded-[10px] border border-border bg-bg-warm px-[14px] py-[11px] text-[14px] font-medium text-foreground outline-none focus:border-primary"
+					class="rounded-[10px] border border-border bg-bg-warm px-[14px] py-[11px] text-[14px] font-medium text-foreground outline-none focus:border-ring"
 				/>
 			</label>
 
@@ -54,7 +54,7 @@
 			<Button
 				type="submit"
 				disabled={busy}
-				class="mt-1 h-[44px] gap-2 rounded-full bg-foreground px-[18px] text-[13.5px] font-semibold text-background hover:bg-foreground/90"
+				class="mt-1 h-[44px] gap-2 rounded-full bg-primary px-[18px] text-[13.5px] font-semibold text-primary-foreground hover:bg-primary/90"
 			>
 				{#if busy}<LoaderIcon size={15} class="animate-spin" />{/if}
 				Continue

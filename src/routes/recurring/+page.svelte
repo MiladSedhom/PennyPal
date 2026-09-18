@@ -62,7 +62,7 @@
 		<Button
 			type="button"
 			onclick={() => (editing = 'new')}
-			class="h-[40px] gap-2 rounded-full bg-foreground px-[18px] text-[13.5px] font-semibold text-background hover:bg-foreground/90"
+			class="h-[40px] gap-2 rounded-full bg-primary px-[18px] text-[13.5px] font-semibold text-primary-foreground hover:bg-primary/90"
 		>
 			<PlusIcon size={15} /> New rule
 		</Button>

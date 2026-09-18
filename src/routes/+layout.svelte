@@ -63,8 +63,8 @@
 							<a
 								href={resolve(n.path)}
 								class="rounded-full px-4 py-2 text-[13.5px] font-semibold no-underline transition-colors"
-								class:bg-foreground={active}
-								class:text-background={active}
+								class:bg-primary={active}
+								class:text-primary-foreground={active}
 								class:text-text-dim={!active}
 								class:hover:text-foreground={!active}
 							>

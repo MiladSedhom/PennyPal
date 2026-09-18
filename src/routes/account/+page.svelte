@@ -99,7 +99,7 @@
 					<a
 						href="{p.connect}?link=1"
 						data-sveltekit-reload
-						class="inline-flex h-[36px] items-center rounded-full bg-foreground px-4 text-[13px] font-semibold text-background no-underline hover:bg-foreground/90"
+						class="inline-flex h-[36px] items-center rounded-full bg-primary px-4 text-[13px] font-semibold text-primary-foreground no-underline hover:bg-primary/90"
 					>
 						Connect
 					</a>

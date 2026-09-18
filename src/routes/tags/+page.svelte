@@ -151,7 +151,7 @@
 						<input
 							{...fields.name.as('text')}
 							placeholder="e.g. Groceries"
-							class="w-full rounded-sm border border-border bg-bg-warm px-[14px] py-[11px] text-[14px] font-medium text-foreground outline-none focus:border-primary"
+							class="w-full rounded-sm border border-border bg-bg-warm px-[14px] py-[11px] text-[14px] font-medium text-foreground outline-none focus:border-ring"
 						/>
 					</label>
 					<label class="block">
@@ -162,7 +162,7 @@
 								{...fields.budget.as('text')}
 								inputmode="numeric"
 								placeholder="—"
-								class="w-full rounded-sm border border-border bg-bg-warm py-[11px] pl-[26px] pr-[14px] font-mono text-[14px] font-medium text-foreground outline-none focus:border-primary"
+								class="w-full rounded-sm border border-border bg-bg-warm py-[11px] pl-[26px] pr-[14px] font-mono text-[14px] font-medium text-foreground outline-none focus:border-ring"
 							/>
 						</div>
 					</label>
@@ -225,7 +225,7 @@
 					<Button
 						type="submit"
 						disabled={!fields.name.value()?.trim() || createOrUpdateTag.pending > 0}
-						class="h-[40px] flex-1 gap-2 rounded-full bg-foreground px-[18px] text-[13.5px] font-semibold text-background hover:bg-foreground/90"
+						class="h-[40px] flex-1 gap-2 rounded-full bg-primary px-[18px] text-[13.5px] font-semibold text-primary-foreground hover:bg-primary/90"
 					>
 						<CheckIcon size={15} />
 						{fields.id.value() ? 'Save changes' : 'Create tag'}

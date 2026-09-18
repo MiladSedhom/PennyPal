@@ -247,8 +247,8 @@
 			<div>
 				<div class="font-display text-[60px] font-bold leading-none tracking-[-0.045em]">${totalDisplay}</div>
 				{#if budget}
-					<div class="mt-4 h-2 overflow-hidden rounded-full bg-foreground/12">
-						<div class="h-full rounded-full bg-foreground" style:width="{pctUsed}%"></div>
+					<div class="mt-4 h-2 overflow-hidden rounded-full bg-primary/12">
+						<div class="h-full rounded-full bg-primary" style:width="{pctUsed}%"></div>
 					</div>
 					<div class="mt-2 flex justify-between">
 						<Caption class="!text-text-ink-soft">{pctUsed.toFixed(0)}% used · {daysLeft} days left</Caption>

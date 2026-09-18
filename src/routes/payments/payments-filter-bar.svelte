@@ -287,7 +287,7 @@
 							filters.amountMin = val === '' ? null : Math.max(0, Math.round(Number(val)))
 						}}
 						placeholder="Min"
-						class="w-full rounded-sm border border-border bg-bg-warm py-[8px] pl-[24px] pr-[10px] font-mono text-[13px] font-medium text-foreground outline-none focus:border-primary"
+						class="w-full rounded-sm border border-border bg-bg-warm py-[8px] pl-[24px] pr-[10px] font-mono text-[13px] font-medium text-foreground outline-none focus:border-ring"
 					/>
 				</div>
 				<span class="text-text-mute">–</span>
@@ -301,7 +301,7 @@
 							filters.amountMax = val === '' ? null : Math.max(0, Math.round(Number(val)))
 						}}
 						placeholder="Max"
-						class="w-full rounded-sm border border-border bg-bg-warm py-[8px] pl-[24px] pr-[10px] font-mono text-[13px] font-medium text-foreground outline-none focus:border-primary"
+						class="w-full rounded-sm border border-border bg-bg-warm py-[8px] pl-[24px] pr-[10px] font-mono text-[13px] font-medium text-foreground outline-none focus:border-ring"
 					/>
 				</div>
 			</div>
