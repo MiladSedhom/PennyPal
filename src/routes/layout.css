@@ -304,6 +304,15 @@
 	}
 }
 
+@utility grid-backdrop {
+	--grid-line: color-mix(in srgb, var(--foreground) 8%, transparent);
+	background-image:
+		linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+		linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+	background-size: 28px 28px;
+	mask-image: radial-gradient(circle 120px at var(--pointer-x) var(--pointer-y), #000, rgb(0 0 0 / 0.45));
+}
+
 @utility no-scrollbar {
 	-ms-overflow-style: none;
 	scrollbar-width: none;

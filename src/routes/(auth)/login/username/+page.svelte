@@ -13,7 +13,7 @@
 	const busy = $derived(chooseUsername.pending > 0)
 </script>
 
-<div class="flex min-h-screen items-center justify-center bg-background p-6">
+<div class="flex min-h-screen items-center justify-center p-6">
 	<Card pad="none" class="w-full max-w-[420px] overflow-hidden shadow-lg">
 		<div class="border-b border-border-soft px-8 py-6">
 			<div class="flex items-center gap-[11px]">
