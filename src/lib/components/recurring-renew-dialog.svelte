@@ -2,7 +2,6 @@
 	import * as Dialog from '$lib/components/ui/dialog'
 	import { Button } from '$lib/components/ui/button'
 	import DatePicker from '$lib/components/ui/date-picker/date-picker.svelte'
-	import Caption from '$lib/components/pp/caption.svelte'
 	import { renewRecurringPayment } from '$lib/remote/recurring.remote'
 	import { formatMoney } from '$lib/utils'
 	import { CalendarDate, getLocalTimeZone, type DateValue } from '@internationalized/date'
@@ -72,14 +71,14 @@
 			}}
 		>
 			<div class="flex items-baseline justify-between">
-				<Caption>Amount</Caption>
+				<span class="caption">Amount</span>
 				<span class="font-display text-[22px] font-bold tracking-[-0.02em] tabular-nums">
 					{formatMoney(rule?.amount ?? 0)}
 				</span>
 			</div>
 
 			<div class="flex flex-col gap-1.5">
-				<Caption>Paid on</Caption>
+				<span class="caption">Paid on</span>
 				<DatePicker
 					bind:value={date}
 					class="w-full rounded-[10px]! border-transparent bg-bg-warm! px-3!"

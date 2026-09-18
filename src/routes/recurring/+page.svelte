@@ -5,7 +5,6 @@
 	import RecurringRenewDialog from '$lib/components/recurring-renew-dialog.svelte'
 
 	import Card from '$lib/components/pp/card.svelte'
-	import Caption from '$lib/components/pp/caption.svelte'
 	import TagChip from '$lib/components/pp/tag-chip.svelte'
 	import { Button } from '$lib/components/ui/button'
 	import { dialogs } from '$lib/components/pp/confirm-dialog'
@@ -56,13 +55,13 @@
 <div class="px-10 pb-14 pt-2">
 	<div class="mb-[22px] flex items-end justify-between">
 		<div>
-			<Caption>{rules.length} rule{rules.length === 1 ? '' : 's'}</Caption>
+			<span class="caption">{rules.length} rule{rules.length === 1 ? '' : 's'}</span>
 			<h1 class="m-0 mt-1.5 font-display text-[38px] font-bold tracking-[-0.04em] text-foreground">Recurring</h1>
 		</div>
 		<Button
 			type="button"
 			onclick={() => (editing = 'new')}
-			class="h-[40px] gap-2 rounded-full bg-foreground px-[18px] text-[13.5px] font-semibold text-background hover:bg-foreground/90"
+			class="h-[40px] gap-2 rounded-full bg-primary px-[18px] text-[13.5px] font-semibold text-primary-foreground hover:bg-primary/90"
 		>
 			<PlusIcon size={15} /> New rule
 		</Button>
@@ -75,7 +74,7 @@
 					<RepeatIcon size={20} />
 				</span>
 				<div class="text-[14.5px] font-semibold">No recurring payments yet</div>
-				<Caption>Rules create real payments on schedule — rent, internet, subscriptions.</Caption>
+				<span class="caption">Rules create real payments on schedule — rent, internet, subscriptions.</span>
 			</div>
 		{:else}
 			{#each rules as r, i (r.id)}
@@ -101,7 +100,7 @@
 						{/if}
 					</div>
 
-					<Caption class="shrink-0 {r.paused || completed ? '' : 'text-lime-text!'}">{status(r)}</Caption>
+					<span class="caption shrink-0 {r.paused || completed ? '' : 'text-lime-text!'}">{status(r)}</span>
 
 					{#if canPayNow(r)}
 						<button

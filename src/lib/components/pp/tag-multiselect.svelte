@@ -15,7 +15,7 @@
 	let {
 		tags,
 		selected = $bindable([]),
-		placeholder = 'Add tags',
+		placeholder = 'Add Tags',
 		trigger = $bindable(null),
 		triggerProps
 	}: {

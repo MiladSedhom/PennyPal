@@ -3,7 +3,6 @@
 	import { Button } from '$lib/components/ui/button'
 	import DatePicker from '$lib/components/ui/date-picker/date-picker.svelte'
 	import TagMultiSelect from '$lib/components/pp/tag-multiselect.svelte'
-	import Caption from '$lib/components/pp/caption.svelte'
 	import { updatePayment } from '$lib/remote/payments.remote'
 	import { CalendarDate, getLocalTimeZone } from '@internationalized/date'
 	import XIcon from '@lucide/svelte/icons/x'
@@ -87,7 +86,7 @@
 		>
 			<div class="grid grid-cols-2 gap-3">
 				<div class="flex flex-col gap-1.5">
-					<Caption>Date</Caption>
+					<span class="caption">Date</span>
 					<DatePicker
 						bind:value={date}
 						class="w-full rounded-[10px]! border-transparent bg-bg-warm! px-3!"
@@ -95,7 +94,7 @@
 					/>
 				</div>
 				<div class="flex flex-col gap-1.5">
-					<Caption>Amount</Caption>
+					<span class="caption">Amount</span>
 					<input
 						type="number"
 						bind:value={amount}
@@ -108,14 +107,14 @@
 			</div>
 
 			<div class="flex flex-col gap-1.5">
-				<Caption>Tags</Caption>
+				<span class="caption">Tags</span>
 				<div class="rounded-[10px] bg-bg-warm">
 					<TagMultiSelect {tags} bind:selected={selectedTags} />
 				</div>
 			</div>
 
 			<div class="flex flex-col gap-1.5">
-				<Caption>Note</Caption>
+				<span class="caption">Note</span>
 				<input
 					bind:value={note}
 					placeholder="—"

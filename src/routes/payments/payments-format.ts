@@ -15,8 +15,10 @@ export type Row = {
 // Body rows are flat when sorted by amount, and day-grouped (with subtotals) when sorted by date.
 export type BodyItem = { kind: 'divider'; label: string; subtotal: number } | { kind: 'row'; row: Row }
 
-const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+// Pinned locale so SSR and hydration output match.
+const weekdayFormat = new Intl.DateTimeFormat('en-US', { weekday: 'long' })
+const monthDayFormat = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' })
+const rowDateFormat = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 
 /** Local calendar day for a date, as `YYYY-MM-DD`. */
 function toIsoDay(d: string | Date): string {
@@ -25,22 +27,21 @@ function toIsoDay(d: string | Date): string {
 	return new Date(dt.getTime() - tz).toISOString().slice(0, 10)
 }
 
-/** Day-divider label, e.g. `Today · Jun 18`, `Yesterday · Jun 17`, `Tue · Jun 16`. */
+/** Day-divider label, e.g. `Today · Jun 18`, `Yesterday · Jun 17`, `Tuesday · Jun 16`. */
 function formatDayHeader(iso: string): string {
 	const d = new Date(iso + 'T00:00:00')
 	const today = new Date()
 	today.setHours(0, 0, 0, 0)
-	const diff = Math.round((today.getTime() - d.getTime()) / 86400000)
-	const md = `${months[d.getMonth()]} ${d.getDate()}`
-	if (diff === 0) return `Today · ${md}`
-	if (diff === 1) return `Yesterday · ${md}`
-	return `${weekdays[d.getDay()]} · ${md}`
+	const daysAgo = Math.round((today.getTime() - d.getTime()) / 86_400_000)
+	const monthDay = monthDayFormat.format(d)
+	if (daysAgo === 0) return `Today, ${monthDay}`
+	if (daysAgo === 1) return `Yesterday, ${monthDay}`
+	return `${weekdayFormat.format(d)}, ${monthDay}`
 }
 
 /** Full row date, e.g. `Jun 18, 2026`. */
 export function formatRowDate(d: string | Date): string {
-	const dt = new Date(d)
-	return `${months[dt.getMonth()]} ${dt.getDate()}, ${dt.getFullYear()}`
+	return rowDateFormat.format(new Date(d))
 }
 
 /** Group consecutive rows by calendar day, inserting a divider with the day's subtotal before each group. */

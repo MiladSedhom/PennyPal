@@ -1,4 +1,8 @@
 <script lang="ts">
+	import ConstructionIcon from '@lucide/svelte/icons/construction'
+	import { resolve } from '$app/paths'
+	import { Button } from '$lib/components/ui/button'
+	/*
 	import { getLoggedInUser } from '$lib/remote/auth.remote'
 	import { getPayments } from '$lib/remote/payments.remote'
 	import { getTags } from '$lib/remote/tags.remote'
@@ -11,7 +15,6 @@
 	import { SvelteDate, SvelteSet, SvelteMap } from 'svelte/reactivity'
 
 	import Card from '$lib/components/pp/card.svelte'
-	import Caption from '$lib/components/pp/caption.svelte'
 	import TagIconChip from '$lib/components/pp/tag-icon-chip.svelte'
 	import { getSwatch } from '$lib/tag-meta'
 	import { formatMoney } from '$lib/utils'
@@ -211,12 +214,24 @@
 	})
 
 	const totalDisplay = $derived(total.toLocaleString('en-US'))
+	*/
 </script>
+
+<div class="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-6 text-center">
+	<span class="flex size-14 items-center justify-center rounded-full bg-muted text-text-dim">
+		<ConstructionIcon class="size-7" />
+	</span>
+	<h1 class="m-0 font-display text-2xl font-bold tracking-[-0.03em]">This page is under construction</h1>
+	<p class="m-0 text-text-dim">Check out the payments page for now.</p>
+	<Button href={resolve('/payments')} class="rounded-full">Go to payments</Button>
+</div>
+
+<!--
 
 <div class="px-10 pb-12 pt-2">
 	<div class="mb-[22px] flex items-end justify-between">
 		<div>
-			<Caption>{dayLabel}</Caption>
+			<span class="caption">{dayLabel}</span>
 			<h1 class="m-0 mt-1.5 font-display text-[40px] font-bold leading-[1.05] tracking-[-0.04em] text-foreground">
 				Good evening, {user?.username}
 			</h1>
@@ -232,37 +247,34 @@
 		</div>
 	</div>
 
-	<!-- Row 1: hero spend + dark donut + two stat cards -->
 	<div class="mb-4 grid gap-4 lg:grid-cols-[1.5fr_1.1fr_1fr]">
-		<!-- Mint hero -->
 		<Card tone="mint" class="flex min-h-[260px] flex-col justify-between">
 			<div class="flex items-center justify-between">
 				<span class="inline-flex items-center gap-2 text-[13.5px] font-semibold">
 					<WalletIcon size={15} /> Spent in {monthShort}
 				</span>
 				{#if budget}
-					<Caption>of {formatMoney(budget.amount)} budget</Caption>
+					<span class="caption">of {formatMoney(budget.amount)} budget</span>
 				{/if}
 			</div>
 			<div>
 				<div class="font-display text-[60px] font-bold leading-none tracking-[-0.045em]">${totalDisplay}</div>
 				{#if budget}
-					<div class="mt-4 h-2 overflow-hidden rounded-full bg-foreground/12">
-						<div class="h-full rounded-full bg-foreground" style:width="{pctUsed}%"></div>
+					<div class="mt-4 h-2 overflow-hidden rounded-full bg-primary/12">
+						<div class="h-full rounded-full bg-primary" style:width="{pctUsed}%"></div>
 					</div>
 					<div class="mt-2 flex justify-between">
-						<Caption class="!text-text-ink-soft">{pctUsed.toFixed(0)}% used · {daysLeft} days left</Caption>
-						<Caption class="!text-lime-text">{formatMoney(remaining)} remaining</Caption>
+						<span class="caption !text-text-ink-soft">{pctUsed.toFixed(0)}% used · {daysLeft} days left</span>
+						<span class="caption !text-lime-text">{formatMoney(remaining)} remaining</span>
 					</div>
 				{:else}
 					<div class="mt-4">
-						<Caption class="!text-text-ink-soft">No active budget for this period</Caption>
+						<span class="caption !text-text-ink-soft">No active budget for this period</span>
 					</div>
 				{/if}
 			</div>
 		</Card>
 
-		<!-- Dark donut card -->
 		<Card tone="ink" class="flex min-h-[260px] flex-col">
 			<span class="inline-flex items-center gap-2 text-[13.5px] font-semibold text-background/85">
 				<PieChartIcon size={15} /> Where it went
@@ -277,7 +289,7 @@
 									cy="52"
 									r={R}
 									fill="none"
-									stroke={p.color}
+									style:stroke={p.color}
 									stroke-width="16"
 									stroke-dasharray={p.dasharray}
 									stroke-dashoffset={p.dashoffset}
@@ -312,7 +324,6 @@
 			{/if}
 		</Card>
 
-		<!-- Stacked stat cards -->
 		<div class="flex flex-col gap-4">
 			<Card class="flex min-h-[122px] flex-col justify-between" pad="lg">
 				<span class="inline-flex items-center gap-[7px] text-[12.5px] font-semibold text-text-dim">
@@ -347,12 +358,11 @@
 		onsaved={() => getRecurringPayments().refresh()}
 	/>
 
-	<!-- Row 2: trend + insights -->
 	<div class="mb-4 grid gap-4 lg:grid-cols-[1.5fr_1fr]">
 		<Card>
 			<div class="mb-5 flex items-center justify-between">
 				<span class="font-display text-[19px] font-semibold tracking-[-0.02em]">Spending trend</span>
-				<Caption>Last 14 days</Caption>
+				<span class="caption">Last 14 days</span>
 			</div>
 			<div class="flex h-[150px] items-end gap-2">
 				{#each trend as d, i (i)}
@@ -368,8 +378,8 @@
 				{/each}
 			</div>
 			<div class="mt-2.5 flex justify-between">
-				<Caption>{trend[0].date.toLocaleString('en-US', { month: 'short', day: 'numeric' })}</Caption>
-				<Caption>Today</Caption>
+				<span class="caption">{trend[0].date.toLocaleString('en-US', { month: 'short', day: 'numeric' })}</span>
+				<span class="caption">Today</span>
 			</div>
 		</Card>
 
@@ -403,7 +413,6 @@
 		</Card>
 	</div>
 
-	<!-- Row 3: budgets by category + upcoming -->
 	<div class="grid gap-4 lg:grid-cols-[1.5fr_1fr]">
 		<Card>
 			<div class="mb-[18px] flex items-center justify-between">
@@ -465,7 +474,7 @@
 							<TagIconChip color={b.color} icon={b.icon} size={32} />
 							<div class="min-w-0 flex-1">
 								<div class="truncate text-[13.5px] font-semibold">{b.note}</div>
-								<Caption>{b.whenLabel}</Caption>
+								<span class="caption">{b.whenLabel}</span>
 							</div>
 							{#if b.rolling}
 								<button
@@ -478,7 +487,7 @@
 							{/if}
 							<div class="text-right">
 								<div class="text-[13.5px] font-semibold tabular-nums">{formatMoney(b.amount)}</div>
-								<Caption class={b.due === 'Due' ? '!text-[color:var(--danger)]' : ''}>{b.due}</Caption>
+								<span class="caption {b.due === 'Due' ? '!text-[color:var(--danger)]' : ''}">{b.due}</span>
 							</div>
 						</div>
 					{/each}
@@ -487,3 +496,4 @@
 		</Card>
 	</div>
 </div>
+-->
