@@ -104,7 +104,7 @@
 										? 'w-[92px]'
 										: ''}"
 						>
-							<span class="font-mono text-[11px] font-semibold uppercase tracking-[0.04em] text-text-mute">
+							<span class="font-mono text-xs font-semibold uppercase tracking-[0.04em] text-text-mute">
 								<FlexRender content={header.column.columnDef.header} context={header.getContext()} />
 							</span>
 						</Table.Head>
@@ -128,7 +128,7 @@
 								<div class="flex items-center gap-3">
 									<span class="caption font-bold! text-foreground!">{item.label}</span>
 									<div class="flex-1"></div>
-									<span class="caption">{formatMoney(item.subtotal)}</span>
+									<span class="caption text-foreground!">{formatMoney(item.subtotal)}</span>
 								</div>
 							</Table.Cell>
 						</Table.Row>
