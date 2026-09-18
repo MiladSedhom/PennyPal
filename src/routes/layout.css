@@ -3,39 +3,81 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* PennyPal v0.5 — Notion direction: white canvas, warm-gray sidebar, near-black ink, quiet rounding */
+/* PennyPal v0.6 — Bits UI kit base.
+   Source: Figma "Bits UI kit" (Pavel Stianko, CC BY 4.0), Collection 1, modes Light / Dark.
+   `--kit-*` mirrors the Figma variables one-to-one; retheme by editing those.
+   Everything after the kit block derives from it. */
 :root {
-	/* Notion · light (primary) */
-	--bg: #ffffff;
-	--bg-warm: #f7f6f3;
-	--surface: #ffffff;
-	--surface-hi: #fbfbfa;
-	--surface-2: #f1f1ef;
-	--mint: #efefed;
-	--mint-deep: #e3e2e0;
-	--border-color: #e9e9e7;
-	--border-soft: #edeceb;
-	--text: #37352f;
-	--text-ink-soft: #4a4842;
-	--text-dim: #6b6a67;
-	--text-mute: #9b9a97;
-	--text-biege: #91918e;
-	--accent-deep: #191919;
-	--chart-bar: #e3e2e0;
+	/* Kit · Basic */
+	--kit-bg: #ffffff;
+	--kit-bg-black: #18181b;
+	--kit-foreground: #171717;
+	--kit-foreground-alt: #525252;
+	--kit-muted: #f4f4f5;
+	--kit-bg-black-10: rgb(24 24 27 / 0.1);
 
-	/* Notion blue accent */
-	--accent: #2383e2;
-	--accent-dim: #1a6fc4;
-	--accent-soft: rgba(35, 131, 226, 0.1);
-	--accent-ink: #ffffff;
-	--lime: #2f9e44;
-	--lime-text: #2f7b3a;
+	/* Kit · Inputs */
+	--kit-input-border: rgb(24 24 27 / 0.17);
+	--kit-input-border-hover: rgb(24 24 27 / 0.4);
+	--kit-input-height: 48px;
+	--kit-input-height-small: 40px;
 
-	--success: #0f7b6c;
-	--warn: #d9730d;
-	--danger: #e03e3e;
-	--info: #337ea9;
-	--overlay: rgba(15, 15, 15, 0.45);
+	/* Kit · Other */
+	--kit-muted-text: rgb(23 23 23 / 0.4);
+	--kit-border-card: rgb(24 24 27 / 0.1);
+	--kit-focus: var(--kit-foreground);
+	--kit-depth: rgb(255 255 255 / 0);
+
+	/* Kit · TW colors (mode-independent) */
+	--kit-blue: #e0f2fe;
+	--kit-violet: #1e1b4b;
+	--kit-pink: #fae8ff;
+	--kit-red: #f43f5e;
+	--kit-navy: #1e40af;
+
+	/* Kit · Radius */
+	--kit-radius-card: 16px;
+	--kit-radius-card-big: 20px;
+	--kit-radius-small: 10px;
+	--kit-radius-input: 9px;
+
+	/* Kit · Effect styles */
+	--kit-shadow-popup: 0 7px 16px 10px rgb(24 24 27 / 0.05);
+	--kit-shadow-card: 0 2px 0 1px rgb(0 0 0 / 0.04);
+	--kit-shadow-mini: 0 1px 0 1px rgb(0 0 0 / 0.04);
+
+	/* App tokens — names kept so existing markup keeps working, values derived from the kit */
+	--bg: var(--kit-bg);
+	--bg-warm: var(--kit-muted);
+	--surface: var(--kit-bg);
+	--surface-hi: color-mix(in srgb, var(--kit-foreground) 3%, var(--kit-bg));
+	--surface-2: var(--kit-muted);
+	--mint: var(--kit-muted);
+	--mint-deep: color-mix(in srgb, var(--kit-foreground) 10%, var(--kit-bg));
+	--border-color: var(--kit-border-card);
+	--border-soft: var(--kit-border-card);
+	--text: var(--kit-foreground);
+	--text-ink-soft: var(--kit-foreground-alt);
+	--text-dim: var(--kit-foreground-alt);
+	--text-mute: var(--kit-muted-text);
+	--text-biege: var(--kit-muted-text);
+	--accent-deep: var(--kit-bg-black);
+	--chart-bar: var(--kit-muted);
+
+	/* Monochrome accent: the kit's focus/primary colour is the foreground itself */
+	--accent: var(--kit-foreground);
+	--accent-dim: var(--kit-foreground-alt);
+	--accent-soft: var(--kit-bg-black-10);
+	--accent-ink: var(--kit-bg);
+	--lime: var(--kit-blue);
+	--lime-text: var(--kit-navy);
+
+	/* Status. Only red is in the kit; success/warn are Tailwind picks from the same family. */
+	--success: #059669;
+	--warn: #f59e0b;
+	--danger: var(--kit-red);
+	--info: var(--kit-navy);
+	--overlay: rgb(24 24 27 / 0.5);
 
 	/* shadcn token bridge */
 	--background: var(--bg);
@@ -44,143 +86,95 @@
 	--card-foreground: var(--text);
 	--popover: var(--surface);
 	--popover-foreground: var(--text);
-	--primary: var(--text);
-	--primary-foreground: #ffffff;
-	--secondary: var(--mint);
+	--primary: var(--kit-foreground);
+	--primary-foreground: var(--kit-bg);
+	--secondary: var(--kit-muted);
 	--secondary-foreground: var(--text);
-	--muted: var(--bg-warm);
-	--muted-foreground: var(--text-mute);
-	--accent-bg: var(--mint);
+	--muted: var(--kit-muted);
+	--muted-foreground: var(--kit-foreground-alt);
+	--accent-bg: var(--kit-muted);
 	--accent-foreground: var(--text);
-	--destructive: var(--danger);
+	--destructive: var(--kit-red);
 	--destructive-foreground: #ffffff;
-	--border: var(--border-color);
-	--input: var(--border-color);
-	--ring: var(--accent);
+	--border: var(--kit-border-card);
+	--input: var(--kit-input-border);
+	--ring: var(--kit-focus);
 
-	--chart-1: var(--accent);
-	--chart-2: #d9730d;
-	--chart-3: #0f7b6c;
-	--chart-4: #ad1a72;
-	--chart-5: #6940a5;
+	--chart-1: var(--kit-foreground);
+	--chart-2: var(--kit-navy);
+	--chart-3: var(--kit-red);
+	--chart-4: var(--kit-violet);
+	--chart-5: var(--kit-foreground-alt);
 
-	--sidebar: var(--bg-warm);
+	--sidebar: var(--surface);
 	--sidebar-foreground: var(--text);
 	--sidebar-primary: var(--text);
-	--sidebar-primary-foreground: #ffffff;
-	--sidebar-accent: var(--mint);
+	--sidebar-primary-foreground: var(--kit-bg);
+	--sidebar-accent: var(--kit-muted);
 	--sidebar-accent-foreground: var(--text);
-	--sidebar-border: var(--border-color);
-	--sidebar-ring: var(--accent);
+	--sidebar-border: var(--kit-border-card);
+	--sidebar-ring: var(--kit-focus);
 
-	--font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-	--font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-	--font-serif: Lyon-Text, Georgia, 'Liberation Serif', serif;
-	--font-mono: 'SFMono-Regular', 'JetBrains Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+	/* Kit uses Inter throughout; display face is the same family */
+	--font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+	--font-display: 'Inter', system-ui, -apple-system, sans-serif;
+	--font-serif: Georgia, serif;
+	--font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-	/* Quiet rounding */
-	--radius: 6px;
-	--radius-card: 8px;
-	--radius-sm: 4px;
+	--radius: var(--kit-radius-input);
+	--radius-card: var(--kit-radius-card);
 	--radius-pill: 9999px;
 	--spacing: 0.25rem;
 	--tracking-normal: 0em;
 
-	--shadow-color: hsl(0 0% 6%);
-	--shadow-2xs: 0 0 0 1px rgba(15, 15, 15, 0.03);
-	--shadow-xs: 0 1px 2px 0 rgba(15, 15, 15, 0.06);
-	--shadow-sm: 0 1px 3px 0 rgba(15, 15, 15, 0.08), 0 1px 2px -1px rgba(15, 15, 15, 0.06);
-	--shadow: 0 2px 6px -1px rgba(15, 15, 15, 0.1), 0 1px 3px -1px rgba(15, 15, 15, 0.08);
-	--shadow-md: 0 4px 12px -2px rgba(15, 15, 15, 0.12);
-	--shadow-lg: 0 8px 24px -6px rgba(15, 15, 15, 0.16);
-	--shadow-xl: 0 12px 36px -8px rgba(15, 15, 15, 0.2);
-	--shadow-2xl: 0 20px 56px -12px rgba(15, 15, 15, 0.28);
+	--shadow-2xs: var(--kit-shadow-mini);
+	--shadow-xs: var(--kit-shadow-mini);
+	--shadow-sm: var(--kit-shadow-card);
+	--shadow: var(--kit-shadow-card);
+	--shadow-md: var(--kit-shadow-popup);
+	--shadow-lg: var(--kit-shadow-popup);
+	--shadow-xl: var(--kit-shadow-popup);
+	--shadow-2xl: var(--kit-shadow-popup);
 }
 
 .dark {
-	/* Notion · dark (companion) */
-	--bg: #191919;
-	--bg-warm: #202020;
-	--surface: #202020;
-	--surface-hi: #252525;
-	--surface-2: #2f2f2f;
-	--mint: #2f2f2f;
-	--mint-deep: #373737;
-	--border-color: #2f2f2f;
-	--border-soft: #282828;
-	--text: #d4d4d4;
-	--text-ink-soft: #cfcfcf;
-	--text-dim: rgba(255, 255, 255, 0.65);
-	--text-mute: #999999;
-	--text-biege: #a1a1a1;
-	--accent-deep: #ededed;
-	--chart-bar: #373737;
+	/* Kit · Dark mode. Note the kit flattens foreground-alt to pure white here. */
+	--kit-bg: #171717;
+	--kit-bg-black: #171717;
+	--kit-foreground: #ffffff;
+	--kit-foreground-alt: #ffffff;
+	--kit-muted: #27272a;
+	--kit-bg-black-10: rgb(245 245 245 / 0.1);
+	--kit-input-border: rgb(245 245 245 / 0.17);
+	--kit-input-border-hover: rgb(244 244 245 / 0.4);
+	--kit-muted-text: rgb(255 255 255 / 0.4);
+	--kit-border-card: rgb(245 245 245 / 0.1);
+	--kit-focus: #ffffff;
+	--kit-depth: rgb(255 255 255 / 0.03);
 
-	--accent: #529cca;
-	--accent-dim: #3b82c4;
-	--accent-soft: rgba(82, 156, 202, 0.15);
-	--accent-ink: #0d1117;
-	--lime: #4dab9a;
-	--lime-text: #6fc296;
-
-	--success: #4dab9a;
-	--warn: #ffa344;
-	--danger: #ff7369;
-	--info: #6bb3e0;
-	--overlay: rgba(0, 0, 0, 0.72);
-
-	--background: var(--bg);
-	--foreground: var(--text);
-	--card: var(--surface);
-	--card-foreground: var(--text);
-	--popover: var(--surface);
-	--popover-foreground: var(--text);
-	--primary: #ededed;
-	--primary-foreground: #0d1117;
-	--secondary: var(--mint);
-	--secondary-foreground: var(--text);
-	--muted: var(--surface-hi);
-	--muted-foreground: var(--text-mute);
-	--accent-bg: var(--mint);
-	--accent-foreground: var(--text);
-	--destructive: var(--danger);
-	--destructive-foreground: var(--accent-ink);
-	--border: var(--border-color);
-	--input: var(--border-color);
-	--ring: var(--accent);
-
-	--chart-1: var(--accent);
-	--chart-2: #ffa344;
-	--chart-3: #4dab9a;
-	--chart-4: #e0a1c4;
-	--chart-5: #9d8cd6;
-
-	--sidebar: var(--bg-warm);
-	--sidebar-foreground: var(--text);
-	--sidebar-primary: var(--text);
-	--sidebar-primary-foreground: #0d1117;
-	--sidebar-accent: var(--mint);
-	--sidebar-accent-foreground: var(--text);
-	--sidebar-border: var(--border-color);
-	--sidebar-ring: var(--accent);
-
-	--shadow-color: hsl(0 0% 0%);
-	--shadow-2xs: 0 0 0 1px rgba(255, 255, 255, 0.05);
-	--shadow-xs: 0 1px 0 0 rgba(0, 0, 0, 0.4);
-	--shadow-sm: 0 2px 6px -2px rgba(0, 0, 0, 0.5);
-	--shadow: 0 3px 10px -3px rgba(0, 0, 0, 0.55);
-	--shadow-md: 0 6px 18px -6px rgba(0, 0, 0, 0.6);
-	--shadow-lg: 0 10px 26px -8px rgba(0, 0, 0, 0.65);
-	--shadow-xl: 0 14px 34px -10px rgba(0, 0, 0, 0.7);
-	--shadow-2xl: 0 22px 56px -14px rgba(0, 0, 0, 0.82);
+	--success: #34d399;
+	--warn: #fbbf24;
+	--info: #60a5fa;
+	--overlay: rgb(0 0 0 / 0.7);
 }
 
 @theme inline {
 	--spacing: var(--spacing);
-	--radius-sm: 4px;
-	--radius-md: 6px;
-	--radius-lg: 8px;
-	--radius-xl: 10px;
+	/* h-input / h-input-sm: the kit's control heights */
+	--spacing-input: var(--kit-input-height);
+	--spacing-input-sm: var(--kit-input-height-small);
+
+	/* Tailwind scale mapped onto the kit's radii */
+	--radius-sm: 6px;
+	--radius-md: var(--kit-radius-input);
+	--radius-lg: var(--kit-radius-card);
+	--radius-xl: var(--kit-radius-card-big);
+	--radius-2xl: 24px;
+	/* Named kit radii: rounded-input, rounded-small, rounded-card, rounded-card-big */
+	--radius-input: var(--kit-radius-input);
+	--radius-small: var(--kit-radius-small);
+	--radius-card: var(--kit-radius-card);
+	--radius-card-big: var(--kit-radius-card-big);
 
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
@@ -200,6 +194,7 @@
 	--color-destructive-foreground: var(--destructive-foreground);
 	--color-border: var(--border);
 	--color-input: var(--input);
+	--color-input-hover: var(--kit-input-border-hover);
 	--color-ring: var(--ring);
 
 	--color-surface: var(--surface);
@@ -222,6 +217,14 @@
 	--color-warn: var(--warn);
 	--color-success: var(--success);
 	--color-info: var(--info);
+
+	/* Kit palette exposed directly: bg-kit-blue, text-kit-navy, … */
+	--color-kit-blue: var(--kit-blue);
+	--color-kit-violet: var(--kit-violet);
+	--color-kit-pink: var(--kit-pink);
+	--color-kit-red: var(--kit-red);
+	--color-kit-navy: var(--kit-navy);
+	--color-kit-muted-text: var(--kit-muted-text);
 
 	--color-chart-1: var(--chart-1);
 	--color-chart-2: var(--chart-2);
@@ -257,6 +260,10 @@
 	--shadow-lg: var(--shadow-lg);
 	--shadow-xl: var(--shadow-xl);
 	--shadow-2xl: var(--shadow-2xl);
+	/* Named kit effects: shadow-popup, shadow-card, shadow-mini */
+	--shadow-popup: var(--kit-shadow-popup);
+	--shadow-card: var(--kit-shadow-card);
+	--shadow-mini: var(--kit-shadow-mini);
 }
 
 @layer base {
@@ -271,8 +278,7 @@
 		-webkit-font-smoothing: antialiased;
 	}
 	::placeholder {
-		color: var(--text-mute);
-		opacity: 0.7;
+		color: var(--kit-muted-text);
 	}
 	::selection {
 		background: var(--mint-deep);
@@ -305,7 +311,7 @@
 	@apply scale-0 -rotate-90 opacity-0 transition-all!;
 }
 
-/* Notion caption — quiet sans, not mono */
+/* Caption — quiet sans, not mono */
 @utility caption {
 	font-family: var(--font-sans);
 	font-size: 12px;
@@ -320,7 +326,7 @@
 	padding: 2px 6px;
 	background: var(--bg-warm);
 	border: 1px solid var(--border-color);
-	border-radius: 4px;
+	border-radius: 6px;
 	color: var(--text-dim);
 	line-height: 1;
 	letter-spacing: 0.02em;
