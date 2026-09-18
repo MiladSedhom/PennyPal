@@ -14,7 +14,6 @@
 	import PaymentsForm from '$lib/components/payments-form.svelte'
 	import PaymentEditDialog from '$lib/components/payment-edit-dialog.svelte'
 	import Card from '$lib/components/pp/card.svelte'
-	import Caption from '$lib/components/pp/caption.svelte'
 	import { Button } from '$lib/components/ui/button'
 	import { formatMoney } from '$lib/utils'
 	import ArrowUpRightIcon from '@lucide/svelte/icons/arrow-up-right'
@@ -88,28 +87,19 @@
 			}
 		)
 	}
-
-	const monthLabel = new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' })
 </script>
 
-<div class="px-10 pb-14 pt-2">
-	<div class="mb-[22px] flex items-end justify-between">
+<div class="p-10 pt-4">
+	<div class="flex items-end justify-between mb-4">
 		<div>
-			<Caption>{pageData.total} payments · {monthLabel}</Caption>
-			<h1 class="m-0 mt-1.5 font-display text-[38px] font-bold tracking-[-0.04em] text-foreground">Payments</h1>
+			<h1 class="m-0 mt-1.5 font-display text-2xl font-bold tracking-[-0.04em] text-foreground">Payments</h1>
 		</div>
 		<div class="flex gap-2.5">
-			<Button
-				variant="outline"
-				class="h-[40px] gap-2 rounded-full bg-transparent px-[18px] text-[13.5px] font-semibold"
-			>
-				<ArrowUpRightIcon size={15} /> Export
-			</Button>
 			<PaymentsForm onsaved={refreshPayments} />
 		</div>
 	</div>
 
-	<Card pad="md" class="mb-4">
+	<Card pad="none" class="mb-4">
 		<PaymentsFilterBar
 			{filters}
 			{tags}
@@ -119,16 +109,14 @@
 		/>
 	</Card>
 
-	<Card pad="none" class="overflow-hidden">
-		<PaymentsTable
-			{filters}
-			{pageData}
-			bind:pagination
-			onedit={(r) => (editing = r)}
-			ondelete={confirmDelete}
-			onconfirm={confirmRow}
-		/>
-	</Card>
+	<PaymentsTable
+		{filters}
+		{pageData}
+		bind:pagination
+		onedit={(r) => (editing = r)}
+		ondelete={confirmDelete}
+		onconfirm={confirmRow}
+	/>
 </div>
 
 <PaymentEditDialog payment={editing} {tags} onclose={() => (editing = null)} onsaved={refreshPayments} />
