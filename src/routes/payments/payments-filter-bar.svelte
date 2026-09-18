@@ -14,6 +14,8 @@
 	import { getSwatch, getIcon } from '$lib/tag-meta'
 	import { formatMoney } from '$lib/utils'
 	import * as Popover from '$lib/components/ui/popover'
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu'
+	import { Button } from '$lib/components/ui/button'
 	import { RangeCalendar } from '$lib/components/ui/range-calendar'
 	import { Slider } from '$lib/components/ui/slider'
 
@@ -24,6 +26,7 @@
 	import WalletIcon from '@lucide/svelte/icons/wallet'
 	import TagIcon from '@lucide/svelte/icons/tag'
 	import RepeatIcon from '@lucide/svelte/icons/repeat'
+	import ArrowDownUpIcon from '@lucide/svelte/icons/arrow-down-up'
 
 	import type { DateRange } from 'bits-ui'
 	import type { PaymentFilters, SortKey, StatusFilter } from './filters.svelte'
@@ -44,16 +47,14 @@
 		onconfirmAll: () => void
 	} = $props()
 
+	let tagSearch = $state('')
+
+	const PRIMARY_TAG_COUNT = 6
 	const STATUS_OPTIONS: { key: StatusFilter; label: string }[] = [
 		{ key: 'all', label: 'All' },
 		{ key: 'pending', label: 'Pending' },
 		{ key: 'confirmed', label: 'Confirmed' }
 	]
-
-	let tagSearch = $state('')
-
-	const PRIMARY_TAG_COUNT = 6
-	const ZERO_STAT = { count: 0, spend: 0 }
 
 	const primaryTags = $derived(selectPrimaryTags(meta.topTags, tags, filters.tagIds))
 	const overflowTags = $derived(sortOverflowTags(tags, primaryTags))
@@ -112,6 +113,18 @@
 		{ key: 'date', label: 'Date' },
 		{ key: 'amount', label: 'Amount' }
 	]
+	const sortLabel = $derived(SORT_OPTIONS.find((o) => o.key === filters.sortKey)?.label ?? 'Date')
+
+	const statusLabel = $derived(STATUS_OPTIONS.find((o) => o.key === filters.status)?.label ?? 'All')
+	const recurringActive = $derived(filters.recurringOnly || filters.status !== 'all')
+	const recurringLabel = $derived.by(() => {
+		if (filters.recurringOnly) return filters.status === 'all' ? 'Recurring only' : `Recurring · ${statusLabel}`
+		return filters.status === 'all' ? 'Recurring' : statusLabel
+	})
+	function clearRecurring() {
+		filters.status = 'all'
+		filters.recurringOnly = false
+	}
 
 	/** The tags surfaced as chips: top by usage, top by spend, plus any currently selected. */
 	function selectPrimaryTags(stats: TagStat[], allTags: Tag[], selectedIds: number[]): Tag[] {
@@ -123,7 +136,7 @@
 		for (const id of selectedIds) primaryIds.add(id)
 
 		const statById = new Map(stats.map((s) => [s.id, s]))
-		const statOf = (id: number) => statById.get(id) ?? ZERO_STAT
+		const statOf = (id: number) => statById.get(id) ?? { count: 0, spend: 0 }
 		return allTags
 			.filter((t) => primaryIds.has(t.id))
 			.sort((a, b) => {
@@ -154,11 +167,13 @@
 	}
 </script>
 
-<!-- Clear-X that lives inside a trigger button; a real <button> would nest invalidly, hence the role. -->
+<!-- A span because it nests in a trigger button; pointer events are stopped since dropdowns open on pointerdown. -->
 {#snippet clearChip(onclear: () => void, label: string)}
 	<span
 		role="button"
 		tabindex="0"
+		onpointerdown={(e) => e.stopPropagation()}
+		onpointerup={(e) => e.stopPropagation()}
 		onclick={(e) => {
 			e.stopPropagation()
 			onclear()
@@ -172,7 +187,7 @@
 		class="flex text-text-mute hover:text-foreground"
 		aria-label={label}
 	>
-		<XIcon size={13} />
+		<XIcon class="size-3.5" />
 	</span>
 {/snippet}
 
@@ -185,33 +200,36 @@
 			class="flex-1 border-none bg-transparent text-[13.5px] font-medium text-foreground outline-none placeholder:text-text-mute"
 		/>
 		{#if filters.search}
-			<button
-				type="button"
+			<Button
+				variant="ghost"
+				size="icon-sm"
 				onclick={() => (filters.search = '')}
-				class="flex border-none bg-transparent p-0 text-text-mute"
+				class="size-5 rounded-full text-text-mute hover:bg-transparent hover:text-foreground dark:hover:bg-transparent"
 				aria-label="Clear search"
 			>
-				<XIcon size={13} />
-			</button>
+				<XIcon class="size-3.5" />
+			</Button>
 		{/if}
 	</div>
 
 	<Popover.Root onOpenChange={(open) => !open && filters.commitRange()}>
 		<Popover.Trigger>
 			{#snippet child({ props })}
-				<button
+				<Button
 					{...props}
-					type="button"
-					class="inline-flex items-center gap-2 rounded-full bg-bg-warm px-[14px] py-2 text-[12.5px] font-semibold"
-					class:text-foreground={filters.range.start}
-					class:text-text-mute={!filters.range.start}
+					variant="secondary"
+					size="sm"
+					class={[
+						'rounded-full text-[12.5px] font-semibold hover:text-foreground',
+						filters.range.start ? 'text-foreground' : 'text-text-dim'
+					]}
 				>
-					<CalendarIcon size={13} />
+					<CalendarIcon class="size-3.5" />
 					{rangeLabel}
 					{#if filters.range.start || filters.range.end}
 						{@render clearChip(() => filters.clearRange(), 'Clear date range')}
 					{/if}
-				</button>
+				</Button>
 			{/snippet}
 		</Popover.Trigger>
 		<Popover.Content class="w-auto rounded-2xl border-none bg-card p-2 shadow-xl" align="end">
@@ -219,17 +237,14 @@
 			<div class="mt-2 flex flex-wrap gap-2 px-1 pb-1">
 				{#each datePresets as preset (preset.label)}
 					{@const isActive = isDatePresetActive(preset)}
-					<button
-						type="button"
+					<Button
+						variant={isActive ? 'default' : 'secondary'}
+						size="sm"
 						onclick={() => applyDatePreset(preset)}
-						class="rounded-full px-3 py-[6px] text-[12.5px] font-semibold"
-						class:bg-mint={isActive}
-						class:text-foreground={isActive}
-						class:bg-bg-warm={!isActive}
-						class:text-text-dim={!isActive}
+						class={['h-7 rounded-full text-[12.5px] font-semibold', !isActive && 'text-text-dim hover:text-foreground']}
 					>
 						{preset.label}
-					</button>
+					</Button>
 				{/each}
 			</div>
 		</Popover.Content>
@@ -239,19 +254,21 @@
 	<Popover.Root>
 		<Popover.Trigger>
 			{#snippet child({ props })}
-				<button
+				<Button
 					{...props}
-					type="button"
-					class="inline-flex items-center gap-2 rounded-full bg-bg-warm px-[14px] py-2 text-[12.5px] font-semibold"
-					class:text-foreground={amountActive}
-					class:text-text-mute={!amountActive}
+					variant="secondary"
+					size="sm"
+					class={[
+						'rounded-full text-[12.5px] font-semibold hover:text-foreground',
+						amountActive ? 'text-foreground' : 'text-text-dim'
+					]}
 				>
-					<WalletIcon size={13} />
+					<WalletIcon class="size-3.5" />
 					{amountLabel}
 					{#if amountActive}
 						{@render clearChip(() => filters.clearAmount(), 'Clear amount filter')}
 					{/if}
-				</button>
+				</Button>
 			{/snippet}
 		</Popover.Trigger>
 		<Popover.Content class="w-[280px] rounded-2xl border-none bg-card p-4 shadow-xl" align="end">
@@ -259,17 +276,14 @@
 			<div class="mb-4 flex flex-wrap gap-2">
 				{#each amountSliderBrackets as bracket (bracket.label)}
 					{@const isActive = isBracketActive(bracket)}
-					<button
-						type="button"
+					<Button
+						variant={isActive ? 'default' : 'secondary'}
+						size="sm"
 						onclick={() => filters.setAmount(bracket.min, bracket.max)}
-						class="rounded-full px-3 py-[6px] text-[12.5px] font-semibold"
-						class:bg-mint={isActive}
-						class:text-foreground={isActive}
-						class:bg-bg-warm={!isActive}
-						class:text-text-dim={!isActive}
+						class={['h-7 rounded-full text-[12.5px] font-semibold', !isActive && 'text-text-dim hover:text-foreground']}
 					>
 						{bracket.label}
-					</button>
+					</Button>
 				{/each}
 			</div>
 
@@ -305,110 +319,118 @@
 				</div>
 			</div>
 			{#if amountActive}
-				<button
-					type="button"
+				<Button
+					variant="link"
+					size="sm"
 					onclick={() => filters.clearAmount()}
-					class="mt-3 w-full border-none bg-transparent text-[12.5px] font-semibold text-lime-text"
+					class="mt-3 w-full text-[12.5px] font-semibold text-lime-text"
 				>
 					Clear
-				</button>
+				</Button>
 			{/if}
 		</Popover.Content>
 	</Popover.Root>
 
-	<!-- Sort -->
-	<div class="inline-flex items-center gap-2">
-		<span class="caption">Sort</span>
-		<div class="inline-flex gap-1 rounded-full bg-bg-warm p-1">
-			{#each SORT_OPTIONS as { key, label } (key)}
-				<button
-					type="button"
-					onclick={() => filters.setSort(key)}
-					class="rounded-full border-none px-[14px] py-1.5 text-[12.5px] font-semibold"
-					class:bg-card={filters.sortKey === key}
-					class:text-foreground={filters.sortKey === key}
-					class:shadow-xs={filters.sortKey === key}
-					class:bg-transparent={filters.sortKey !== key}
-					class:text-text-mute={filters.sortKey !== key}
+	<DropdownMenu.Root>
+		<DropdownMenu.Trigger>
+			{#snippet child({ props })}
+				<Button
+					{...props}
+					variant="secondary"
+					size="sm"
+					class={[
+						'rounded-full text-[12.5px] font-semibold hover:text-foreground',
+						recurringActive ? 'text-foreground' : 'text-text-dim'
+					]}
 				>
-					{label}
-				</button>
-			{/each}
-		</div>
-	</div>
-</div>
-
-<div class="mt-3.5 flex flex-wrap items-center gap-2">
-	<span class="caption mr-0.5">Show</span>
-	<div class="inline-flex gap-1 rounded-full bg-bg-warm p-1">
-		{#each STATUS_OPTIONS as { key, label } (key)}
-			<button
-				type="button"
-				onclick={() => (filters.status = key)}
-				class="rounded-full border-none px-[14px] py-1.5 text-[12.5px] font-semibold"
-				class:bg-card={filters.status === key}
-				class:text-foreground={filters.status === key}
-				class:shadow-xs={filters.status === key}
-				class:bg-transparent={filters.status !== key}
-				class:text-text-mute={filters.status !== key}
+					<RepeatIcon class="size-3.5" />
+					{recurringLabel}
+					{#if recurringActive}
+						{@render clearChip(clearRecurring, 'Clear recurring filters')}
+					{/if}
+				</Button>
+			{/snippet}
+		</DropdownMenu.Trigger>
+		<DropdownMenu.Content class="w-52" align="end">
+			<DropdownMenu.RadioGroup
+				value={filters.status}
+				onValueChange={(value) => (filters.status = value as StatusFilter)}
 			>
-				{label}
-			</button>
-		{/each}
-	</div>
-	<button
-		type="button"
-		onclick={() => (filters.recurringOnly = !filters.recurringOnly)}
-		class="inline-flex items-center gap-1.5 rounded-full px-3 py-[6px] text-[12.5px] font-semibold"
-		class:bg-mint={filters.recurringOnly}
-		class:text-foreground={filters.recurringOnly}
-		class:bg-bg-warm={!filters.recurringOnly}
-		class:text-text-mute={!filters.recurringOnly}
-	>
-		<RepeatIcon size={12} /> Recurring
-	</button>
+				<DropdownMenu.GroupHeading class="caption px-2 py-1.5">Status</DropdownMenu.GroupHeading>
+				{#each STATUS_OPTIONS as { key, label } (key)}
+					<DropdownMenu.RadioItem value={key}>{label}</DropdownMenu.RadioItem>
+				{/each}
+			</DropdownMenu.RadioGroup>
+			<DropdownMenu.Separator />
+			<DropdownMenu.CheckboxItem bind:checked={filters.recurringOnly} closeOnSelect={false}>
+				Recurring only
+			</DropdownMenu.CheckboxItem>
+		</DropdownMenu.Content>
+	</DropdownMenu.Root>
+
 	{#if filters.status === 'pending' && pendingCount > 0}
-		<button
-			type="button"
-			onclick={onconfirmAll}
-			class="inline-flex items-center gap-1.5 rounded-full bg-mint px-3 py-[6px] text-[12.5px] font-semibold text-foreground hover:bg-mint-deep"
-		>
-			<CheckIcon size={13} /> Confirm all ({pendingCount})
-		</button>
+		<Button size="sm" onclick={onconfirmAll} class="rounded-full text-[12.5px] font-semibold">
+			<CheckIcon class="size-3.5" /> Confirm all ({pendingCount})
+		</Button>
 	{/if}
+
+	<!-- Sort -->
+	<DropdownMenu.Root>
+		<DropdownMenu.Trigger>
+			{#snippet child({ props })}
+				<Button
+					{...props}
+					variant="secondary"
+					size="sm"
+					class="rounded-full text-[12.5px] font-semibold text-foreground"
+				>
+					<ArrowDownUpIcon class="size-3.5" />
+					Sort: {sortLabel}
+				</Button>
+			{/snippet}
+		</DropdownMenu.Trigger>
+		<DropdownMenu.Content class="w-44" align="end">
+			<DropdownMenu.RadioGroup value={filters.sortKey} onValueChange={(value) => filters.setSort(value as SortKey)}>
+				<DropdownMenu.GroupHeading class="caption px-2 py-1.5">Sort by</DropdownMenu.GroupHeading>
+				{#each SORT_OPTIONS as { key, label } (key)}
+					<DropdownMenu.RadioItem value={key}>{label}</DropdownMenu.RadioItem>
+				{/each}
+			</DropdownMenu.RadioGroup>
+		</DropdownMenu.Content>
+	</DropdownMenu.Root>
 </div>
 
 <div class="mt-3.5 flex flex-wrap items-center gap-2">
-	<span class="caption mr-0.5">Filter</span>
 	{#each primaryTags as tag (tag.id)}
 		{@const isSelected = filters.tagIds.includes(tag.id)}
 		{@const swatch = getSwatch(tag.color)}
 		{@const Icon = getIcon(tag.icon)}
-		<button
-			type="button"
+		<Button
+			variant="outline"
+			size="sm"
 			onclick={() => filters.toggleTag(tag.id)}
-			class="inline-flex items-center gap-1.5 rounded-full px-3 py-[5px] text-[12.5px] font-semibold"
-			style:background={isSelected ? swatch.bg : 'transparent'}
-			style:color={isSelected ? swatch.ink : 'var(--text-mute)'}
-			style:border={isSelected ? '1px solid transparent' : '1px solid var(--border-color)'}
+			aria-pressed={isSelected}
+			class={['h-7 rounded-full text-[12.5px] font-semibold', !isSelected && 'text-text-dim hover:text-foreground']}
+			style={isSelected ? `background: ${swatch.bg}; color: ${swatch.ink}; border-color: transparent` : undefined}
 		>
-			<Icon size={12} />
+			<Icon class="size-3" />
 			{tag.name}
-		</button>
+		</Button>
 	{/each}
 
 	{#if overflowTags.length > 0}
 		<Popover.Root>
 			<Popover.Trigger>
 				{#snippet child({ props })}
-					<button
+					<Button
 						{...props}
-						type="button"
-						class="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-[5px] text-[12.5px] font-semibold text-text-dim hover:text-foreground"
+						variant="outline"
+						size="sm"
+						class="h-7 rounded-full text-[12.5px] font-semibold text-text-dim hover:text-foreground"
 					>
-						<TagIcon size={12} /> More tags
+						<TagIcon class="size-3" /> More tags
 						<span class="text-text-mute">+{overflowTags.length}</span>
-					</button>
+					</Button>
 				{/snippet}
 			</Popover.Trigger>
 			<Popover.Content class="w-[280px] rounded-2xl border-none bg-card p-2.5 shadow-xl" align="start">
@@ -423,19 +445,21 @@
 				<div class="flex max-h-[300px] flex-col gap-0.5 overflow-y-auto">
 					{#each visibleOverflowTags as tag (tag.id)}
 						{@const isSelected = filters.tagIds.includes(tag.id)}
-						<button
-							type="button"
+						<Button
+							variant="ghost"
 							onclick={() => filters.toggleTag(tag.id)}
-							class="flex w-full items-center gap-2.5 rounded-sm border-none px-2.5 py-2 text-left text-foreground"
-							class:bg-bg-warm={isSelected}
-							class:bg-transparent={!isSelected}
+							aria-pressed={isSelected}
+							class={[
+								"h-auto w-full justify-start gap-2.5 rounded-sm px-2.5 py-2 text-foreground has-[>svg]:px-2.5 [&_svg:not([class*='size-'])]:size-3",
+								isSelected && 'bg-bg-warm'
+							]}
 						>
 							<TagIconChip color={tag.color} icon={tag.icon} size={26} />
-							<span class="flex-1 text-[13.5px] font-semibold">{tag.name}</span>
+							<span class="flex-1 text-left text-[13.5px] font-semibold">{tag.name}</span>
 							{#if isSelected}
-								<CheckIcon size={15} class="text-lime-text" />
+								<CheckIcon class="size-4 text-lime-text" />
 							{/if}
-						</button>
+						</Button>
 					{:else}
 						<div class="px-2.5 py-3 text-center text-[12.5px] text-text-mute">No tags match.</div>
 					{/each}
@@ -445,12 +469,13 @@
 	{/if}
 
 	{#if filters.tagIds.length > 0}
-		<button
-			type="button"
+		<Button
+			variant="link"
+			size="sm"
 			onclick={() => filters.clearTags()}
-			class="ml-1 border-none bg-transparent text-[12.5px] font-semibold text-lime-text"
+			class="ml-1 h-7 px-1 text-[12.5px] font-semibold text-lime-text"
 		>
 			Clear
-		</button>
+		</Button>
 	{/if}
 </div>
