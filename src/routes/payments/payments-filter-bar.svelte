@@ -184,7 +184,7 @@
 				onclear()
 			}
 		}}
-		class="flex text-text-mute hover:text-foreground"
+		class="flex text-faint hover:text-foreground"
 		aria-label={label}
 	>
 		<XIcon class="size-3.5" />
@@ -192,19 +192,19 @@
 {/snippet}
 
 <div class="flex flex-wrap items-center gap-3">
-	<div class="flex min-w-[200px] flex-1 items-center gap-2 rounded-full bg-bg-warm px-[14px] py-2">
-		<SearchIcon size={14} class="text-text-mute" />
+	<div class="flex min-w-[200px] flex-1 items-center gap-2 rounded-full bg-muted px-[14px] py-2">
+		<SearchIcon size={14} class="text-faint" />
 		<input
 			bind:value={filters.search}
 			placeholder="Search notes, tags…"
-			class="flex-1 border-none bg-transparent text-[13.5px] font-medium text-foreground outline-none placeholder:text-text-mute"
+			class="flex-1 border-none bg-transparent text-[13.5px] font-medium text-foreground outline-none placeholder:text-faint"
 		/>
 		{#if filters.search}
 			<Button
 				variant="ghost"
 				size="icon-sm"
 				onclick={() => (filters.search = '')}
-				class="size-5 rounded-full text-text-mute hover:bg-transparent hover:text-foreground dark:hover:bg-transparent"
+				class="size-5 rounded-full text-faint hover:bg-transparent hover:text-foreground dark:hover:bg-transparent"
 				aria-label="Clear search"
 			>
 				<XIcon class="size-3.5" />
@@ -221,7 +221,7 @@
 					size="sm"
 					class={[
 						'rounded-full text-[12.5px] font-semibold hover:text-foreground',
-						filters.range.start ? 'text-foreground' : 'text-text-dim'
+						filters.range.start ? 'text-foreground' : 'text-muted-foreground'
 					]}
 				>
 					<CalendarIcon class="size-3.5" />
@@ -241,7 +241,10 @@
 						variant={isActive ? 'default' : 'secondary'}
 						size="sm"
 						onclick={() => applyDatePreset(preset)}
-						class={['h-7 rounded-full text-[12.5px] font-semibold', !isActive && 'text-text-dim hover:text-foreground']}
+						class={[
+							'h-7 rounded-full text-[12.5px] font-semibold',
+							!isActive && 'text-muted-foreground hover:text-foreground'
+						]}
 					>
 						{preset.label}
 					</Button>
@@ -260,7 +263,7 @@
 					size="sm"
 					class={[
 						'rounded-full text-[12.5px] font-semibold hover:text-foreground',
-						amountActive ? 'text-foreground' : 'text-text-dim'
+						amountActive ? 'text-foreground' : 'text-muted-foreground'
 					]}
 				>
 					<WalletIcon class="size-3.5" />
@@ -280,7 +283,10 @@
 						variant={isActive ? 'default' : 'secondary'}
 						size="sm"
 						onclick={() => filters.setAmount(bracket.min, bracket.max)}
-						class={['h-7 rounded-full text-[12.5px] font-semibold', !isActive && 'text-text-dim hover:text-foreground']}
+						class={[
+							'h-7 rounded-full text-[12.5px] font-semibold',
+							!isActive && 'text-muted-foreground hover:text-foreground'
+						]}
 					>
 						{bracket.label}
 					</Button>
@@ -291,7 +297,7 @@
 			<Slider type="multiple" value={sliderValue} onValueChange={onSliderChange} min={0} max={amountCeiling} step={1} />
 			<div class="mt-4 flex items-center gap-2">
 				<div class="relative flex flex-1 items-center">
-					<span class="absolute left-[12px] font-mono text-[13px] text-text-mute">$</span>
+					<span class="absolute left-[12px] font-mono text-[13px] text-faint">$</span>
 					<input
 						inputmode="numeric"
 						value={filters.amountMin ?? ''}
@@ -300,12 +306,12 @@
 							filters.amountMin = val === '' ? null : Math.max(0, Math.round(Number(val)))
 						}}
 						placeholder="Min"
-						class="w-full rounded-sm border border-border bg-bg-warm py-[8px] pl-[24px] pr-[10px] font-mono text-[13px] font-medium text-foreground outline-none focus:border-ring"
+						class="w-full rounded-sm border border-border bg-muted py-[8px] pl-[24px] pr-[10px] font-mono text-[13px] font-medium text-foreground outline-none focus:border-ring"
 					/>
 				</div>
-				<span class="text-text-mute">–</span>
+				<span class="text-faint">–</span>
 				<div class="relative flex flex-1 items-center">
-					<span class="absolute left-[12px] font-mono text-[13px] text-text-mute">$</span>
+					<span class="absolute left-[12px] font-mono text-[13px] text-faint">$</span>
 					<input
 						inputmode="numeric"
 						value={filters.amountMax ?? ''}
@@ -314,7 +320,7 @@
 							filters.amountMax = val === '' ? null : Math.max(0, Math.round(Number(val)))
 						}}
 						placeholder="Max"
-						class="w-full rounded-sm border border-border bg-bg-warm py-[8px] pl-[24px] pr-[10px] font-mono text-[13px] font-medium text-foreground outline-none focus:border-ring"
+						class="w-full rounded-sm border border-border bg-muted py-[8px] pl-[24px] pr-[10px] font-mono text-[13px] font-medium text-foreground outline-none focus:border-ring"
 					/>
 				</div>
 			</div>
@@ -323,7 +329,7 @@
 					variant="link"
 					size="sm"
 					onclick={() => filters.clearAmount()}
-					class="mt-3 w-full text-[12.5px] font-semibold text-lime-text"
+					class="mt-3 w-full text-[12.5px] font-semibold text-kit-navy"
 				>
 					Clear
 				</Button>
@@ -340,7 +346,7 @@
 					size="sm"
 					class={[
 						'rounded-full text-[12.5px] font-semibold hover:text-foreground',
-						recurringActive ? 'text-foreground' : 'text-text-dim'
+						recurringActive ? 'text-foreground' : 'text-muted-foreground'
 					]}
 				>
 					<RepeatIcon class="size-3.5" />
@@ -410,7 +416,10 @@
 			size="sm"
 			onclick={() => filters.toggleTag(tag.id)}
 			aria-pressed={isSelected}
-			class={['h-7 rounded-full text-[12.5px] font-semibold', !isSelected && 'text-text-dim hover:text-foreground']}
+			class={[
+				'h-7 rounded-full text-[12.5px] font-semibold',
+				!isSelected && 'text-muted-foreground hover:text-foreground'
+			]}
 			style={isSelected ? `background: ${swatch.bg}; color: ${swatch.ink}; border-color: transparent` : undefined}
 		>
 			<Icon class="size-3" />
@@ -426,20 +435,20 @@
 						{...props}
 						variant="outline"
 						size="sm"
-						class="h-7 rounded-full text-[12.5px] font-semibold text-text-dim hover:text-foreground"
+						class="h-7 rounded-full text-[12.5px] font-semibold text-muted-foreground hover:text-foreground"
 					>
 						<TagIcon class="size-3" /> More tags
-						<span class="text-text-mute">+{overflowTags.length}</span>
+						<span class="text-faint">+{overflowTags.length}</span>
 					</Button>
 				{/snippet}
 			</Popover.Trigger>
 			<Popover.Content class="w-[280px] rounded-2xl border-none bg-card p-2.5 shadow-xl" align="start">
-				<div class="mb-2 flex items-center gap-2 rounded-sm bg-bg-warm px-2.5 py-1.5">
-					<SearchIcon size={13} class="text-text-mute" />
+				<div class="mb-2 flex items-center gap-2 rounded-sm bg-muted px-2.5 py-1.5">
+					<SearchIcon size={13} class="text-faint" />
 					<input
 						bind:value={tagSearch}
 						placeholder="Search tags…"
-						class="flex-1 border-none bg-transparent text-[13px] text-foreground outline-none placeholder:text-text-mute"
+						class="flex-1 border-none bg-transparent text-[13px] text-foreground outline-none placeholder:text-faint"
 					/>
 				</div>
 				<div class="flex max-h-[300px] flex-col gap-0.5 overflow-y-auto">
@@ -451,17 +460,17 @@
 							aria-pressed={isSelected}
 							class={[
 								"h-auto w-full justify-start gap-2.5 rounded-sm px-2.5 py-2 text-foreground has-[>svg]:px-2.5 [&_svg:not([class*='size-'])]:size-3",
-								isSelected && 'bg-bg-warm'
+								isSelected && 'bg-muted'
 							]}
 						>
 							<TagIconChip color={tag.color} icon={tag.icon} size={26} />
 							<span class="flex-1 text-left text-[13.5px] font-semibold">{tag.name}</span>
 							{#if isSelected}
-								<CheckIcon class="size-4 text-lime-text" />
+								<CheckIcon class="size-4 text-kit-navy" />
 							{/if}
 						</Button>
 					{:else}
-						<div class="px-2.5 py-3 text-center text-[12.5px] text-text-mute">No tags match.</div>
+						<div class="px-2.5 py-3 text-center text-[12.5px] text-faint">No tags match.</div>
 					{/each}
 				</div>
 			</Popover.Content>
@@ -473,7 +482,7 @@
 			variant="link"
 			size="sm"
 			onclick={() => filters.clearTags()}
-			class="ml-1 h-7 px-1 text-[12.5px] font-semibold text-lime-text"
+			class="ml-1 h-7 px-1 text-[12.5px] font-semibold text-kit-navy"
 		>
 			Clear
 		</Button>

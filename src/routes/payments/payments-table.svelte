@@ -93,7 +93,7 @@
 	<Table.Root>
 		<Table.Header>
 			{#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
-				<Table.Row class="border-border-soft hover:bg-transparent">
+				<Table.Row class="border-border hover:bg-transparent">
 					{#each headerGroup.headers as header (header.id)}
 						<Table.Head
 							class="px-6 py-3 {header.column.id === 'amount'
@@ -104,7 +104,7 @@
 										? 'w-[92px]'
 										: ''}"
 						>
-							<span class="font-mono text-xs font-semibold uppercase tracking-[0.04em] text-text-mute">
+							<span class="font-mono text-xs font-semibold uppercase tracking-[0.04em] text-faint">
 								<FlexRender content={header.column.columnDef.header} context={header.getContext()} />
 							</span>
 						</Table.Head>
@@ -116,14 +116,14 @@
 		<Table.Body>
 			{#if bodyItems.length === 0}
 				<Table.Row class="hover:bg-transparent">
-					<Table.Cell colspan={colCount} class="px-6 py-12 text-center text- text-text-mute">
+					<Table.Cell colspan={colCount} class="px-6 py-12 text-center text- text-faint">
 						No payments match your filters.
 					</Table.Cell>
 				</Table.Row>
 			{:else}
 				{#each bodyItems as item, i (item.kind === 'row' ? `r${item.row.id}` : `d${i}`)}
 					{#if item.kind === 'divider'}
-						<Table.Row class="border-border-soft bg-bg-warm hover:bg-bg-warm ">
+						<Table.Row class="border-border bg-muted hover:bg-muted ">
 							<Table.Cell colspan={colCount} class="px-6 py-2.5">
 								<div class="flex items-center gap-3">
 									<span class="caption font-bold! text-foreground!">{item.label}</span>
@@ -134,12 +134,12 @@
 						</Table.Row>
 					{:else}
 						{@const r = item.row}
-						<Table.Row class="group border-border-soft {r.confirmed ? '' : 'bg-warn/5 hover:bg-warn/10'}">
+						<Table.Row class="group border-border {r.confirmed ? '' : 'bg-warn/5 hover:bg-warn/10'}">
 							<Table.Cell class="px-6 py-4 text-base font-semibold tabular-nums">
 								{formatMoney(r.amount)}
 							</Table.Cell>
 							{#if filters.sortKey === 'amount'}
-								<Table.Cell class="px-6 py-4 text-sm text-text-dim tabular-nums">
+								<Table.Cell class="px-6 py-4 text-sm text-muted-foreground tabular-nums">
 									{formatRowDate(r.createdAt)}
 								</Table.Cell>
 							{/if}
@@ -150,15 +150,15 @@
 											<TagChip name={tag.name} color={tag.color} icon={tag.icon} size="sm" />
 										{/each}
 									{:else}
-										<span class="text-xs text-text-mute">Untagged</span>
+										<span class="text-xs text-faint">Untagged</span>
 									{/if}
 								</span>
 							</Table.Cell>
-							<Table.Cell class="px-6 py-[13px] text-[13px] {r.note ? 'text-text-dim' : 'text-text-mute'}">
+							<Table.Cell class="px-6 py-[13px] text-[13px] {r.note ? 'text-muted-foreground' : 'text-faint'}">
 								<span class="inline-flex items-center gap-1.5">
 									{#if r.recurringPaymentId}
 										<span
-											class="inline-flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full bg-mint text-foreground"
+											class="inline-flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full bg-muted text-foreground"
 											title="Created by a recurring payment"
 										>
 											<RepeatIcon size={12} />
@@ -173,7 +173,7 @@
 										<button
 											type="button"
 											onclick={() => onconfirm(r)}
-											class="mr-1 inline-flex items-center gap-1 rounded-full bg-mint px-2.5 py-1 text-[11.5px] font-semibold text-foreground hover:bg-mint-deep"
+											class="mr-1 inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-[11.5px] font-semibold text-foreground hover:bg-foreground/10"
 										>
 											<CheckIcon size={12} /> Confirm
 										</button>
@@ -184,7 +184,7 @@
 										<button
 											type="button"
 											onclick={() => onedit(r)}
-											class="flex h-7 w-7 items-center justify-center rounded-full border-none bg-transparent text-text-mute hover:bg-bg-warm hover:text-foreground"
+											class="flex h-7 w-7 items-center justify-center rounded-full border-none bg-transparent text-faint hover:bg-muted hover:text-foreground"
 											aria-label="Edit payment"
 										>
 											<PencilIcon size={14} />
@@ -192,7 +192,7 @@
 										<button
 											type="button"
 											onclick={() => ondelete(r)}
-											class="flex h-7 w-7 items-center justify-center rounded-full border-none bg-transparent text-text-mute hover:bg-bg-warm hover:text-(--danger)"
+											class="flex h-7 w-7 items-center justify-center rounded-full border-none bg-transparent text-faint hover:bg-muted hover:text-destructive"
 											aria-label="Delete payment"
 										>
 											<Trash2Icon size={14} />
@@ -214,7 +214,7 @@
 				type="button"
 				onclick={() => table.previousPage()}
 				disabled={!table.getCanPreviousPage()}
-				class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border-soft text-text-dim disabled:opacity-40 enabled:hover:bg-bg-warm"
+				class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border text-muted-foreground disabled:opacity-40 enabled:hover:bg-muted"
 				aria-label="Previous page"
 			>
 				<ChevronLeftIcon size={15} />
@@ -224,7 +224,7 @@
 				type="button"
 				onclick={() => table.nextPage()}
 				disabled={!table.getCanNextPage()}
-				class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border-soft text-text-dim disabled:opacity-40 enabled:hover:bg-bg-warm"
+				class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-border text-muted-foreground disabled:opacity-40 enabled:hover:bg-muted"
 				aria-label="Next page"
 			>
 				<ChevronRightIcon size={15} />

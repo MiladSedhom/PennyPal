@@ -13,7 +13,6 @@
 
 	import PaymentsForm from '$lib/components/payments-form.svelte'
 	import PaymentEditDialog from '$lib/components/payment-edit-dialog.svelte'
-	import Card from '$lib/components/pp/card.svelte'
 	import { Button } from '$lib/components/ui/button'
 	import { formatMoney } from '$lib/utils'
 	import ArrowUpRightIcon from '@lucide/svelte/icons/arrow-up-right'
@@ -92,14 +91,14 @@
 <div class="p-10 pt-4">
 	<div class="flex items-end justify-between mb-4">
 		<div>
-			<h1 class="m-0 mt-1.5 font-display text-2xl font-bold tracking-[-0.04em] text-foreground">Payments</h1>
+			<h1 class="font-display text-2xl font-bold text-foreground">Payments</h1>
 		</div>
 		<div class="flex gap-2.5">
 			<PaymentsForm onsaved={refreshPayments} />
 		</div>
 	</div>
 
-	<Card pad="none" class="mb-4">
+	<div class="mb-4">
 		<PaymentsFilterBar
 			{filters}
 			{tags}
@@ -107,7 +106,7 @@
 			pendingCount={filters.status === 'pending' ? pageData.total : 0}
 			onconfirmAll={confirmAllPending}
 		/>
-	</Card>
+	</div>
 
 	<PaymentsTable
 		{filters}

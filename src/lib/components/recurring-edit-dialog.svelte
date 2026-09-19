@@ -130,14 +130,14 @@
 	}}
 >
 	<Dialog.Content class="max-w-[460px] gap-0 rounded-2xl border-none bg-card p-0 shadow-2xl" showCloseButton={false}>
-		<div class="flex items-center justify-between border-b border-border-soft px-6 py-4">
+		<div class="flex items-center justify-between border-b border-border px-6 py-4">
 			<Dialog.Title class="m-0 font-display text-[19px] font-bold tracking-[-0.025em]">
 				{editing ? 'Edit recurring payment' : 'New recurring payment'}
 			</Dialog.Title>
 			<button
 				type="button"
 				onclick={onclose}
-				class="flex h-8 w-8 items-center justify-center rounded-full border-none bg-bg-warm p-0 text-text-dim hover:bg-mint"
+				class="flex h-8 w-8 items-center justify-center rounded-full border-none bg-muted p-0 text-muted-foreground hover:bg-muted"
 				aria-label="Close"
 			>
 				<XIcon size={16} />
@@ -160,14 +160,14 @@
 						placeholder="0"
 						step="1"
 						min="0"
-						class="w-full rounded-[10px] border border-transparent bg-bg-warm px-3 py-2 text-right font-mono text-[13.5px] font-medium text-foreground"
+						class="w-full rounded-[10px] border border-transparent bg-muted px-3 py-2 text-right font-mono text-[13.5px] font-medium text-foreground"
 					/>
 				</div>
 				<div class="flex flex-col gap-1.5">
 					<span class="caption">Starts</span>
 					<DatePicker
 						bind:value={startDate}
-						class="w-full rounded-[10px]! border-transparent bg-bg-warm! px-3!"
+						class="w-full rounded-[10px]! border-transparent bg-muted! px-3!"
 						title={startDate.toString()}
 					/>
 				</div>
@@ -182,12 +182,12 @@
 						min="1"
 						max={MAX_INTERVAL_COUNT}
 						step="1"
-						class="w-20 rounded-[10px] border bg-bg-warm px-3 py-2 text-right font-mono text-[13.5px] font-medium text-foreground {intervalCountInvalid
-							? 'border-(--danger)'
+						class="w-20 rounded-[10px] border bg-muted px-3 py-2 text-right font-mono text-[13.5px] font-medium text-foreground {intervalCountInvalid
+							? 'border-destructive'
 							: 'border-transparent'}"
 					/>
 					<Select.Root type="single" bind:value={interval}>
-						<Select.Trigger class="flex-1 rounded-[10px] border-transparent bg-bg-warm text-[13.5px] font-medium">
+						<Select.Trigger class="flex-1 rounded-[10px] border-transparent bg-muted text-[13.5px] font-medium">
 							{unitLabel}
 						</Select.Trigger>
 						<Select.Content class="rounded-xl border-none bg-card shadow-xl">
@@ -202,7 +202,7 @@
 
 			<div class="flex flex-col gap-1.5">
 				<span class="caption">Schedule</span>
-				<div class="inline-flex gap-1 self-start rounded-[10px] bg-bg-warm p-1">
+				<div class="inline-flex gap-1 self-start rounded-[10px] bg-muted p-1">
 					{#each [{ v: false, label: 'Fixed dates' }, { v: true, label: 'Rolls from each payment' }] as opt (opt.label)}
 						<button
 							type="button"
@@ -212,13 +212,13 @@
 							class:text-foreground={rolling === opt.v}
 							class:shadow-xs={rolling === opt.v}
 							class:bg-transparent={rolling !== opt.v}
-							class:text-text-mute={rolling !== opt.v}
+							class:text-faint={rolling !== opt.v}
 						>
 							{opt.label}
 						</button>
 					{/each}
 				</div>
-				<span class="text-[12px] text-text-mute">
+				<span class="text-[12px] text-faint">
 					{rolling
 						? 'Each cycle starts from when you actually pay — pay early or late and the schedule follows.'
 						: 'Payments land on the same calendar dates regardless of when you pay.'}
@@ -226,20 +226,18 @@
 			</div>
 
 			<div class="flex flex-col gap-1.5">
-				<span class="caption">Ends <span class="normal-case text-text-mute">(optional)</span></span>
+				<span class="caption">Ends <span class="normal-case text-faint">(optional)</span></span>
 				<div class="flex items-center gap-2">
 					<DatePicker
 						bind:value={endDate}
-						class="w-full rounded-[10px]! {endDateInvalid
-							? 'border-(--danger)'
-							: 'border-transparent'} bg-bg-warm! px-3!"
+						class="w-full rounded-[10px]! {endDateInvalid ? 'border-destructive' : 'border-transparent'} bg-muted! px-3!"
 						title={endDate?.toString() ?? 'Never'}
 					/>
 					{#if endDate}
 						<button
 							type="button"
 							onclick={() => (endDate = undefined)}
-							class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-text-mute hover:bg-bg-warm hover:text-foreground"
+							class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-faint hover:bg-muted hover:text-foreground"
 							aria-label="Clear end date"
 						>
 							<XIcon size={13} />
@@ -247,13 +245,13 @@
 					{/if}
 				</div>
 				{#if endDateInvalid}
-					<span class="text-[12px] text-(--danger)">End date must be after the start date.</span>
+					<span class="text-[12px] text-destructive">End date must be after the start date.</span>
 				{/if}
 			</div>
 
 			<div class="flex flex-col gap-1.5">
 				<span class="caption">Tags</span>
-				<div class="rounded-[10px] bg-bg-warm">
+				<div class="rounded-[10px] bg-muted">
 					<TagMultiSelect {tags} bind:selected={selectedTags} />
 				</div>
 			</div>
@@ -263,15 +261,15 @@
 				<input
 					bind:value={note}
 					placeholder="—"
-					class="w-full rounded-[10px] border border-transparent bg-bg-warm px-3 py-2 text-[13.5px] text-foreground"
+					class="w-full rounded-[10px] border border-transparent bg-muted px-3 py-2 text-[13.5px] text-foreground"
 				/>
 			</div>
 
 			{#if preview.length > 0}
-				<div class="rounded-[10px] bg-bg-warm px-3 py-2.5 text-[12.5px] text-text-dim">
+				<div class="rounded-[10px] bg-muted px-3 py-2.5 text-[12.5px] text-muted-foreground">
 					Next: {preview.map((d) => previewFormatter.format(d)).join(' · ')}
 					{#if backfillCount > 0}
-						<span class="mt-1 block text-text-mute">
+						<span class="mt-1 block text-faint">
 							Will create {backfillCount} back-dated payment{backfillCount === 1 ? '' : 's'} right away.
 						</span>
 					{/if}
@@ -282,13 +280,13 @@
 				<button
 					type="button"
 					onclick={onclose}
-					class="border-none bg-transparent px-3 py-2 text-[13.5px] font-semibold text-text-dim hover:text-foreground"
+					class="border-none bg-transparent px-3 py-2 text-[13.5px] font-semibold text-muted-foreground hover:text-foreground"
 				>
 					Cancel
 				</button>
 				<Button
 					type="submit"
-					class="h-[36px] gap-2 rounded-full bg-mint px-[18px] text-[13.5px] font-semibold text-foreground hover:bg-mint-deep"
+					class="h-[36px] gap-2 rounded-full bg-muted px-[18px] text-[13.5px] font-semibold text-foreground hover:bg-foreground/10"
 					disabled={saving || !canSave}
 				>
 					{#if saving}

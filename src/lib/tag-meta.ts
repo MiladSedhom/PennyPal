@@ -84,13 +84,12 @@ import type { Component } from 'svelte'
 // Ids are stored in the DB; colours come from --tag-<id>-bg/-ink in layout.css.
 export type TagColor = 'sage' | 'sand' | 'clay' | 'sky' | 'teal' | 'lilac' | 'rose' | 'olive'
 
-export type TagSwatch = { ink: string; bg: string; ring: string }
+export type TagSwatch = { ink: string; bg: string }
 
 function cssSwatch(id: TagColor): TagSwatch {
 	return {
 		ink: `var(--tag-${id}-ink)`,
-		bg: `var(--tag-${id}-bg)`,
-		ring: `color-mix(in srgb, var(--tag-${id}-ink) 18%, transparent)`
+		bg: `var(--tag-${id}-bg)`
 	}
 }
 
@@ -273,8 +272,6 @@ export const ICON_CHOICES = [
 	'HeartPulse',
 	'Tag'
 ] as const
-
-export type IconChoices = (typeof ICON_CHOICES)[number]
 
 export const DEFAULT_TAG_COLOR: TagColor = 'sage'
 export const DEFAULT_TAG_ICON = 'Tag'

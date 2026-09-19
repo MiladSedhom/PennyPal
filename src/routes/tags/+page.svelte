@@ -2,7 +2,6 @@
 	import { getTags, createOrUpdateTag, deleteTag, mergeTags } from '$lib/remote/tags.remote'
 	import { getPayments } from '$lib/remote/payments.remote'
 
-	import Card from '$lib/components/pp/card.svelte'
 	import TagIconChip from '$lib/components/pp/tag-icon-chip.svelte'
 	import TagMergeMenu from '$lib/components/pp/tag-merge-menu.svelte'
 	import { Button } from '$lib/components/ui/button'
@@ -97,16 +96,11 @@
 	}
 </script>
 
-<div class="px-10 pb-14 pt-2">
-	<div class="mb-6">
-		<h1 class="m-0 font-display text-[38px] font-bold tracking-[-0.04em] text-foreground">Tags</h1>
-		<p class="mt-2 m-0 text-[15.5px] text-text-dim">
-			Give every tag a color and an icon. They show up across your payments and insights.
-		</p>
-	</div>
+<div class="p-10 pt-4">
+	<h1 class="font-display text-2xl font-bold text-foreground mb-4">Tags</h1>
 
 	<div class="grid items-start gap-4 lg:grid-cols-[1fr_1.15fr]">
-		<Card pad="xl" class="lg:sticky lg:top-4">
+		<div class="rounded-card border bg-card p-4 lg:sticky lg:top-4 shadow-2xl">
 			<form
 				{...createOrUpdateTag.enhance(async ({ submit }) => {
 					if (await submit()) {
@@ -119,7 +113,7 @@
 				<input type="hidden" name="icon" value={fields.icon.value() ?? 'Tag'} />
 
 				<!-- Live preview -->
-				<div class="mb-6 flex items-center gap-4 rounded-2xl bg-bg-warm p-5">
+				<div class="mb-6 flex items-center gap-4 rounded-2xl bg-muted p-5">
 					<span
 						class="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl"
 						style:background={sw.bg}
@@ -150,18 +144,18 @@
 						<input
 							{...fields.name.as('text')}
 							placeholder="e.g. Groceries"
-							class="w-full rounded-sm border border-border bg-bg-warm px-[14px] py-[11px] text-[14px] font-medium text-foreground outline-none focus:border-ring"
+							class="w-full rounded-sm border border-border bg-muted px-[14px] py-[11px] text-[14px] font-medium text-foreground outline-none focus:border-ring"
 						/>
 					</label>
 					<label class="block">
 						<span class="caption mb-2 block">Monthly budget</span>
 						<div class="relative flex items-center">
-							<span class="absolute left-[14px] font-mono text-[14px] text-text-mute">$</span>
+							<span class="absolute left-[14px] font-mono text-[14px] text-faint">$</span>
 							<input
 								{...fields.budget.as('text')}
 								inputmode="numeric"
 								placeholder="—"
-								class="w-full rounded-sm border border-border bg-bg-warm py-[11px] pl-[26px] pr-[14px] font-mono text-[14px] font-medium text-foreground outline-none focus:border-ring"
+								class="w-full rounded-sm border border-border bg-muted py-[11px] pl-[26px] pr-[14px] font-mono text-[14px] font-medium text-foreground outline-none focus:border-ring"
 							/>
 						</div>
 					</label>
@@ -176,9 +170,9 @@
 							<button
 								type="button"
 								onclick={() => fields.color.set(id)}
-								class="inline-flex h-[38px] w-[38px] items-center justify-center rounded-[11px]"
+								class="inline-flex h-9.5 w-9.5 items-center justify-center rounded-[11px]"
 								style:background={s.bg}
-								style:border={fields.color.value() === id ? `2px solid var(--text)` : '2px solid transparent'}
+								style:border={fields.color.value() === id ? `2px solid var(--foreground)` : '2px solid transparent'}
 								aria-label={id}
 							>
 								{#if fields.color.value() === id}
@@ -190,7 +184,7 @@
 				</div>
 
 				<!-- Icon -->
-				<div class="mb-[26px]">
+				<div class="mb-6">
 					<span class="caption mb-2.5 block">Icon</span>
 					<div class="flex flex-wrap gap-2">
 						{#each ICON_CHOICES as icon (icon)}
@@ -200,8 +194,8 @@
 								type="button"
 								onclick={() => fields.icon.set(icon)}
 								class="inline-flex aspect-square items-center justify-center rounded-[8px] size-12"
-								style:background={selected ? sw.bg : 'var(--bg-warm)'}
-								style:color={selected ? sw.ink : 'var(--text-dim)'}
+								style:background={selected ? sw.bg : 'var(--muted)'}
+								style:color={selected ? sw.ink : 'var(--muted-foreground)'}
 								style:border={selected ? `1px solid ${sw.ink}` : '1px solid transparent'}
 								aria-label={icon}
 								title={toTitleCase(icon)}
@@ -244,7 +238,7 @@
 								const t = tagsWithPaymentCount.find((x) => x.id.toString() === fields.id.value())
 								if (t) confirmRemove(t)
 							}}
-							class="h-[40px] gap-2 rounded-full bg-transparent px-[18px] text-[13.5px] font-semibold text-(--danger) hover:bg-(--danger)/10"
+							class="h-[40px] gap-2 rounded-full bg-transparent px-[18px] text-[13.5px] font-semibold text-destructive hover:bg-destructive/10"
 							aria-label="Delete this tag"
 						>
 							<Trash2Icon size={15} />
@@ -252,18 +246,18 @@
 					{/if}
 				</div>
 			</form>
-		</Card>
+		</div>
 
 		<!-- Existing tags list -->
-		<Card pad="none">
+		<div class="rounded-card border bg-card p-4 shadow-2xl">
 			<div class="flex items-center justify-between px-6 pb-4 pt-5">
 				<span class="font-display text-[19px] font-semibold tracking-[-0.02em]">
-					Your tags <span class="font-medium text-text-mute">· {tagsWithPaymentCount.length}</span>
+					Your tags <span class="font-medium text-faint">· {tagsWithPaymentCount.length}</span>
 				</span>
 				<Button
 					type="button"
 					onclick={resetForm}
-					class="h-[32px] gap-1.5 rounded-full bg-mint px-3 text-[12.5px] font-semibold text-foreground hover:bg-mint-deep"
+					class="h-[32px] gap-1.5 rounded-full bg-muted px-3 text-[12.5px] font-semibold text-foreground hover:bg-foreground/10"
 				>
 					<PlusIcon size={13} /> New
 				</Button>
@@ -271,25 +265,25 @@
 
 			<!-- Search + sort -->
 			<div class="flex flex-wrap items-center gap-3 px-6 pb-4">
-				<div class="flex min-w-[180px] flex-1 items-center gap-2 rounded-full bg-bg-warm px-[14px] py-2">
-					<SearchIcon size={14} class="text-text-mute" />
+				<div class="flex min-w-[180px] flex-1 items-center gap-2 rounded-full bg-muted px-[14px] py-2">
+					<SearchIcon size={14} class="text-faint" />
 					<input
 						bind:value={search}
 						placeholder="Search tags…"
-						class="flex-1 border-none bg-transparent text-[13.5px] font-medium text-foreground outline-none placeholder:text-text-mute"
+						class="flex-1 border-none bg-transparent text-[13.5px] font-medium text-foreground outline-none placeholder:text-faint"
 					/>
 					{#if search}
 						<button
 							type="button"
 							onclick={() => (search = '')}
-							class="flex border-none bg-transparent p-0 text-text-mute"
+							class="flex border-none bg-transparent p-0 text-faint"
 							aria-label="Clear search"
 						>
 							<XIcon size={13} />
 						</button>
 					{/if}
 				</div>
-				<div class="inline-flex gap-1 rounded-full bg-bg-warm p-1">
+				<div class="inline-flex gap-1 rounded-full bg-muted p-1">
 					{#each [['name', 'Name'], ['count', 'Usage'], ['budget', 'Budget']] as const as [key, label] (key)}
 						<button
 							type="button"
@@ -299,7 +293,7 @@
 							class:text-foreground={sort === key}
 							class:shadow-xs={sort === key}
 							class:bg-transparent={sort !== key}
-							class:text-text-mute={sort !== key}
+							class:text-faint={sort !== key}
 						>
 							{label}
 						</button>
@@ -309,18 +303,18 @@
 
 			<div class="max-h-[calc(100vh-280px)] overflow-y-auto">
 				{#if tagsWithPaymentCount.length === 0}
-					<div class="border-t border-border-soft px-6 py-12 text-center text-[13px] text-text-mute">
+					<div class="border-t border-border px-6 py-12 text-center text-[13px] text-faint">
 						You don't have any tags yet — create your first on the left.
 					</div>
 				{:else if displayedTags.length === 0}
-					<div class="border-t border-border-soft px-6 py-12 text-center text-[13px] text-text-mute">
+					<div class="border-t border-border px-6 py-12 text-center text-[13px] text-faint">
 						No tags match “{search}”.
 					</div>
 				{/if}
 				{#each displayedTags as t (t.id)}
 					<div
-						class="group flex items-center gap-3.5 border-t border-border-soft px-6 py-3"
-						class:bg-bg-warm={fields.id.value() === t.id.toString()}
+						class="group flex items-center gap-3.5 border-t border-border px-6 py-3"
+						class:bg-muted={fields.id.value() === t.id.toString()}
 					>
 						<TagIconChip color={t.color} icon={t.icon} size={38} />
 						<button type="button" onclick={() => startEdit(t)} class="flex-1 border-none bg-transparent text-left">
@@ -328,24 +322,24 @@
 							<span class="caption">{t.count} payment{t.count === 1 ? '' : 's'}</span>
 						</button>
 						{#if t.budget != null}
-							<span class="font-mono text-[12.5px] text-text-mute">{formatMoney(t.budget)}/mo</span>
+							<span class="font-mono text-[12.5px] text-faint">{formatMoney(t.budget)}/mo</span>
 						{/if}
 						<button
 							type="button"
 							onclick={() => startEdit(t)}
-							class="border-none bg-transparent p-1.5 text-text-mute hover:text-foreground"
+							class="border-none bg-transparent p-1.5 text-faint hover:text-foreground"
 							class:text-foreground={fields.id.value() === t.id.toString()}
 							aria-label="Edit tag"
 						>
 							<PencilIcon size={16} />
 						</button>
 						{#if tagsWithPaymentCount.length > 1}
-							<TagMergeMenu source={t} tags={tags} onpick={(targetId) => confirmMerge(t, targetId)} />
+							<TagMergeMenu source={t} {tags} onpick={(targetId) => confirmMerge(t, targetId)} />
 						{/if}
 						<button
 							type="button"
 							onclick={() => confirmRemove(t)}
-							class="border-none bg-transparent p-1.5 text-text-mute hover:text-(--danger)"
+							class="border-none bg-transparent p-1.5 text-faint hover:text-destructive"
 							aria-label="Delete tag"
 						>
 							<Trash2Icon size={16} />
@@ -353,6 +347,6 @@
 					</div>
 				{/each}
 			</div>
-		</Card>
+		</div>
 	</div>
 </div>

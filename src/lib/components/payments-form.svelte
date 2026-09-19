@@ -133,12 +133,12 @@
 			focusDate(0)
 		}}
 	>
-		<div class="flex items-center justify-between border-b border-border-soft p-4">
+		<div class="flex items-center justify-between border-b border-border p-4">
 			<div class="flex items-baseline gap-3">
 				<Dialog.Title class="m-0 font-display text-[22px] font-bold tracking-[-0.025em]">Add Payments</Dialog.Title>
 			</div>
 			<div class="flex items-center gap-3">
-				<span class="hidden items-center gap-4 text-[12px] text-text-mute sm:inline-flex">
+				<span class="hidden items-center gap-4 text-[12px] text-faint sm:inline-flex">
 					<span><Kbd.Root class="px-2">Tab</Kbd.Root> add row</span>
 					<span><Kbd.Root class="px-2">⌫</Kbd.Root> remove</span>
 					<span><Kbd.Root class="px-2">⌘ + ↵</Kbd.Root> save</span>
@@ -147,7 +147,7 @@
 					variant="secondary"
 					size="icon-sm"
 					onclick={() => (open = false)}
-					class="rounded-full text-text-dim hover:text-foreground"
+					class="rounded-full text-muted-foreground hover:text-foreground"
 					aria-label="Close"
 				>
 					<XIcon />
@@ -156,31 +156,31 @@
 		</div>
 
 		<div
-			class="grid items-center gap-3 border-b border-border-soft bg-bg-warm px-7 py-3"
+			class="grid items-center gap-3 border-b border-border bg-muted px-7 py-3"
 			style:grid-template-columns="32px 190px 130px 1.4fr 1fr 32px"
 		>
 			<span></span>
-			<span class="font-mono text-xs font-semibold uppercase tracking-[0.04em] text-text-mute text-center">Date</span>
-			<span class="font-mono text-xs font-semibold uppercase tracking-[0.04em] text-text-mute text-center">Amount</span>
-			<span class="font-mono text-xs font-semibold uppercase tracking-[0.04em] text-text-mute text-center">Tags</span>
-			<span class="font-mono text-xs font-semibold uppercase tracking-[0.04em] text-text-mute text-center">Note</span>
+			<span class="font-mono text-xs font-semibold uppercase tracking-[0.04em] text-faint text-center">Date</span>
+			<span class="font-mono text-xs font-semibold uppercase tracking-[0.04em] text-faint text-center">Amount</span>
+			<span class="font-mono text-xs font-semibold uppercase tracking-[0.04em] text-faint text-center">Tags</span>
+			<span class="font-mono text-xs font-semibold uppercase tracking-[0.04em] text-faint text-center">Note</span>
 			<span></span>
 		</div>
 
 		<div class="max-h-[55vh] h-[35vh] overflow-y-auto">
 			{#each paymentsForms as p, index (index)}
 				<div
-					class="grid items-center gap-3 border-b border-border-soft px-7 py-2"
+					class="grid items-center gap-3 border-b border-border px-7 py-2"
 					style:grid-template-columns="32px 190px 130px 1.4fr 1fr 32px"
 				>
-					<span class="text-center font-mono text-[11px] tracking-[0.04em] text-text-mute">
+					<span class="text-center font-mono text-[11px] tracking-[0.04em] text-faint">
 						{String(index + 1).padStart(2, '0')}
 					</span>
 
 					<DatePicker
 						bind:value={p.date}
 						bind:ref={refs.date[index]}
-						class="w-full rounded-sm! border-transparent bg-transparent! px-2.5! hover:bg-bg-warm!"
+						class="w-full rounded-sm! border-transparent bg-transparent! px-2.5! hover:bg-muted!"
 						title={p.date.toString()}
 					/>
 
@@ -192,7 +192,7 @@
 						step="1"
 						min="0"
 						onkeydown={(e) => amountKeydown(e, index)}
-						class="w-full rounded-sm border border-transparent bg-transparent px-2.5 py-2 text-right font-mono text-[13.5px] font-medium text-foreground hover:bg-bg-warm"
+						class="w-full rounded-sm border border-transparent bg-transparent px-2.5 py-2 text-right font-mono text-[13.5px] font-medium text-foreground hover:bg-muted"
 					/>
 
 					<TagMultiSelect
@@ -211,7 +211,7 @@
 						bind:this={refs.note[index]}
 						placeholder="—"
 						onkeydown={(e) => noteKeydown(e, index, paymentsForms.length > 1)}
-						class="w-full rounded-sm border border-transparent bg-transparent px-2.5 py-2 text-[13.5px] text-foreground hover:bg-bg-warm"
+						class="w-full rounded-sm border border-transparent bg-transparent px-2.5 py-2 text-[13.5px] text-foreground hover:bg-muted"
 					/>
 
 					<span class="flex items-center justify-center">
@@ -221,7 +221,7 @@
 								size="icon-sm"
 								onclick={() => removeRow(index)}
 								onkeydown={(e) => addRowOnTab(e, index)}
-								class="size-6 rounded-full text-text-mute hover:text-foreground"
+								class="size-6 rounded-full text-faint hover:text-foreground"
 								aria-label="Remove row"
 							>
 								<XIcon class="size-3.5" />
@@ -236,7 +236,7 @@
 					variant="secondary"
 					size="sm"
 					onclick={addRow}
-					class="rounded-full text-[12.5px] font-semibold text-text-dim hover:text-foreground"
+					class="rounded-full text-[12.5px] font-semibold text-muted-foreground hover:text-foreground"
 				>
 					<PlusIcon class="size-3.5" />
 					Add Another Payment

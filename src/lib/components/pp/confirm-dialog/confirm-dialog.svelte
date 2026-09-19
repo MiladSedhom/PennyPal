@@ -14,7 +14,7 @@
 	const toneRing: Record<ConfirmTone, string> = {
 		danger: 'bg-destructive/10 text-destructive',
 		warning: 'bg-warn/10 text-warn',
-		info: 'bg-mint text-foreground'
+		info: 'bg-muted text-foreground'
 	}
 </script>
 
@@ -41,7 +41,7 @@
 						<AlertDialog.Title class="font-display text-[18px] font-bold tracking-[-0.02em]">
 							{current.title}
 						</AlertDialog.Title>
-						<AlertDialog.Description class="text-[13.5px] leading-normal text-text-dim">
+						<AlertDialog.Description class="text-[13.5px] leading-normal text-muted-foreground">
 							{current.message}
 						</AlertDialog.Description>
 					</div>

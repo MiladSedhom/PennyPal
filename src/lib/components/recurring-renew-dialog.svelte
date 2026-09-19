@@ -51,12 +51,12 @@
 	}}
 >
 	<Dialog.Content class="max-w-[400px] gap-0 rounded-2xl border-none bg-card p-0 shadow-2xl" showCloseButton={false}>
-		<div class="flex items-center justify-between border-b border-border-soft px-6 py-4">
+		<div class="flex items-center justify-between border-b border-border px-6 py-4">
 			<Dialog.Title class="m-0 font-display text-[18px] font-bold tracking-[-0.025em]">Log payment</Dialog.Title>
 			<button
 				type="button"
 				onclick={onclose}
-				class="flex h-8 w-8 items-center justify-center rounded-full border-none bg-bg-warm p-0 text-text-dim hover:bg-mint"
+				class="flex h-8 w-8 items-center justify-center rounded-full border-none bg-muted p-0 text-muted-foreground hover:bg-muted"
 				aria-label="Close"
 			>
 				<XIcon size={16} />
@@ -81,23 +81,23 @@
 				<span class="caption">Paid on</span>
 				<DatePicker
 					bind:value={date}
-					class="w-full rounded-[10px]! border-transparent bg-bg-warm! px-3!"
+					class="w-full rounded-[10px]! border-transparent bg-muted! px-3!"
 					title={date.toString()}
 				/>
-				<span class="text-[12px] text-text-mute">The next cycle will start one interval after this date.</span>
+				<span class="text-[12px] text-faint">The next cycle will start one interval after this date.</span>
 			</div>
 
 			<div class="mt-1 flex justify-end gap-2">
 				<button
 					type="button"
 					onclick={onclose}
-					class="border-none bg-transparent px-3 py-2 text-[13.5px] font-semibold text-text-dim hover:text-foreground"
+					class="border-none bg-transparent px-3 py-2 text-[13.5px] font-semibold text-muted-foreground hover:text-foreground"
 				>
 					Cancel
 				</button>
 				<Button
 					type="submit"
-					class="h-[36px] gap-2 rounded-full bg-mint px-[18px] text-[13.5px] font-semibold text-foreground hover:bg-mint-deep"
+					class="h-[36px] gap-2 rounded-full bg-muted px-[18px] text-[13.5px] font-semibold text-foreground hover:bg-foreground/10"
 					disabled={saving}
 				>
 					{#if saving}

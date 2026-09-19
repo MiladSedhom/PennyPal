@@ -2,7 +2,6 @@
 	import { Button } from '$lib/components/ui/button'
 	import { resolve } from '$app/paths'
 	import { loginOrRegister } from '$lib/remote/auth.remote'
-	import Card from '$lib/components/pp/card.svelte'
 	import EyeIcon from '@lucide/svelte/icons/eye'
 	import EyeOffIcon from '@lucide/svelte/icons/eye-off'
 	import LoaderIcon from '@lucide/svelte/icons/loader-circle'
@@ -19,12 +18,12 @@
 	const busy = $derived(loginOrRegister.pending > 0)
 
 	const oauthBtn =
-		'inline-flex h-[44px] items-center justify-center gap-2.5 rounded-full border border-border bg-bg-warm px-[18px] ' +
-		'text-[13.5px] font-semibold text-foreground transition-colors hover:bg-mint'
+		'inline-flex h-[44px] items-center justify-center gap-2.5 rounded-full border border-border bg-muted px-[18px] ' +
+		'text-[13.5px] font-semibold text-foreground transition-colors hover:bg-muted'
 </script>
 
-<Card pad="none" class="w-full max-w-[420px] overflow-hidden shadow-lg border-border border">
-	<div class="border-b border-border-soft px-8 py-6">
+<div class="w-full max-w-[420px] overflow-hidden rounded-card border bg-card shadow-lg">
+	<div class="border-b border-border px-8 py-6">
 		<div class="flex items-center justify-between gap-3">
 			<span class="font-display text-3xl font-black leading-none">Penny<span class="text-primary">Pal</span></span>
 			<Button
@@ -41,7 +40,7 @@
 
 	<div class="flex flex-col gap-5 px-8 py-7">
 		<!-- Sign in / Create account toggle -->
-		<div class="inline-flex gap-1 rounded-full bg-bg-warm p-1" role="tablist">
+		<div class="inline-flex gap-1 rounded-full bg-muted p-1" role="tablist">
 			{#each [['login', 'Sign in'], ['register', 'Create account']] as const as [key, label] (key)}
 				<button
 					type="button"
@@ -53,7 +52,7 @@
 					class:text-foreground={mode === key}
 					class:shadow-xs={mode === key}
 					class:bg-transparent={mode !== key}
-					class:text-text-mute={mode !== key}
+					class:text-faint={mode !== key}
 				>
 					{label}
 				</button>
@@ -71,9 +70,9 @@
 		</div>
 
 		<div class="flex items-center gap-3">
-			<span class="h-px flex-1 bg-border-soft"></span>
+			<span class="h-px flex-1 bg-border"></span>
 			<span class="caption">or with a username</span>
-			<span class="h-px flex-1 bg-border-soft"></span>
+			<span class="h-px flex-1 bg-border"></span>
 		</div>
 
 		<form {...loginOrRegister.enhance(async ({ submit }) => void (await submit()))} class="flex flex-col gap-4">
@@ -82,7 +81,7 @@
 				<input
 					{...loginOrRegister.fields.username.as('text')}
 					autocomplete="username"
-					class="rounded-[10px] border border-border bg-bg-warm px-[14px] py-[11px] text-[14px] font-medium text-foreground outline-none focus:border-ring"
+					class="rounded-[10px] border border-border bg-muted px-[14px] py-[11px] text-[14px] font-medium text-foreground outline-none focus:border-ring"
 				/>
 			</label>
 			<label class="flex flex-col gap-2">
@@ -91,12 +90,12 @@
 					<input
 						{...loginOrRegister.fields.password.as(showPassword ? 'text' : 'password')}
 						autocomplete={mode === 'login' ? 'current-password' : 'new-password'}
-						class="w-full rounded-[10px] border border-border bg-bg-warm py-[11px] pl-[14px] pr-[42px] text-[14px] font-medium text-foreground outline-none focus:border-ring"
+						class="w-full rounded-[10px] border border-border bg-muted py-[11px] pl-[14px] pr-[42px] text-[14px] font-medium text-foreground outline-none focus:border-ring"
 					/>
 					<button
 						type="button"
 						onclick={() => (showPassword = !showPassword)}
-						class="absolute right-[10px] flex border-none bg-transparent p-1 text-text-mute hover:text-foreground"
+						class="absolute right-[10px] flex border-none bg-transparent p-1 text-faint hover:text-foreground"
 						aria-label={showPassword ? 'Hide password' : 'Show password'}
 					>
 						{#if showPassword}<EyeOffIcon size={16} />{:else}<EyeIcon size={16} />{/if}
@@ -124,4 +123,4 @@
 			</Button>
 		</form>
 	</div>
-</Card>
+</div>

@@ -33,7 +33,7 @@
 </script>
 
 {#if loggedInUser}
-	<header class="px-10 py-4 border-b">
+	<header class="px-10 py-4">
 		<div class="flex items-center justify-between gap-6">
 			<div class="flex items-center gap-8">
 				<a href={resolve('/')} class="flex items-center gap-[11px] text-foreground no-underline">
@@ -49,7 +49,7 @@
 						href={resolve(n.path)}
 						class={[
 							'rounded-full p-2 text-xs font-semibold no-underline transition-colors',
-							active ? 'text-primary' : ' hover:text-foreground text-text-dim'
+							active ? 'text-primary' : ' hover:text-foreground text-muted-foreground'
 						]}
 					>
 						{n.label}
@@ -60,26 +60,26 @@
 				<Button
 					variant="ghost"
 					onclick={toggleMode}
-					class="relative inline-flex h-[38px] w-[38px] items-center justify-center rounded-full bg-card text-foreground"
+					class="relative inline-flex h-9.5 w-9.5 items-center justify-center rounded-full bg-card text-foreground"
 					aria-label="Toggle theme"
 				>
-					<SunIcon class="h-[1rem] w-[1rem] scale-in dark:scale-out-reverse" />
-					<MoonIcon class="absolute h-[1rem] w-[1rem] scale-out dark:scale-in" />
+					<SunIcon class="h-4 w-4 scale-in dark:scale-out-reverse" />
+					<MoonIcon class="absolute h-4 w-4 scale-out dark:scale-in" />
 				</Button>
 				<form {...logout}>
 					<Button
 						variant="ghost"
 						type="submit"
-						class="inline-flex h-[38px] w-[38px] items-center justify-center rounded-full bg-card text-foreground"
+						class="inline-flex h-9.5 w-9.5 items-center justify-center rounded-full bg-card text-foreground"
 						aria-label="Log out"
 					>
-						<LogOutIcon class="h-[1rem] w-[1rem]" />
+						<LogOutIcon class="h-4 w-4" />
 					</Button>
 				</form>
 				<Button
 					variant="ghost"
 					href={resolve('/account')}
-					class="inline-flex h-[38px] w-[38px] items-center justify-center rounded-full bg-mint text-md font-bold text-foreground no-underline font-display"
+					class="inline-flex h-9.5 w-9.5 items-center justify-center rounded-full bg-muted text-md font-bold text-foreground no-underline font-display"
 					aria-label="Account"
 				>
 					{initials}

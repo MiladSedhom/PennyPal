@@ -4,7 +4,6 @@
 	import RecurringEditDialog from '$lib/components/recurring-edit-dialog.svelte'
 	import RecurringRenewDialog from '$lib/components/recurring-renew-dialog.svelte'
 
-	import Card from '$lib/components/pp/card.svelte'
 	import TagChip from '$lib/components/pp/tag-chip.svelte'
 	import { Button } from '$lib/components/ui/button'
 	import { dialogs } from '$lib/components/pp/confirm-dialog'
@@ -67,10 +66,10 @@
 		</Button>
 	</div>
 
-	<Card pad="none" class="overflow-hidden">
+	<div class="overflow-hidden rounded-card border bg-card">
 		{#if rules.length === 0}
 			<div class="flex flex-col items-center gap-3 px-6 py-16 text-center">
-				<span class="flex h-12 w-12 items-center justify-center rounded-full bg-bg-warm text-text-mute">
+				<span class="flex h-12 w-12 items-center justify-center rounded-full bg-muted text-faint">
 					<RepeatIcon size={20} />
 				</span>
 				<div class="text-[14.5px] font-semibold">No recurring payments yet</div>
@@ -80,7 +79,7 @@
 			{#each rules as r, i (r.id)}
 				{@const completed = isCompleted(r)}
 				<div
-					class="group flex items-center gap-4 px-6 py-4 {i > 0 ? 'border-t border-border-soft' : ''}"
+					class="group flex items-center gap-4 px-6 py-4 {i > 0 ? 'border-t border-border' : ''}"
 					class:opacity-60={r.paused || completed}
 				>
 					<div class="w-[88px] shrink-0 text-[16.5px] font-bold tabular-nums">{formatMoney(r.amount)}</div>
@@ -96,17 +95,17 @@
 							{formatCadence(r.interval, r.intervalCount)}
 						</div>
 						{#if r.note}
-							<div class="truncate text-[12.5px] text-text-mute">{r.note}</div>
+							<div class="truncate text-[12.5px] text-faint">{r.note}</div>
 						{/if}
 					</div>
 
-					<span class="caption shrink-0 {r.paused || completed ? '' : 'text-lime-text!'}">{status(r)}</span>
+					<span class="caption shrink-0 {r.paused || completed ? '' : 'text-kit-navy!'}">{status(r)}</span>
 
 					{#if canPayNow(r)}
 						<button
 							type="button"
 							onclick={() => (paying = r)}
-							class="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-mint px-3.5 py-1.5 text-[12.5px] font-semibold text-foreground hover:bg-mint-deep"
+							class="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-muted px-3.5 py-1.5 text-[12.5px] font-semibold text-foreground hover:bg-foreground/10"
 						>
 							<CheckIcon size={13} /> Pay now
 						</button>
@@ -117,7 +116,7 @@
 							<button
 								type="button"
 								onclick={() => setRecurringPaused({ id: r.id, paused: !r.paused })}
-								class="flex h-7 w-7 items-center justify-center rounded-full border-none bg-transparent text-text-mute hover:bg-bg-warm hover:text-foreground"
+								class="flex h-7 w-7 items-center justify-center rounded-full border-none bg-transparent text-faint hover:bg-muted hover:text-foreground"
 								aria-label={r.paused ? 'Resume rule' : 'Pause rule'}
 							>
 								{#if r.paused}<PlayIcon size={14} />{:else}<PauseIcon size={14} />{/if}
@@ -126,7 +125,7 @@
 						<button
 							type="button"
 							onclick={() => (editing = r)}
-							class="flex h-7 w-7 items-center justify-center rounded-full border-none bg-transparent text-text-mute hover:bg-bg-warm hover:text-foreground"
+							class="flex h-7 w-7 items-center justify-center rounded-full border-none bg-transparent text-faint hover:bg-muted hover:text-foreground"
 							aria-label="Edit rule"
 						>
 							<PencilIcon size={14} />
@@ -134,7 +133,7 @@
 						<button
 							type="button"
 							onclick={() => confirmDelete(r)}
-							class="flex h-7 w-7 items-center justify-center rounded-full border-none bg-transparent text-text-mute hover:bg-bg-warm hover:text-(--danger)"
+							class="flex h-7 w-7 items-center justify-center rounded-full border-none bg-transparent text-faint hover:bg-muted hover:text-destructive"
 							aria-label="Delete rule"
 						>
 							<Trash2Icon size={14} />
@@ -143,7 +142,7 @@
 				</div>
 			{/each}
 		{/if}
-	</Card>
+	</div>
 </div>
 
 <RecurringEditDialog rule={editing} {tags} onclose={() => (editing = null)} />
