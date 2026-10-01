@@ -1,13 +1,10 @@
 <script lang="ts">
-	import * as Dialog from '$lib/components/ui/dialog'
-	import * as Drawer from '$lib/components/ui/drawer'
+	import ResponsiveDialog from '$lib/components/pp/responsive-dialog.svelte'
 	import { Button } from '$lib/components/ui/button'
 	import DatePicker from '$lib/components/ui/date-picker/date-picker.svelte'
 	import TagMultiSelect from '$lib/components/pp/tag-multiselect.svelte'
 	import { updatePayment } from '$lib/remote/payments.remote'
 	import { CalendarDate, getLocalTimeZone } from '@internationalized/date'
-	import { MediaQuery } from 'svelte/reactivity'
-	import XIcon from '@lucide/svelte/icons/x'
 	import CheckIcon from '@lucide/svelte/icons/check'
 	import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle'
 
@@ -43,12 +40,6 @@
 
 	let saving = $state(false)
 
-	const isDesktop = new MediaQuery('min-width: 768px')
-
-	function onOpenChange(isOpen: boolean) {
-		if (!isOpen) onclose()
-	}
-
 	async function save() {
 		if (!payment || !(amount > 0)) return
 		saving = true
@@ -66,7 +57,7 @@
 	}
 </script>
 
-{#snippet editForm()}
+<ResponsiveDialog open={payment !== null} title="Edit payment" {onclose} class="max-w-[440px]">
 	<form
 		class="flex flex-col gap-4 px-4 pb-4 md:px-6 md:py-5"
 		onsubmit={(e) => {
@@ -134,32 +125,4 @@
 			</Button>
 		</div>
 	</form>
-{/snippet}
-
-{#if isDesktop.current}
-	<Dialog.Root open={payment !== null} {onOpenChange}>
-		<Dialog.Content class="max-w-[440px] gap-0 rounded-2xl border-none bg-card p-0 shadow-2xl" showCloseButton={false}>
-			<div class="flex items-center justify-between border-b border-border px-6 py-4">
-				<Dialog.Title class="m-0 font-display text-[19px] font-bold tracking-[-0.025em]">Edit payment</Dialog.Title>
-				<button
-					type="button"
-					onclick={onclose}
-					class="flex h-8 w-8 items-center justify-center rounded-full border-none bg-muted p-0 text-muted-foreground hover:bg-muted"
-					aria-label="Close"
-				>
-					<XIcon size={16} />
-				</button>
-			</div>
-			{@render editForm()}
-		</Dialog.Content>
-	</Dialog.Root>
-{:else}
-	<Drawer.Root open={payment !== null} {onOpenChange}>
-		<Drawer.Content>
-			<Drawer.Header>
-				<Drawer.Title class="font-display text-[19px] font-bold tracking-[-0.025em]">Edit payment</Drawer.Title>
-			</Drawer.Header>
-			{@render editForm()}
-		</Drawer.Content>
-	</Drawer.Root>
-{/if}
+</ResponsiveDialog>

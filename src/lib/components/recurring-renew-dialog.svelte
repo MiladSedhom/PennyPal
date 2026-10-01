@@ -1,11 +1,10 @@
 <script lang="ts">
-	import * as Dialog from '$lib/components/ui/dialog'
+	import ResponsiveDialog from '$lib/components/pp/responsive-dialog.svelte'
 	import { Button } from '$lib/components/ui/button'
 	import DatePicker from '$lib/components/ui/date-picker/date-picker.svelte'
 	import { renewRecurringPayment } from '$lib/remote/recurring.remote'
 	import { formatMoney } from '$lib/utils'
 	import { CalendarDate, getLocalTimeZone, type DateValue } from '@internationalized/date'
-	import XIcon from '@lucide/svelte/icons/x'
 	import CheckIcon from '@lucide/svelte/icons/check'
 	import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle'
 
@@ -44,70 +43,51 @@
 	}
 </script>
 
-<Dialog.Root
-	open={rule !== null}
-	onOpenChange={(isOpen) => {
-		if (!isOpen) onclose()
-	}}
->
-	<Dialog.Content class="max-w-[400px] gap-0 rounded-2xl border-none bg-card p-0 shadow-2xl" showCloseButton={false}>
-		<div class="flex items-center justify-between border-b border-border px-6 py-4">
-			<Dialog.Title class="m-0 font-display text-[18px] font-bold tracking-[-0.025em]">Log payment</Dialog.Title>
+<ResponsiveDialog open={rule !== null} title="Log payment" {onclose} class="max-w-[400px]">
+	<form
+		class="flex flex-col gap-4 px-4 pb-4 md:px-6 md:py-5"
+		onsubmit={(e) => {
+			e.preventDefault()
+			save()
+		}}
+	>
+		<div class="flex items-baseline justify-between">
+			<span class="caption">Amount</span>
+			<span class="font-display text-[22px] font-bold tracking-[-0.02em] tabular-nums">
+				{formatMoney(rule?.amount ?? 0)}
+			</span>
+		</div>
+
+		<div class="flex flex-col gap-1.5">
+			<span class="caption">Paid on</span>
+			<DatePicker
+				bind:value={date}
+				class="w-full rounded-[10px]! border-transparent bg-muted! px-3!"
+				title={date.toString()}
+			/>
+			<span class="text-[12px] text-faint">The next cycle will start one interval after this date.</span>
+		</div>
+
+		<div class="mt-1 flex gap-2 md:justify-end">
 			<button
 				type="button"
 				onclick={onclose}
-				class="flex h-8 w-8 items-center justify-center rounded-full border-none bg-muted p-0 text-muted-foreground hover:bg-muted"
-				aria-label="Close"
+				class="flex-1 border-none bg-transparent px-3 py-2 text-[13.5px] font-semibold text-muted-foreground hover:text-foreground md:flex-none"
 			>
-				<XIcon size={16} />
+				Cancel
 			</button>
+			<Button
+				type="submit"
+				class="h-[36px] flex-1 gap-2 rounded-full bg-muted px-[18px] text-[13.5px] font-semibold text-foreground hover:bg-foreground/10 md:flex-none"
+				disabled={saving}
+			>
+				{#if saving}
+					<LoaderCircleIcon size={15} class="animate-spin" />
+				{:else}
+					<CheckIcon size={15} />
+				{/if}
+				Log payment
+			</Button>
 		</div>
-
-		<form
-			class="flex flex-col gap-4 px-6 py-5"
-			onsubmit={(e) => {
-				e.preventDefault()
-				save()
-			}}
-		>
-			<div class="flex items-baseline justify-between">
-				<span class="caption">Amount</span>
-				<span class="font-display text-[22px] font-bold tracking-[-0.02em] tabular-nums">
-					{formatMoney(rule?.amount ?? 0)}
-				</span>
-			</div>
-
-			<div class="flex flex-col gap-1.5">
-				<span class="caption">Paid on</span>
-				<DatePicker
-					bind:value={date}
-					class="w-full rounded-[10px]! border-transparent bg-muted! px-3!"
-					title={date.toString()}
-				/>
-				<span class="text-[12px] text-faint">The next cycle will start one interval after this date.</span>
-			</div>
-
-			<div class="mt-1 flex justify-end gap-2">
-				<button
-					type="button"
-					onclick={onclose}
-					class="border-none bg-transparent px-3 py-2 text-[13.5px] font-semibold text-muted-foreground hover:text-foreground"
-				>
-					Cancel
-				</button>
-				<Button
-					type="submit"
-					class="h-[36px] gap-2 rounded-full bg-muted px-[18px] text-[13.5px] font-semibold text-foreground hover:bg-foreground/10"
-					disabled={saving}
-				>
-					{#if saving}
-						<LoaderCircleIcon size={15} class="animate-spin" />
-					{:else}
-						<CheckIcon size={15} />
-					{/if}
-					Log payment
-				</Button>
-			</div>
-		</form>
-	</Dialog.Content>
-</Dialog.Root>
+	</form>
+</ResponsiveDialog>
