@@ -15,6 +15,7 @@
 	import { formatMoney } from '$lib/utils'
 	import * as Popover from '$lib/components/ui/popover'
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu'
+	import * as Drawer from '$lib/components/ui/drawer'
 	import { Button } from '$lib/components/ui/button'
 	import { RangeCalendar } from '$lib/components/ui/range-calendar'
 	import { Slider } from '$lib/components/ui/slider'
@@ -27,6 +28,7 @@
 	import TagIcon from '@lucide/svelte/icons/tag'
 	import RepeatIcon from '@lucide/svelte/icons/repeat'
 	import ArrowDownUpIcon from '@lucide/svelte/icons/arrow-down-up'
+	import SlidersHorizontalIcon from '@lucide/svelte/icons/sliders-horizontal'
 
 	import type { DateRange } from 'bits-ui'
 	import type { PaymentFilters, SortKey, StatusFilter } from './filters.svelte'
@@ -126,6 +128,17 @@
 		filters.recurringOnly = false
 	}
 
+	const dateRangeActive = $derived(Boolean(filters.range.start || filters.range.end))
+	const activeFilterCount = $derived(
+		[dateRangeActive, amountActive, recurringActive].filter(Boolean).length + filters.tagIds.length
+	)
+	function clearAllFilters() {
+		filters.clearRange()
+		filters.clearAmount()
+		filters.clearTags()
+		clearRecurring()
+	}
+
 	/** The tags surfaced as chips: top by usage, top by spend, plus any currently selected. */
 	function selectPrimaryTags(stats: TagStat[], allTags: Tag[], selectedIds: number[]): Tag[] {
 		const topByCount = [...stats].sort((a, b) => b.count - a.count).slice(0, PRIMARY_TAG_COUNT)
@@ -191,6 +204,108 @@
 	</span>
 {/snippet}
 
+{#snippet dateRangePanel(numberOfMonths: number, calendarClass = '')}
+	<RangeCalendar bind:value={filters.range} {numberOfMonths} class={calendarClass} />
+	<div class="mt-2 flex flex-wrap gap-2 px-1 pb-1">
+		{#each datePresets as preset (preset.label)}
+			{@const isActive = isDatePresetActive(preset)}
+			<Button
+				variant={isActive ? 'default' : 'secondary'}
+				size="sm"
+				onclick={() => applyDatePreset(preset)}
+				class={[
+					'h-7 rounded-full text-[12.5px] font-semibold',
+					!isActive && 'text-muted-foreground hover:text-foreground'
+				]}
+			>
+				{preset.label}
+			</Button>
+		{/each}
+	</div>
+{/snippet}
+
+{#snippet amountPanel()}
+	<span class="caption mb-2.5 block">Quick ranges</span>
+	<div class="mb-4 flex flex-wrap gap-2">
+		{#each amountSliderBrackets as bracket (bracket.label)}
+			{@const isActive = isBracketActive(bracket)}
+			<Button
+				variant={isActive ? 'default' : 'secondary'}
+				size="sm"
+				onclick={() => filters.setAmount(bracket.min, bracket.max)}
+				class={[
+					'h-7 rounded-full text-[12.5px] font-semibold',
+					!isActive && 'text-muted-foreground hover:text-foreground'
+				]}
+			>
+				{bracket.label}
+			</Button>
+		{/each}
+	</div>
+
+	<span class="caption mb-3 block">Custom</span>
+	<Slider type="multiple" value={sliderValue} onValueChange={onSliderChange} min={0} max={amountCeiling} step={1} />
+	<div class="mt-4 flex items-center gap-2">
+		<div class="relative flex flex-1 items-center">
+			<span class="absolute left-[12px] font-mono text-[13px] text-faint">$</span>
+			<input
+				inputmode="numeric"
+				value={filters.amountMin ?? ''}
+				oninput={(e) => {
+					const val = e.currentTarget.value.trim()
+					filters.amountMin = val === '' ? null : Math.max(0, Math.round(Number(val)))
+				}}
+				placeholder="Min"
+				class="w-full rounded-sm border border-border bg-muted py-[8px] pl-[24px] pr-[10px] font-mono text-[13px] font-medium text-foreground outline-none focus:border-ring"
+			/>
+		</div>
+		<span class="text-faint">–</span>
+		<div class="relative flex flex-1 items-center">
+			<span class="absolute left-[12px] font-mono text-[13px] text-faint">$</span>
+			<input
+				inputmode="numeric"
+				value={filters.amountMax ?? ''}
+				oninput={(e) => {
+					const val = e.currentTarget.value.trim()
+					filters.amountMax = val === '' ? null : Math.max(0, Math.round(Number(val)))
+				}}
+				placeholder="Max"
+				class="w-full rounded-sm border border-border bg-muted py-[8px] pl-[24px] pr-[10px] font-mono text-[13px] font-medium text-foreground outline-none focus:border-ring"
+			/>
+		</div>
+	</div>
+	{#if amountActive}
+		<Button
+			variant="link"
+			size="sm"
+			onclick={() => filters.clearAmount()}
+			class="mt-3 w-full text-[12.5px] font-semibold text-kit-navy"
+		>
+			Clear
+		</Button>
+	{/if}
+{/snippet}
+
+{#snippet tagToggle(tag: Tag)}
+	{@const isSelected = filters.tagIds.includes(tag.id)}
+	{@const swatch = getSwatch(tag.color)}
+	{@const Icon = getIcon(tag.icon)}
+	<Button
+		variant="outline"
+		size="sm"
+		onclick={() => filters.toggleTag(tag.id)}
+		aria-pressed={isSelected}
+		class={[
+			'h-7 rounded-full text-[12.5px] font-semibold',
+			!isSelected && 'text-muted-foreground hover:text-foreground'
+		]}
+		style={isSelected ? `background: ${swatch.bg}; color: ${swatch.ink}; border-color: transparent` : undefined}
+	>
+		<Icon class="size-3" />
+		{tag.name}
+	</Button>
+{/snippet}
+
 <div class="flex flex-wrap items-center gap-3">
 	<div class="flex min-w-[200px] flex-1 items-center gap-2 rounded-full bg-muted px-[14px] py-2">
 		<SearchIcon size={14} class="text-faint" />
@@ -212,167 +327,118 @@
 		{/if}
 	</div>
 
-	<Popover.Root onOpenChange={(open) => !open && filters.commitRange()}>
-		<Popover.Trigger>
-			{#snippet child({ props })}
-				<Button
-					{...props}
-					variant="secondary"
-					size="sm"
-					class={[
-						'rounded-full text-[12.5px] font-semibold hover:text-foreground',
-						filters.range.start ? 'text-foreground' : 'text-muted-foreground'
-					]}
-				>
-					<CalendarIcon class="size-3.5" />
-					{rangeLabel}
-					{#if filters.range.start || filters.range.end}
-						{@render clearChip(() => filters.clearRange(), 'Clear date range')}
-					{/if}
-				</Button>
-			{/snippet}
-		</Popover.Trigger>
-		<Popover.Content class="w-auto rounded-2xl border-none bg-card p-2 shadow-xl" align="end">
-			<RangeCalendar bind:value={filters.range} numberOfMonths={2} />
-			<div class="mt-2 flex flex-wrap gap-2 px-1 pb-1">
-				{#each datePresets as preset (preset.label)}
-					{@const isActive = isDatePresetActive(preset)}
+	<div class="hidden md:contents">
+		<Popover.Root onOpenChange={(open) => !open && filters.commitRange()}>
+			<Popover.Trigger>
+				{#snippet child({ props })}
 					<Button
-						variant={isActive ? 'default' : 'secondary'}
+						{...props}
+						variant="secondary"
 						size="sm"
-						onclick={() => applyDatePreset(preset)}
 						class={[
-							'h-7 rounded-full text-[12.5px] font-semibold',
-							!isActive && 'text-muted-foreground hover:text-foreground'
+							'rounded-full text-[12.5px] font-semibold hover:text-foreground',
+							dateRangeActive ? 'text-foreground' : 'text-muted-foreground'
 						]}
 					>
-						{preset.label}
+						<CalendarIcon class="size-3.5" />
+						{rangeLabel}
+						{#if dateRangeActive}
+							{@render clearChip(() => filters.clearRange(), 'Clear date range')}
+						{/if}
 					</Button>
-				{/each}
-			</div>
-		</Popover.Content>
-	</Popover.Root>
+				{/snippet}
+			</Popover.Trigger>
+			<Popover.Content class="w-auto rounded-2xl border-none bg-card p-2 shadow-xl" align="end">
+				{@render dateRangePanel(2)}
+			</Popover.Content>
+		</Popover.Root>
 
-	<!-- Amount -->
-	<Popover.Root>
-		<Popover.Trigger>
-			{#snippet child({ props })}
-				<Button
-					{...props}
-					variant="secondary"
-					size="sm"
-					class={[
-						'rounded-full text-[12.5px] font-semibold hover:text-foreground',
-						amountActive ? 'text-foreground' : 'text-muted-foreground'
-					]}
-				>
-					<WalletIcon class="size-3.5" />
-					{amountLabel}
-					{#if amountActive}
-						{@render clearChip(() => filters.clearAmount(), 'Clear amount filter')}
-					{/if}
-				</Button>
-			{/snippet}
-		</Popover.Trigger>
-		<Popover.Content class="w-[280px] rounded-2xl border-none bg-card p-4 shadow-xl" align="end">
-			<span class="caption mb-2.5 block">Quick ranges</span>
-			<div class="mb-4 flex flex-wrap gap-2">
-				{#each amountSliderBrackets as bracket (bracket.label)}
-					{@const isActive = isBracketActive(bracket)}
+		<Popover.Root>
+			<Popover.Trigger>
+				{#snippet child({ props })}
 					<Button
-						variant={isActive ? 'default' : 'secondary'}
+						{...props}
+						variant="secondary"
 						size="sm"
-						onclick={() => filters.setAmount(bracket.min, bracket.max)}
 						class={[
-							'h-7 rounded-full text-[12.5px] font-semibold',
-							!isActive && 'text-muted-foreground hover:text-foreground'
+							'rounded-full text-[12.5px] font-semibold hover:text-foreground',
+							amountActive ? 'text-foreground' : 'text-muted-foreground'
 						]}
 					>
-						{bracket.label}
+						<WalletIcon class="size-3.5" />
+						{amountLabel}
+						{#if amountActive}
+							{@render clearChip(() => filters.clearAmount(), 'Clear amount filter')}
+						{/if}
 					</Button>
-				{/each}
-			</div>
+				{/snippet}
+			</Popover.Trigger>
+			<Popover.Content class="w-[280px] rounded-2xl border-none bg-card p-4 shadow-xl" align="end">
+				{@render amountPanel()}
+			</Popover.Content>
+		</Popover.Root>
 
-			<span class="caption mb-3 block">Custom</span>
-			<Slider type="multiple" value={sliderValue} onValueChange={onSliderChange} min={0} max={amountCeiling} step={1} />
-			<div class="mt-4 flex items-center gap-2">
-				<div class="relative flex flex-1 items-center">
-					<span class="absolute left-[12px] font-mono text-[13px] text-faint">$</span>
-					<input
-						inputmode="numeric"
-						value={filters.amountMin ?? ''}
-						oninput={(e) => {
-							const val = e.currentTarget.value.trim()
-							filters.amountMin = val === '' ? null : Math.max(0, Math.round(Number(val)))
-						}}
-						placeholder="Min"
-						class="w-full rounded-sm border border-border bg-muted py-[8px] pl-[24px] pr-[10px] font-mono text-[13px] font-medium text-foreground outline-none focus:border-ring"
-					/>
-				</div>
-				<span class="text-faint">–</span>
-				<div class="relative flex flex-1 items-center">
-					<span class="absolute left-[12px] font-mono text-[13px] text-faint">$</span>
-					<input
-						inputmode="numeric"
-						value={filters.amountMax ?? ''}
-						oninput={(e) => {
-							const val = e.currentTarget.value.trim()
-							filters.amountMax = val === '' ? null : Math.max(0, Math.round(Number(val)))
-						}}
-						placeholder="Max"
-						class="w-full rounded-sm border border-border bg-muted py-[8px] pl-[24px] pr-[10px] font-mono text-[13px] font-medium text-foreground outline-none focus:border-ring"
-					/>
-				</div>
-			</div>
-			{#if amountActive}
-				<Button
-					variant="link"
-					size="sm"
-					onclick={() => filters.clearAmount()}
-					class="mt-3 w-full text-[12.5px] font-semibold text-kit-navy"
+		<DropdownMenu.Root>
+			<DropdownMenu.Trigger>
+				{#snippet child({ props })}
+					<Button
+						{...props}
+						variant="secondary"
+						size="sm"
+						class={[
+							'rounded-full text-[12.5px] font-semibold hover:text-foreground',
+							recurringActive ? 'text-foreground' : 'text-muted-foreground'
+						]}
+					>
+						<RepeatIcon class="size-3.5" />
+						{recurringLabel}
+						{#if recurringActive}
+							{@render clearChip(clearRecurring, 'Clear recurring filters')}
+						{/if}
+					</Button>
+				{/snippet}
+			</DropdownMenu.Trigger>
+			<DropdownMenu.Content class="w-52" align="end">
+				<DropdownMenu.RadioGroup
+					value={filters.status}
+					onValueChange={(value) => (filters.status = value as StatusFilter)}
 				>
-					Clear
-				</Button>
-			{/if}
-		</Popover.Content>
-	</Popover.Root>
+					<DropdownMenu.GroupHeading class="caption px-2 py-1.5">Status</DropdownMenu.GroupHeading>
+					{#each STATUS_OPTIONS as { key, label } (key)}
+						<DropdownMenu.RadioItem value={key}>{label}</DropdownMenu.RadioItem>
+					{/each}
+				</DropdownMenu.RadioGroup>
+				<DropdownMenu.Separator />
+				<DropdownMenu.CheckboxItem bind:checked={filters.recurringOnly} closeOnSelect={false}>
+					Recurring only
+				</DropdownMenu.CheckboxItem>
+			</DropdownMenu.Content>
+		</DropdownMenu.Root>
 
-	<DropdownMenu.Root>
-		<DropdownMenu.Trigger>
-			{#snippet child({ props })}
-				<Button
-					{...props}
-					variant="secondary"
-					size="sm"
-					class={[
-						'rounded-full text-[12.5px] font-semibold hover:text-foreground',
-						recurringActive ? 'text-foreground' : 'text-muted-foreground'
-					]}
-				>
-					<RepeatIcon class="size-3.5" />
-					{recurringLabel}
-					{#if recurringActive}
-						{@render clearChip(clearRecurring, 'Clear recurring filters')}
-					{/if}
-				</Button>
-			{/snippet}
-		</DropdownMenu.Trigger>
-		<DropdownMenu.Content class="w-52" align="end">
-			<DropdownMenu.RadioGroup
-				value={filters.status}
-				onValueChange={(value) => (filters.status = value as StatusFilter)}
-			>
-				<DropdownMenu.GroupHeading class="caption px-2 py-1.5">Status</DropdownMenu.GroupHeading>
-				{#each STATUS_OPTIONS as { key, label } (key)}
-					<DropdownMenu.RadioItem value={key}>{label}</DropdownMenu.RadioItem>
-				{/each}
-			</DropdownMenu.RadioGroup>
-			<DropdownMenu.Separator />
-			<DropdownMenu.CheckboxItem bind:checked={filters.recurringOnly} closeOnSelect={false}>
-				Recurring only
-			</DropdownMenu.CheckboxItem>
-		</DropdownMenu.Content>
-	</DropdownMenu.Root>
+		<DropdownMenu.Root>
+			<DropdownMenu.Trigger>
+				{#snippet child({ props })}
+					<Button
+						{...props}
+						variant="secondary"
+						size="sm"
+						class="rounded-full text-[12.5px] font-semibold text-foreground"
+					>
+						<ArrowDownUpIcon class="size-3.5" />
+						Sort: {sortLabel}
+					</Button>
+				{/snippet}
+			</DropdownMenu.Trigger>
+			<DropdownMenu.Content class="w-44" align="end">
+				<DropdownMenu.RadioGroup value={filters.sortKey} onValueChange={(value) => filters.setSort(value as SortKey)}>
+					<DropdownMenu.GroupHeading class="caption px-2 py-1.5">Sort by</DropdownMenu.GroupHeading>
+					{#each SORT_OPTIONS as { key, label } (key)}
+						<DropdownMenu.RadioItem value={key}>{label}</DropdownMenu.RadioItem>
+					{/each}
+				</DropdownMenu.RadioGroup>
+			</DropdownMenu.Content>
+		</DropdownMenu.Root>
+	</div>
 
 	{#if filters.status === 'pending' && pendingCount > 0}
 		<Button size="sm" onclick={onconfirmAll} class="rounded-full text-[12.5px] font-semibold">
@@ -380,51 +446,115 @@
 		</Button>
 	{/if}
 
-	<!-- Sort -->
-	<DropdownMenu.Root>
-		<DropdownMenu.Trigger>
+	<Drawer.Root onOpenChange={(open) => !open && filters.commitRange()}>
+		<Drawer.Trigger>
 			{#snippet child({ props })}
 				<Button
 					{...props}
 					variant="secondary"
 					size="sm"
-					class="rounded-full text-[12.5px] font-semibold text-foreground"
+					class={[
+						'rounded-full text-[12.5px] font-semibold md:hidden',
+						activeFilterCount > 0 ? 'text-foreground' : 'text-muted-foreground'
+					]}
 				>
-					<ArrowDownUpIcon class="size-3.5" />
-					Sort: {sortLabel}
+					<SlidersHorizontalIcon class="size-3.5" />
+					Filters
+					{#if activeFilterCount > 0}
+						<span
+							class="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold leading-none text-primary-foreground [text-box:trim-both_cap_alphabetic]"
+						>
+							{activeFilterCount}
+						</span>
+					{/if}
 				</Button>
 			{/snippet}
-		</DropdownMenu.Trigger>
-		<DropdownMenu.Content class="w-44" align="end">
-			<DropdownMenu.RadioGroup value={filters.sortKey} onValueChange={(value) => filters.setSort(value as SortKey)}>
-				<DropdownMenu.GroupHeading class="caption px-2 py-1.5">Sort by</DropdownMenu.GroupHeading>
-				{#each SORT_OPTIONS as { key, label } (key)}
-					<DropdownMenu.RadioItem value={key}>{label}</DropdownMenu.RadioItem>
-				{/each}
-			</DropdownMenu.RadioGroup>
-		</DropdownMenu.Content>
-	</DropdownMenu.Root>
+		</Drawer.Trigger>
+		<Drawer.Content>
+			<Drawer.Header>
+				<Drawer.Title>Filters</Drawer.Title>
+			</Drawer.Header>
+			<div class="flex min-h-0 flex-col gap-6 overflow-y-auto px-4 pb-2">
+				<section>
+					<span class="caption mb-2.5 block">Sort by</span>
+					<div class="flex flex-wrap gap-2">
+						{#each SORT_OPTIONS as { key, label } (key)}
+							<Button
+								variant={filters.sortKey === key ? 'default' : 'secondary'}
+								size="sm"
+								onclick={() => filters.setSort(key)}
+								class={[
+									'h-7 rounded-full text-[12.5px] font-semibold',
+									filters.sortKey !== key && 'text-muted-foreground hover:text-foreground'
+								]}
+							>
+								{label}
+							</Button>
+						{/each}
+					</div>
+				</section>
+				<section data-vaul-no-drag>
+					<span class="caption mb-2.5 block">Date</span>
+					{@render dateRangePanel(1, 'mx-auto w-fit p-0 [--cell-size:--spacing(11)]')}
+				</section>
+				<section data-vaul-no-drag>
+					<span class="caption mb-2.5 block">Amount</span>
+					{@render amountPanel()}
+				</section>
+				<section>
+					<span class="caption mb-2.5 block">Status</span>
+					<div class="flex flex-wrap gap-2">
+						{#each STATUS_OPTIONS as { key, label } (key)}
+							<Button
+								variant={filters.status === key ? 'default' : 'secondary'}
+								size="sm"
+								onclick={() => (filters.status = key)}
+								class={[
+									'h-7 rounded-full text-[12.5px] font-semibold',
+									filters.status !== key && 'text-muted-foreground hover:text-foreground'
+								]}
+							>
+								{label}
+							</Button>
+						{/each}
+						<Button
+							variant={filters.recurringOnly ? 'default' : 'secondary'}
+							size="sm"
+							aria-pressed={filters.recurringOnly}
+							onclick={() => (filters.recurringOnly = !filters.recurringOnly)}
+							class={[
+								'h-7 rounded-full text-[12.5px] font-semibold',
+								!filters.recurringOnly && 'text-muted-foreground hover:text-foreground'
+							]}
+						>
+							<RepeatIcon class="size-3" /> Recurring only
+						</Button>
+					</div>
+				</section>
+				<section>
+					<span class="caption mb-2.5 block">Tags</span>
+					<div class="flex flex-wrap gap-2">
+						{#each tags as tag (tag.id)}
+							{@render tagToggle(tag)}
+						{/each}
+					</div>
+				</section>
+			</div>
+			<Drawer.Footer class="flex-row gap-2 border-t border-border">
+				<Button variant="secondary" onclick={clearAllFilters} class="flex-1 rounded-full">Clear all</Button>
+				<Drawer.Close>
+					{#snippet child({ props })}
+						<Button {...props} class="flex-1 rounded-full">Show results</Button>
+					{/snippet}
+				</Drawer.Close>
+			</Drawer.Footer>
+		</Drawer.Content>
+	</Drawer.Root>
 </div>
 
-<div class="mt-3.5 flex flex-wrap items-center gap-2">
+<div class="mt-3.5 hidden flex-wrap items-center gap-2 md:flex">
 	{#each primaryTags as tag (tag.id)}
-		{@const isSelected = filters.tagIds.includes(tag.id)}
-		{@const swatch = getSwatch(tag.color)}
-		{@const Icon = getIcon(tag.icon)}
-		<Button
-			variant="outline"
-			size="sm"
-			onclick={() => filters.toggleTag(tag.id)}
-			aria-pressed={isSelected}
-			class={[
-				'h-7 rounded-full text-[12.5px] font-semibold',
-				!isSelected && 'text-muted-foreground hover:text-foreground'
-			]}
-			style={isSelected ? `background: ${swatch.bg}; color: ${swatch.ink}; border-color: transparent` : undefined}
-		>
-			<Icon class="size-3" />
-			{tag.name}
-		</Button>
+		{@render tagToggle(tag)}
 	{/each}
 
 	{#if overflowTags.length > 0}
