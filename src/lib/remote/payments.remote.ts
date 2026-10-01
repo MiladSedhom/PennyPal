@@ -1,7 +1,7 @@
 import { command, query } from '$app/server'
 import { db } from '$lib/server/db'
 import { payment, paymentsToTags, tag } from '$lib/server/db/schema'
-import { and, asc, desc, eq, gte, ilike, inArray, isNotNull, lte, or, sql } from 'drizzle-orm'
+import { and, asc, desc, eq, gte, ilike, inArray, isNotNull, lt, lte, or, sql } from 'drizzle-orm'
 import { getLoggedInUser } from '$lib/remote/auth.remote'
 import { reanchorRollingRule } from '$lib/server/recurring'
 import * as v from 'valibot'
@@ -162,8 +162,8 @@ const pageArgsSchema = v.object({
 	tagIds: v.array(v.number()),
 	amountMin: v.nullable(v.number()),
 	amountMax: v.nullable(v.number()),
-	dateStart: v.nullable(v.string()),
-	dateEnd: v.nullable(v.string()),
+	createdFrom: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
+	createdBefore: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
 	confirmed: v.picklist(['all', 'pending', 'confirmed']),
 	recurringOnly: v.boolean()
 })
@@ -175,8 +175,8 @@ export const getPaymentsPage = query(pageArgsSchema, async (args) => {
 
 	if (args.amountMin != null) filters.push(gte(payment.amount, Math.round(args.amountMin)))
 	if (args.amountMax != null) filters.push(lte(payment.amount, Math.round(args.amountMax)))
-	if (args.dateStart) filters.push(gte(payment.createdAt, new Date(args.dateStart + 'T00:00:00')))
-	if (args.dateEnd) filters.push(lte(payment.createdAt, new Date(args.dateEnd + 'T23:59:59.999')))
+	if (args.createdFrom) filters.push(gte(payment.createdAt, new Date(args.createdFrom)))
+	if (args.createdBefore) filters.push(lt(payment.createdAt, new Date(args.createdBefore)))
 	if (args.search.trim()) {
 		const like = `%${args.search.trim()}%`
 		const tagMatch = db

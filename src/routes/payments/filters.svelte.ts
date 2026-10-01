@@ -1,6 +1,6 @@
 import { onMount } from 'svelte'
 import { Debounced, PersistedState, watch } from 'runed'
-import { parseDate } from '@internationalized/date'
+import { getLocalTimeZone, parseDate } from '@internationalized/date'
 import type { DateRange } from 'bits-ui'
 
 export type SortKey = 'date' | 'amount'
@@ -100,6 +100,14 @@ export class PaymentFilters {
 	}
 	get dateEnd(): string | null {
 		return this.#queryEnd
+	}
+
+	// Resolved to instants here so the range follows the user's timezone, not the server's.
+	get createdFrom(): string | null {
+		return this.#queryStart ? parseDate(this.#queryStart).toDate(getLocalTimeZone()).toISOString() : null
+	}
+	get createdBefore(): string | null {
+		return this.#queryEnd ? parseDate(this.#queryEnd).add({ days: 1 }).toDate(getLocalTimeZone()).toISOString() : null
 	}
 
 	/** Serializable view of the filters; also the change signal for persistence. */

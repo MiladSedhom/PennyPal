@@ -32,8 +32,8 @@
 		tagIds: filters.tagIds,
 		amountMin: filters.debouncedAmount.min,
 		amountMax: filters.debouncedAmount.max,
-		dateStart: filters.dateStart,
-		dateEnd: filters.dateEnd,
+		createdFrom: filters.createdFrom,
+		createdBefore: filters.createdBefore,
 		confirmed: filters.status,
 		recurringOnly: filters.recurringOnly
 	})
