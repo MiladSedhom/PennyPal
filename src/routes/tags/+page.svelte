@@ -101,7 +101,7 @@
 </svelte:head>
 
 <div class="p-10 pt-4">
-	<h1 class="font-display text-2xl font-bold text-foreground mb-4">Tags</h1>
+	<h1 class="mb-4 font-display text-xl font-bold tracking-[-0.03em] text-foreground md:text-2xl">Tags</h1>
 
 	<div class="grid items-start gap-4 lg:grid-cols-[1fr_1.15fr]">
 		<div class="rounded-card border bg-card p-4 lg:sticky lg:top-4 shadow-2xl">

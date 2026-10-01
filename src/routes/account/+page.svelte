@@ -42,7 +42,7 @@
 
 <div class="px-10 pb-14 pt-2">
 	<div class="mb-6">
-		<h1 class="m-0 font-display text-[38px] font-bold tracking-[-0.04em] text-foreground">Account</h1>
+		<h1 class="m-0 font-display text-xl font-bold tracking-[-0.03em] text-foreground md:text-2xl">Account</h1>
 		<p class="m-0 mt-2 text-[15.5px] text-muted-foreground">Manage how you sign in to PennyPal.</p>
 	</div>
 

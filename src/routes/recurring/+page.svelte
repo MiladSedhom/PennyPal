@@ -59,7 +59,9 @@
 	<div class="mb-[22px] flex items-end justify-between">
 		<div>
 			<span class="caption">{rules.length} rule{rules.length === 1 ? '' : 's'}</span>
-			<h1 class="m-0 mt-1.5 font-display text-[38px] font-bold tracking-[-0.04em] text-foreground">Recurring</h1>
+			<h1 class="m-0 mt-1.5 font-display text-xl font-bold tracking-[-0.03em] text-foreground md:text-2xl">
+				Recurring
+			</h1>
 		</div>
 		<Button
 			type="button"
