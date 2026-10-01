@@ -88,7 +88,7 @@
 	}
 </script>
 
-<div class="p-10 pt-4">
+<div class="p-4 md:p-10 md:pt-4">
 	<div class="flex items-end justify-between mb-4">
 		<div>
 			<h1 class="font-display text-2xl font-bold text-foreground">Payments</h1>
