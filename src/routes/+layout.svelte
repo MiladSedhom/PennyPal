@@ -13,6 +13,15 @@
 <svelte:window onpointermove={(event) => (pointerPosition = { x: event.clientX, y: event.clientY })} />
 
 <svelte:head>
+	<title>PennyPal</title>
+	<meta name="description" content="Track your payments, recurring bills, and where your money goes by tag." />
+	<meta name="application-name" content="PennyPal" />
+	<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+	<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#171717" />
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="PennyPal" />
+	<meta property="og:title" content="PennyPal" />
+	<meta property="og:description" content="Track your payments, recurring bills, and where your money goes by tag." />
 	<link rel="icon" href={favicon} />
 	<link rel="preconnect" href="https://fonts.googleapis.com" />
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />

@@ -96,6 +96,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Tags · PennyPal</title>
+</svelte:head>
+
 <div class="p-10 pt-4">
 	<h1 class="font-display text-2xl font-bold text-foreground mb-4">Tags</h1>
 

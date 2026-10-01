@@ -51,6 +51,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Recurring · PennyPal</title>
+</svelte:head>
+
 <div class="px-10 pb-14 pt-2">
 	<div class="mb-[22px] flex items-end justify-between">
 		<div>

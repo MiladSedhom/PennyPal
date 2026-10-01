@@ -217,6 +217,10 @@
 	*/
 </script>
 
+<svelte:head>
+	<title>Dashboard · PennyPal</title>
+</svelte:head>
+
 <div class="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-6 text-center">
 	<span class="flex size-14 items-center justify-center rounded-full bg-muted text-muted-foreground">
 		<ConstructionIcon class="size-7" />

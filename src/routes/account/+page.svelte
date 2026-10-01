@@ -36,6 +36,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Account · PennyPal</title>
+</svelte:head>
+
 <div class="px-10 pb-14 pt-2">
 	<div class="mb-6">
 		<h1 class="m-0 font-display text-[38px] font-bold tracking-[-0.04em] text-foreground">Account</h1>

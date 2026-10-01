@@ -85,6 +85,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Payments · PennyPal</title>
+</svelte:head>
+
 <div class="p-4 md:p-10 md:pt-4">
 	<div class="flex items-end justify-between mb-4">
 		<div>

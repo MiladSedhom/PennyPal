@@ -12,6 +12,10 @@
 	const busy = $derived(chooseUsername.pending > 0)
 </script>
 
+<svelte:head>
+	<title>Choose a username · PennyPal</title>
+</svelte:head>
+
 <div class="flex min-h-screen items-center justify-center p-6">
 	<div class="w-full max-w-[420px] overflow-hidden rounded-card border bg-card shadow-lg">
 		<div class="border-b border-border px-8 py-6">
