@@ -126,7 +126,7 @@
 
 <Dialog.Root bind:open>
 	<Dialog.Content
-		class="max-w-[1100px]! w-3/4 gap-0 rounded-2xl border-none bg-card p-0 shadow-2xl sm:max-w-[1100px]!"
+		class="h-dvh max-h-dvh w-full max-w-full! grid-rows-[auto_1fr_auto] gap-0 rounded-none border-none bg-card p-0 shadow-2xl md:h-auto md:max-h-[90dvh] md:w-3/4 md:max-w-[1100px]! md:grid-rows-none md:rounded-2xl"
 		showCloseButton={false}
 		onOpenAutoFocus={(e) => {
 			e.preventDefault()
@@ -156,8 +156,7 @@
 		</div>
 
 		<div
-			class="grid items-center gap-3 border-b border-border bg-muted px-7 py-3"
-			style:grid-template-columns="32px 190px 130px 1.4fr 1fr 32px"
+			class="hidden items-center gap-3 border-b border-border bg-muted px-7 py-3 md:grid md:grid-cols-[32px_190px_130px_1.4fr_1fr_32px]"
 		>
 			<span></span>
 			<span class="font-mono text-xs font-semibold uppercase tracking-[0.04em] text-faint text-center">Date</span>
@@ -167,20 +166,21 @@
 			<span></span>
 		</div>
 
-		<div class="max-h-[55vh] h-[35vh] overflow-y-auto">
+		<div class="min-h-0 overflow-y-auto md:h-[35vh] md:max-h-[55vh]">
 			{#each paymentsForms as p, index (index)}
 				<div
-					class="grid items-center gap-3 border-b border-border px-7 py-2"
-					style:grid-template-columns="32px 190px 130px 1.4fr 1fr 32px"
+					class="grid grid-cols-[24px_1fr_1fr_32px] items-center gap-2 border-b border-border px-4 py-3 md:grid-cols-[32px_190px_130px_1.4fr_1fr_32px] md:gap-3 md:px-7 md:py-2"
 				>
-					<span class="text-center font-mono text-[11px] tracking-[0.04em] text-faint">
+					<span
+						class="col-[1] row-[1] text-center font-mono text-[11px] tracking-[0.04em] text-faint md:col-auto md:row-auto"
+					>
 						{String(index + 1).padStart(2, '0')}
 					</span>
 
 					<DatePicker
 						bind:value={p.date}
 						bind:ref={refs.date[index]}
-						class="w-full rounded-sm! border-transparent bg-transparent! px-2.5! hover:bg-muted!"
+						class="col-[2/4] row-[1] w-full rounded-sm! border-transparent bg-transparent! px-2.5! hover:bg-muted! md:col-auto md:row-auto"
 						title={p.date.toString()}
 					/>
 
@@ -192,29 +192,31 @@
 						step="1"
 						min="0"
 						onkeydown={(e) => amountKeydown(e, index)}
-						class="w-full rounded-sm border border-transparent bg-transparent px-2.5 py-2 text-right font-mono text-[13.5px] font-medium text-foreground hover:bg-muted"
+						class="col-[2] row-[2] w-full rounded-sm border border-transparent bg-transparent px-2.5 py-2 text-right font-mono text-[13.5px] font-medium text-foreground hover:bg-muted md:col-auto md:row-auto"
 					/>
 
-					<TagMultiSelect
-						{tags}
-						bind:selected={p.tags}
-						bind:trigger={refs.tags[index]}
-						triggerProps={{
-							onkeydown: (e) => {
-								if (e.key === 'Backspace') refs.amount[index]?.focus()
-							}
-						}}
-					/>
+					<div class="col-[3/5] row-[2] min-w-0 md:col-auto md:row-auto">
+						<TagMultiSelect
+							{tags}
+							bind:selected={p.tags}
+							bind:trigger={refs.tags[index]}
+							triggerProps={{
+								onkeydown: (e) => {
+									if (e.key === 'Backspace') refs.amount[index]?.focus()
+								}
+							}}
+						/>
+					</div>
 
 					<input
 						bind:value={p.note}
 						bind:this={refs.note[index]}
 						placeholder="—"
 						onkeydown={(e) => noteKeydown(e, index, paymentsForms.length > 1)}
-						class="w-full rounded-sm border border-transparent bg-transparent px-2.5 py-2 text-[13.5px] text-foreground hover:bg-muted"
+						class="col-[2/5] row-[3] w-full rounded-sm border border-transparent bg-transparent px-2.5 py-2 text-[13.5px] text-foreground hover:bg-muted md:col-auto md:row-auto"
 					/>
 
-					<span class="flex items-center justify-center">
+					<span class="col-[4] row-[1] flex items-center justify-center md:col-auto md:row-auto">
 						{#if paymentsForms.length > 1}
 							<Button
 								variant="ghost"
@@ -231,7 +233,7 @@
 				</div>
 			{/each}
 
-			<div class="px-7 pb-4 pt-3">
+			<div class="px-4 pb-4 pt-3 md:px-7">
 				<Button
 					variant="secondary"
 					size="sm"
@@ -245,15 +247,15 @@
 		</div>
 
 		<!-- Sticky commit bar -->
-		<div class="flex justify-center px-7 pb-5 pt-2">
+		<div class="flex justify-center px-4 pb-4 pt-2 md:px-7 md:pb-5">
 			<div
-				class="flex w-full max-w-[1000px] items-center gap-5 rounded-full bg-foreground/85 px-6 py-3 text-background shadow-xl"
+				class="flex w-full max-w-[1000px] flex-wrap items-center gap-3 rounded-2xl bg-foreground/85 px-4 py-3 text-background shadow-xl md:flex-nowrap md:gap-5 md:rounded-full md:px-6"
 			>
 				<div class="flex items-baseline gap-2">
 					<span class="font-display text-[22px] font-bold tracking-[-0.02em] text-background">
 						{formatMoney(completeAmountTotal)}
 					</span>
-					<span class="text-[13px] text-background/60">
+					<span class="hidden text-[13px] text-background/60 sm:inline">
 						{completeRows.length} payment{completeRows.length === 1 ? '' : 's'} ready to be saved
 					</span>
 				</div>
