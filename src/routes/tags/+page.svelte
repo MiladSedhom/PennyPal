@@ -5,7 +5,9 @@
 	import TagIconChip from '$lib/components/pp/tag-icon-chip.svelte'
 	import TagMergeMenu from '$lib/components/pp/tag-merge-menu.svelte'
 	import { Button } from '$lib/components/ui/button'
+	import * as Drawer from '$lib/components/ui/drawer'
 	import { dialogs } from '$lib/components/pp/confirm-dialog'
+	import { MediaQuery } from 'svelte/reactivity'
 	import { TAG_PALETTE, TAG_COLOR_LIST, ICON_CHOICES, ICON_LIBRARY, getSwatch, getIcon } from '$lib/tag-meta'
 	import { formatMoney } from '$lib/utils'
 
@@ -46,12 +48,21 @@
 		})
 	})
 
+	const isWide = new MediaQuery('min-width: 1024px')
+	let editorOpen = $state(false)
+
 	function resetForm() {
 		fields.id.set(undefined)
 		fields.color.set('sage')
 		fields.icon.set('Tag')
 		fields.name.set('')
 		fields.budget.set('')
+		editorOpen = false
+	}
+
+	function startNew() {
+		resetForm()
+		editorOpen = true
 	}
 
 	function startEdit(t: (typeof tagsWithPaymentCount)[number]) {
@@ -60,6 +71,7 @@
 		fields.icon.set((ICON_CHOICES as readonly string[]).includes(t.icon) ? t.icon : 'Tag')
 		fields.name.set(t.name)
 		fields.budget.set(t.budget == null ? '' : String(t.budget))
+		editorOpen = true
 	}
 
 	async function remove(id: number) {
@@ -100,167 +112,173 @@
 	<title>Tags · PennyPal</title>
 </svelte:head>
 
-<div class="p-10 pt-4">
+{#snippet editor()}
+	<form
+		{...createOrUpdateTag.enhance(async ({ submit }) => {
+			if (await submit()) {
+				if (createOrUpdateTag.result?.ok) resetForm()
+			}
+		})}
+	>
+		<input type="hidden" name="id" value={fields.id.value() ?? ''} />
+		<input type="hidden" name="color" value={fields.color.value() ?? 'sage'} />
+		<input type="hidden" name="icon" value={fields.icon.value() ?? 'Tag'} />
+
+		<!-- Live preview -->
+		<div class="mb-6 flex items-center gap-4 rounded-2xl bg-muted p-5">
+			<span
+				class="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl"
+				style:background={sw.bg}
+				style:color={sw.ink}
+			>
+				<PreviewIcon size={26} />
+			</span>
+			<div class="flex-1">
+				<span class="caption">{fields.id.value() ? 'Editing' : 'New tag'}</span>
+				<div class="mt-0.5 font-display text-[24px] font-bold tracking-[-0.03em]">
+					{fields.name.value() || 'Untitled'}
+				</div>
+			</div>
+			<span
+				class="inline-flex items-center gap-1.5 rounded-full px-3 py-[5px] text-[12.5px] font-semibold"
+				style:background={sw.bg}
+				style:color={sw.ink}
+			>
+				<PreviewIcon size={13} />
+				{fields.name.value() || 'Tag'}
+			</span>
+		</div>
+
+		<!-- Name + budget -->
+		<div class="mb-[22px] grid gap-3 sm:grid-cols-[1.5fr_1fr]">
+			<label class="block">
+				<span class="caption mb-2 block">Name</span>
+				<input
+					{...fields.name.as('text')}
+					placeholder="e.g. Groceries"
+					class="w-full rounded-sm border border-border bg-muted px-[14px] py-[11px] text-[14px] font-medium text-foreground outline-none focus:border-ring"
+				/>
+			</label>
+			<label class="block">
+				<span class="caption mb-2 block">Monthly budget</span>
+				<div class="relative flex items-center">
+					<span class="absolute left-[14px] font-mono text-[14px] text-faint">$</span>
+					<input
+						{...fields.budget.as('text')}
+						inputmode="numeric"
+						placeholder="—"
+						class="w-full rounded-sm border border-border bg-muted py-[11px] pl-[26px] pr-[14px] font-mono text-[14px] font-medium text-foreground outline-none focus:border-ring"
+					/>
+				</div>
+			</label>
+		</div>
+
+		<!-- Color -->
+		<div class="mb-[22px]">
+			<span class="caption mb-2.5 block">Color</span>
+			<div class="flex flex-wrap gap-2.5">
+				{#each TAG_COLOR_LIST as id (id)}
+					{@const s = TAG_PALETTE[id]}
+					<button
+						type="button"
+						onclick={() => fields.color.set(id)}
+						class="inline-flex h-9.5 w-9.5 items-center justify-center rounded-[11px]"
+						style:background={s.bg}
+						style:border={fields.color.value() === id ? `2px solid var(--foreground)` : '2px solid transparent'}
+						aria-label={id}
+					>
+						{#if fields.color.value() === id}
+							<span class="h-3.5 w-3.5 rounded-full" style:background={s.ink}></span>
+						{/if}
+					</button>
+				{/each}
+			</div>
+		</div>
+
+		<!-- Icon -->
+		<div class="mb-6">
+			<span class="caption mb-2.5 block">Icon</span>
+			<div class="flex flex-wrap gap-2">
+				{#each ICON_CHOICES as icon (icon)}
+					{@const IconComponent = ICON_LIBRARY[icon]}
+					{@const selected = fields.icon.value() === icon}
+					<button
+						type="button"
+						onclick={() => fields.icon.set(icon)}
+						class="inline-flex aspect-square items-center justify-center rounded-[8px] size-12"
+						style:background={selected ? sw.bg : 'var(--muted)'}
+						style:color={selected ? sw.ink : 'var(--muted-foreground)'}
+						style:border={selected ? `1px solid ${sw.ink}` : '1px solid transparent'}
+						aria-label={icon}
+						title={toTitleCase(icon)}
+					>
+						<IconComponent size={15} />
+					</button>
+				{/each}
+			</div>
+		</div>
+
+		{#if createOrUpdateTag.fields.allIssues()?.[0]}
+			<div
+				class="mb-4 rounded-sm border border-destructive/30 bg-destructive/10 px-3 py-2 text-[12.5px] font-medium text-destructive"
+			>
+				{createOrUpdateTag.fields.allIssues()?.[0].message}
+			</div>
+		{/if}
+
+		<div class="flex gap-2.5">
+			<Button
+				type="submit"
+				disabled={!fields.name.value()?.trim() || createOrUpdateTag.pending > 0}
+				class="h-[40px] flex-1 gap-2 rounded-full bg-primary px-[18px] text-[13.5px] font-semibold text-primary-foreground hover:bg-primary/90"
+			>
+				<CheckIcon size={15} />
+				{fields.id.value() ? 'Save changes' : 'Create tag'}
+			</Button>
+			{#if fields.id.value()}
+				<Button
+					type="button"
+					variant="outline"
+					onclick={resetForm}
+					class="h-[40px] gap-2 rounded-full bg-transparent px-[18px] text-[13.5px] font-semibold"
+				>
+					Cancel
+				</Button>
+				<Button
+					type="button"
+					onclick={() => {
+						const t = tagsWithPaymentCount.find((x) => x.id.toString() === fields.id.value())
+						if (t) confirmRemove(t)
+					}}
+					class="h-[40px] gap-2 rounded-full bg-transparent px-[18px] text-[13.5px] font-semibold text-destructive hover:bg-destructive/10"
+					aria-label="Delete this tag"
+				>
+					<Trash2Icon size={15} />
+				</Button>
+			{/if}
+		</div>
+	</form>
+{/snippet}
+
+<div class="p-4 md:p-10 md:pt-4">
 	<h1 class="mb-4 font-display text-xl font-bold tracking-[-0.03em] text-foreground md:text-2xl">Tags</h1>
 
 	<div class="grid items-start gap-4 lg:grid-cols-[1fr_1.15fr]">
-		<div class="rounded-card border bg-card p-4 lg:sticky lg:top-4 shadow-2xl">
-			<form
-				{...createOrUpdateTag.enhance(async ({ submit }) => {
-					if (await submit()) {
-						if (createOrUpdateTag.result?.ok) resetForm()
-					}
-				})}
-			>
-				<input type="hidden" name="id" value={fields.id.value() ?? ''} />
-				<input type="hidden" name="color" value={fields.color.value() ?? 'sage'} />
-				<input type="hidden" name="icon" value={fields.icon.value() ?? 'Tag'} />
-
-				<!-- Live preview -->
-				<div class="mb-6 flex items-center gap-4 rounded-2xl bg-muted p-5">
-					<span
-						class="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl"
-						style:background={sw.bg}
-						style:color={sw.ink}
-					>
-						<PreviewIcon size={26} />
-					</span>
-					<div class="flex-1">
-						<span class="caption">{fields.id.value() ? 'Editing' : 'New tag'}</span>
-						<div class="mt-0.5 font-display text-[24px] font-bold tracking-[-0.03em]">
-							{fields.name.value() || 'Untitled'}
-						</div>
-					</div>
-					<span
-						class="inline-flex items-center gap-1.5 rounded-full px-3 py-[5px] text-[12.5px] font-semibold"
-						style:background={sw.bg}
-						style:color={sw.ink}
-					>
-						<PreviewIcon size={13} />
-						{fields.name.value() || 'Tag'}
-					</span>
-				</div>
-
-				<!-- Name + budget -->
-				<div class="mb-[22px] grid gap-3 sm:grid-cols-[1.5fr_1fr]">
-					<label class="block">
-						<span class="caption mb-2 block">Name</span>
-						<input
-							{...fields.name.as('text')}
-							placeholder="e.g. Groceries"
-							class="w-full rounded-sm border border-border bg-muted px-[14px] py-[11px] text-[14px] font-medium text-foreground outline-none focus:border-ring"
-						/>
-					</label>
-					<label class="block">
-						<span class="caption mb-2 block">Monthly budget</span>
-						<div class="relative flex items-center">
-							<span class="absolute left-[14px] font-mono text-[14px] text-faint">$</span>
-							<input
-								{...fields.budget.as('text')}
-								inputmode="numeric"
-								placeholder="—"
-								class="w-full rounded-sm border border-border bg-muted py-[11px] pl-[26px] pr-[14px] font-mono text-[14px] font-medium text-foreground outline-none focus:border-ring"
-							/>
-						</div>
-					</label>
-				</div>
-
-				<!-- Color -->
-				<div class="mb-[22px]">
-					<span class="caption mb-2.5 block">Color</span>
-					<div class="flex flex-wrap gap-2.5">
-						{#each TAG_COLOR_LIST as id (id)}
-							{@const s = TAG_PALETTE[id]}
-							<button
-								type="button"
-								onclick={() => fields.color.set(id)}
-								class="inline-flex h-9.5 w-9.5 items-center justify-center rounded-[11px]"
-								style:background={s.bg}
-								style:border={fields.color.value() === id ? `2px solid var(--foreground)` : '2px solid transparent'}
-								aria-label={id}
-							>
-								{#if fields.color.value() === id}
-									<span class="h-3.5 w-3.5 rounded-full" style:background={s.ink}></span>
-								{/if}
-							</button>
-						{/each}
-					</div>
-				</div>
-
-				<!-- Icon -->
-				<div class="mb-6">
-					<span class="caption mb-2.5 block">Icon</span>
-					<div class="flex flex-wrap gap-2">
-						{#each ICON_CHOICES as icon (icon)}
-							{@const IconComponent = ICON_LIBRARY[icon]}
-							{@const selected = fields.icon.value() === icon}
-							<button
-								type="button"
-								onclick={() => fields.icon.set(icon)}
-								class="inline-flex aspect-square items-center justify-center rounded-[8px] size-12"
-								style:background={selected ? sw.bg : 'var(--muted)'}
-								style:color={selected ? sw.ink : 'var(--muted-foreground)'}
-								style:border={selected ? `1px solid ${sw.ink}` : '1px solid transparent'}
-								aria-label={icon}
-								title={toTitleCase(icon)}
-							>
-								<IconComponent size={15} />
-							</button>
-						{/each}
-					</div>
-				</div>
-
-				{#if createOrUpdateTag.fields.allIssues()?.[0]}
-					<div
-						class="mb-4 rounded-sm border border-destructive/30 bg-destructive/10 px-3 py-2 text-[12.5px] font-medium text-destructive"
-					>
-						{createOrUpdateTag.fields.allIssues()?.[0].message}
-					</div>
-				{/if}
-
-				<div class="flex gap-2.5">
-					<Button
-						type="submit"
-						disabled={!fields.name.value()?.trim() || createOrUpdateTag.pending > 0}
-						class="h-[40px] flex-1 gap-2 rounded-full bg-primary px-[18px] text-[13.5px] font-semibold text-primary-foreground hover:bg-primary/90"
-					>
-						<CheckIcon size={15} />
-						{fields.id.value() ? 'Save changes' : 'Create tag'}
-					</Button>
-					{#if fields.id.value()}
-						<Button
-							type="button"
-							variant="outline"
-							onclick={resetForm}
-							class="h-[40px] gap-2 rounded-full bg-transparent px-[18px] text-[13.5px] font-semibold"
-						>
-							Cancel
-						</Button>
-						<Button
-							type="button"
-							onclick={() => {
-								const t = tagsWithPaymentCount.find((x) => x.id.toString() === fields.id.value())
-								if (t) confirmRemove(t)
-							}}
-							class="h-[40px] gap-2 rounded-full bg-transparent px-[18px] text-[13.5px] font-semibold text-destructive hover:bg-destructive/10"
-							aria-label="Delete this tag"
-						>
-							<Trash2Icon size={15} />
-						</Button>
-					{/if}
-				</div>
-			</form>
-		</div>
+		{#if isWide.current}
+			<div class="rounded-card border bg-card p-4 lg:sticky lg:top-4 shadow-2xl">
+				{@render editor()}
+			</div>
+		{/if}
 
 		<!-- Existing tags list -->
-		<div class="rounded-card border bg-card p-4 shadow-2xl">
-			<div class="flex items-center justify-between px-6 pb-4 pt-5">
+		<div class="rounded-card border bg-card py-2 shadow-2xl md:p-4">
+			<div class="flex items-center justify-between px-4 pb-4 pt-3 md:px-6 md:pt-5">
 				<span class="font-display text-[19px] font-semibold tracking-[-0.02em]">
 					Your tags <span class="font-medium text-faint">· {tagsWithPaymentCount.length}</span>
 				</span>
 				<Button
 					type="button"
-					onclick={resetForm}
+					onclick={startNew}
 					class="h-[32px] gap-1.5 rounded-full bg-muted px-3 text-[12.5px] font-semibold text-foreground hover:bg-foreground/10"
 				>
 					<PlusIcon size={13} /> New
@@ -268,7 +286,7 @@
 			</div>
 
 			<!-- Search + sort -->
-			<div class="flex flex-wrap items-center gap-3 px-6 pb-4">
+			<div class="flex flex-wrap items-center gap-3 px-4 pb-4 md:px-6">
 				<div class="flex min-w-[180px] flex-1 items-center gap-2 rounded-full bg-muted px-[14px] py-2">
 					<SearchIcon size={14} class="text-faint" />
 					<input
@@ -305,19 +323,19 @@
 				</div>
 			</div>
 
-			<div class="max-h-[calc(100vh-280px)] overflow-y-auto">
+			<div class="lg:max-h-[calc(100vh-280px)] lg:overflow-y-auto">
 				{#if tagsWithPaymentCount.length === 0}
-					<div class="border-t border-border px-6 py-12 text-center text-[13px] text-faint">
-						You don't have any tags yet — create your first on the left.
+					<div class="border-t border-border px-4 py-12 text-center md:px-6 text-[13px] text-faint">
+						You don't have any tags yet — create your first one.
 					</div>
 				{:else if displayedTags.length === 0}
-					<div class="border-t border-border px-6 py-12 text-center text-[13px] text-faint">
+					<div class="border-t border-border px-4 py-12 text-center md:px-6 text-[13px] text-faint">
 						No tags match “{search}”.
 					</div>
 				{/if}
 				{#each displayedTags as t (t.id)}
 					<div
-						class="group flex items-center gap-3.5 border-t border-border px-6 py-3"
+						class="group flex items-center gap-3.5 border-t border-border px-4 py-3 md:px-6"
 						class:bg-muted={fields.id.value() === t.id.toString()}
 					>
 						<TagIconChip color={t.color} icon={t.icon} size={38} />
@@ -354,3 +372,14 @@
 		</div>
 	</div>
 </div>
+
+{#if !isWide.current}
+	<Drawer.Root open={editorOpen} onOpenChange={(open) => !open && resetForm()}>
+		<Drawer.Content>
+			<Drawer.Title class="sr-only">{fields.id.value() ? 'Edit tag' : 'New tag'}</Drawer.Title>
+			<div class="min-h-0 overflow-y-auto px-4 pt-4 pb-4">
+				{@render editor()}
+			</div>
+		</Drawer.Content>
+	</Drawer.Root>
+{/if}

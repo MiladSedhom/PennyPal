@@ -40,14 +40,14 @@
 	<title>Account · PennyPal</title>
 </svelte:head>
 
-<div class="px-10 pb-14 pt-2">
+<div class="px-4 pb-14 pt-4 md:px-10 md:pt-2">
 	<div class="mb-6">
 		<h1 class="m-0 font-display text-xl font-bold tracking-[-0.03em] text-foreground md:text-2xl">Account</h1>
 		<p class="m-0 mt-2 text-[15.5px] text-muted-foreground">Manage how you sign in to PennyPal.</p>
 	</div>
 
 	<div class="max-w-[560px] overflow-hidden rounded-card border bg-card">
-		<div class="border-b border-border px-6 pb-4 pt-5">
+		<div class="border-b border-border px-4 pb-4 pt-5 md:px-6">
 			<span class="font-display text-[19px] font-semibold tracking-[-0.02em]">Connected accounts</span>
 			<span class="caption mt-1 block">Link a provider to sign in with one click.</span>
 		</div>
@@ -76,7 +76,7 @@
 
 		{#each providers as p (p.key)}
 			{@const connected = connections.providers.includes(p.key)}
-			<div class="flex items-center gap-3.5 border-t border-border px-6 py-4">
+			<div class="flex items-center gap-3.5 border-t border-border px-4 py-4 md:px-6">
 				<span class="inline-flex h-[38px] w-[38px] items-center justify-center rounded-[11px] bg-muted text-foreground">
 					<p.Icon size={18} />
 				</span>
