@@ -2,7 +2,7 @@
 	import { watch } from 'runed'
 	import {
 		getPaymentsPage,
-		getPaymentsMeta,
+		getPaymentTagsFilterOptions,
 		deletePayment,
 		confirmPayment,
 		confirmAllPendingPayments
@@ -13,9 +13,7 @@
 
 	import PaymentsForm from '$lib/components/payments-form.svelte'
 	import PaymentEditDialog from '$lib/components/payment-edit-dialog.svelte'
-	import { Button } from '$lib/components/ui/button'
 	import { formatMoney } from '$lib/utils'
-	import ArrowUpRightIcon from '@lucide/svelte/icons/arrow-up-right'
 
 	import { PaymentFilters } from './filters.svelte'
 	import { formatRowDate, type Row } from './payments-format'
@@ -41,10 +39,9 @@
 	})
 
 	const pageData = $derived(await getPaymentsPage(args))
-	const meta = $derived(await getPaymentsMeta())
 	const tags = $derived(await getTags())
 
-	// Reset to the first page whenever a filter or sort changes (not on page change).
+	// reset to the first page whenever a filter or sort changes (not on page change).
 	watch(
 		() => filters.snapshot,
 		() => {
@@ -57,7 +54,7 @@
 
 	function refreshPayments() {
 		getPaymentsPage(args).refresh()
-		getPaymentsMeta().refresh()
+		getPaymentTagsFilterOptions().refresh()
 	}
 
 	async function confirmRow(r: Row) {
@@ -102,7 +99,6 @@
 		<PaymentsFilterBar
 			{filters}
 			{tags}
-			{meta}
 			pendingCount={filters.status === 'pending' ? pageData.total : 0}
 			onconfirmAll={confirmAllPending}
 		/>

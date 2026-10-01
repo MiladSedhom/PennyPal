@@ -3,7 +3,7 @@ import { db } from '$lib/server/db'
 import { tag, paymentsToTags, recurringPaymentsToTags } from '$lib/server/db/schema'
 import { and, eq, inArray, ne } from 'drizzle-orm'
 import { getLoggedInUser } from './auth.remote'
-import { getPayments, getPaymentsMeta } from './payments.remote'
+import { getPayments, getPaymentTagsFilterOptions } from './payments.remote'
 import { tagUpsertSchema } from '$lib/schemas'
 import { DEFAULT_TAG_COLOR, DEFAULT_TAG_ICON } from '$lib/tag-meta'
 import * as v from 'valibot'
@@ -116,7 +116,7 @@ export const mergeTags = command(mergeTagsSchema, async ({ sourceId, targetId })
 
 	getTags().refresh()
 	getPayments().refresh()
-	getPaymentsMeta().refresh()
+	getPaymentTagsFilterOptions().refresh()
 })
 
 export const deleteTag = command(v.number(), async (id) => {

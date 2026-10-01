@@ -234,13 +234,12 @@ export const getPaymentsPage = query(pageArgsSchema, async (args) => {
 	}
 })
 
-// Metadata for the filter bar: relevant tags (last 45 days) + amount domain.
-export const getPaymentsMeta = query(async () => {
+export const getPaymentTagsFilterOptions = query(async () => {
 	const user = await getLoggedInUser()
 
 	const cutoff = new Date(Date.now() - 45 * 86_400_000)
 
-	const topTags = await db
+	const recentTags = await db
 		.select({
 			id: tag.id,
 			name: tag.name,
@@ -255,10 +254,10 @@ export const getPaymentsMeta = query(async () => {
 		.where(and(eq(tag.userId, user.id), gte(payment.createdAt, cutoff)))
 		.groupBy(tag.id, tag.name, tag.color, tag.icon)
 
-	const [{ maxAmount }] = await db
-		.select({ maxAmount: sql<number>`coalesce(max(${payment.amount}), 0)::int` })
+	const [{ biggestPayment }] = await db
+		.select({ biggestPayment: sql<number>`coalesce(max(${payment.amount}), 0)::int` })
 		.from(payment)
 		.where(eq(payment.userId, user.id))
 
-	return { topTags, maxAmount }
+	return { recentTags, biggestPayment }
 })

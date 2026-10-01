@@ -33,23 +33,21 @@
 	import type { DateRange } from 'bits-ui'
 	import type { PaymentFilters, SortKey, StatusFilter } from './filters.svelte'
 	import type { Tag } from './payments-format'
+	import { getPaymentTagsFilterOptions } from '$lib/remote/payments.remote'
 
 	type TagStat = Tag & { count: number; spend: number }
 	let {
 		filters,
 		tags,
-		meta,
+
 		pendingCount,
 		onconfirmAll
 	}: {
 		filters: PaymentFilters
 		tags: Tag[]
-		meta: { topTags: TagStat[]; maxAmount: number }
 		pendingCount: number
 		onconfirmAll: () => void
 	} = $props()
-
-	let tagSearch = $state('')
 
 	const PRIMARY_TAG_COUNT = 6
 	const STATUS_OPTIONS: { key: StatusFilter; label: string }[] = [
@@ -58,12 +56,16 @@
 		{ key: 'confirmed', label: 'Confirmed' }
 	]
 
-	const primaryTags = $derived(selectPrimaryTags(meta.topTags, tags, filters.tagIds))
+	let tagSearch = $state('')
+
+	const { recentTags, biggestPayment } = $derived(await getPaymentTagsFilterOptions())
+
+	const primaryTags = $derived(selectPrimaryTags(recentTags, tags, filters.tagIds))
 	const overflowTags = $derived(sortOverflowTags(tags, primaryTags))
 	const visibleOverflowTags = $derived(matchTagsByName(overflowTags, tagSearch))
 
 	const MIN_AMOUNT_CEILING = 500
-	const amountCeiling = $derived(Math.max(meta.maxAmount, MIN_AMOUNT_CEILING))
+	const amountCeiling = $derived(Math.max(biggestPayment, MIN_AMOUNT_CEILING))
 
 	const sliderValue = $derived<[number, number]>([filters.amountMin ?? 0, filters.amountMax ?? amountCeiling])
 	function onSliderChange([min, max]: number[]) {
