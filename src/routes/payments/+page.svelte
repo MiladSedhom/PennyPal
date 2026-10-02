@@ -14,6 +14,8 @@
 	import PaymentsForm from '#lib/components/payments-form.svelte'
 	import PaymentEditDialog from '#lib/components/payment-edit-dialog.svelte'
 	import { formatMoney } from '#lib/utils/index.js'
+	import { Button } from '#lib/components/ui/button/index.js'
+	import CheckIcon from '@lucide/svelte/icons/check'
 
 	import { PaymentFilters } from './filters.svelte'
 	import { formatRowDate, type Row } from './payments-format'
@@ -94,18 +96,18 @@
 		<div>
 			<h1 class="font-display text-xl font-bold tracking-[-0.03em] text-foreground md:text-2xl">Payments</h1>
 		</div>
-		<div class="flex gap-2.5">
+		<div class="flex flex-wrap justify-end gap-2.5">
+			{#if filters.status === 'pending' && pageData.total > 0}
+				<Button variant="secondary" onclick={confirmAllPending} class="rounded-full">
+					<CheckIcon class="size-4" /> Confirm all ({pageData.total})
+				</Button>
+			{/if}
 			<PaymentsForm onsaved={refreshPayments} />
 		</div>
 	</div>
 
 	<div class="mb-4">
-		<PaymentsFilterBar
-			{filters}
-			{tags}
-			pendingCount={filters.status === 'pending' ? pageData.total : 0}
-			onconfirmAll={confirmAllPending}
-		/>
+		<PaymentsFilterBar {filters} />
 	</div>
 
 	<PaymentsTable

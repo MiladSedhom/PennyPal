@@ -34,20 +34,10 @@
 	import type { PaymentFilters, SortKey, RecurringStatusFilter } from './filters.svelte'
 	import type { Tag } from './payments-format'
 	import { getPaymentTagsFilterOptions } from '#lib/remote/payments.remote.js'
+	import { getTags } from '#lib/remote/tags.remote.js'
 
 	type TagStat = Tag & { count: number; spend: number }
-	let {
-		filters,
-		tags,
-
-		pendingCount,
-		onconfirmAll
-	}: {
-		filters: PaymentFilters
-		tags: Tag[]
-		pendingCount: number
-		onconfirmAll: () => void
-	} = $props()
+	let { filters }: { filters: PaymentFilters } = $props()
 
 	const PRIMARY_TAG_COUNT = 6
 	const STATUS_OPTIONS: { key: RecurringStatusFilter; label: string }[] = [
@@ -58,6 +48,7 @@
 
 	let tagSearch = $state('')
 
+	const tags = $derived(await getTags())
 	const { recentTags, biggestPayment } = $derived(await getPaymentTagsFilterOptions())
 
 	const primaryTags = $derived(selectPrimaryTags(recentTags, tags, filters.tagIds))
@@ -427,12 +418,6 @@
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>
 	</div>
-
-	{#if filters.status === 'pending' && pendingCount > 0}
-		<Button size="sm" onclick={onconfirmAll} class="rounded-full text-[12.5px] font-semibold">
-			<CheckIcon class="size-3.5" /> Confirm all ({pendingCount})
-		</Button>
-	{/if}
 
 	<Drawer.Root onOpenChange={(open) => !open && filters.commitDateRange()}>
 		<Drawer.Trigger>
