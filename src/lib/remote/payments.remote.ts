@@ -164,7 +164,7 @@ const pageArgsSchema = v.object({
 	amountMax: v.nullable(v.number()),
 	createdFrom: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
 	createdBefore: v.nullable(v.pipe(v.string(), v.isoTimestamp())),
-	confirmed: v.picklist(['all', 'pending', 'confirmed']),
+	status: v.picklist(['all', 'pending', 'confirmed']),
 	recurringOnly: v.boolean()
 })
 
@@ -193,7 +193,7 @@ export const getPaymentsPage = query(pageArgsSchema, async (args) => {
 			.where(inArray(paymentsToTags.tagId, args.tagIds))
 		filters.push(inArray(payment.id, tagged))
 	}
-	if (args.confirmed !== 'all') filters.push(eq(payment.confirmed, args.confirmed === 'confirmed'))
+	if (args.status !== 'all') filters.push(eq(payment.confirmed, args.status === 'confirmed'))
 	if (args.recurringOnly) filters.push(isNotNull(payment.recurringPaymentId))
 
 	const where = and(...filters)

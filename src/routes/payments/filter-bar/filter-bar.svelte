@@ -34,10 +34,10 @@
 		{ key: 'pending', label: 'Pending' },
 		{ key: 'confirmed', label: 'Confirmed' }
 	]
-	const statusLabel = $derived(STATUS_OPTIONS.find((o) => o.key === filters.status)?.label ?? 'All')
-	const recurringLabel = $derived.by(() => {
-		if (filters.recurringOnly) return filters.status === 'all' ? 'Recurring only' : `Recurring · ${statusLabel}`
-		return filters.status === 'all' ? 'Recurring' : statusLabel
+	const statusOptionLabel = $derived(STATUS_OPTIONS.find((o) => o.key === filters.status)?.label ?? 'All')
+	const statusLabel = $derived.by(() => {
+		if (filters.recurringOnly) return filters.status === 'all' ? 'Recurring only' : `Recurring · ${statusOptionLabel}`
+		return filters.status === 'all' ? 'Recurring' : statusOptionLabel
 	})
 
 	const SORT_OPTIONS: { key: SortKey; label: string }[] = [
@@ -125,7 +125,7 @@
 		</FilterPill>
 		<FilterPill
 			icon={RepeatIcon}
-			label={recurringLabel}
+			label={statusLabel}
 			active={filters.isStatusActive}
 			onclear={filters.clearStatus}
 			contentClass="w-auto p-3"

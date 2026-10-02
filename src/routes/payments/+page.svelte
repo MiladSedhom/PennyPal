@@ -36,7 +36,7 @@
 		amountMax: filters.debouncedAmount.max,
 		createdFrom: filters.createdFrom,
 		createdBefore: filters.createdBefore,
-		confirmed: filters.status,
+		status: filters.status,
 		recurringOnly: filters.recurringOnly
 	})
 
