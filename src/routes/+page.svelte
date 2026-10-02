@@ -1,23 +1,23 @@
 <script lang="ts">
 	import ConstructionIcon from '@lucide/svelte/icons/construction'
 	import { resolve } from '$app/paths'
-	import { Button } from '$lib/components/ui/button'
+	import { Button } from '#lib/components/ui/button/index.js'
 	/*
-	import { getLoggedInUser } from '$lib/remote/auth.remote'
-	import { getPayments } from '$lib/remote/payments.remote'
-	import { getTags } from '$lib/remote/tags.remote'
-	import { getCurrentBudget } from '$lib/remote/budgets.remote'
-	import { getRecurringPayments } from '$lib/remote/recurring.remote'
-	import { formatCadence } from '$lib/recurrence'
-	import PaymentsForm from '$lib/components/payments-form.svelte'
-	import RecurringRenewDialog from '$lib/components/recurring-renew-dialog.svelte'
+	import { getLoggedInUser } from '#lib/remote/auth.remote.js'
+	import { getPayments } from '#lib/remote/payments.remote.js'
+	import { getTags } from '#lib/remote/tags.remote.js'
+	import { getCurrentBudget } from '#lib/remote/budgets.remote.js'
+	import { getRecurringPayments } from '#lib/remote/recurring.remote.js'
+	import { formatCadence } from '#lib/recurrence.js'
+	import PaymentsForm from '#lib/components/payments-form.svelte'
+	import RecurringRenewDialog from '#lib/components/recurring-renew-dialog.svelte'
 	import { resolve } from '$app/paths'
 	import { SvelteDate, SvelteSet, SvelteMap } from 'svelte/reactivity'
 
-	import Card from '$lib/components/pp/card.svelte'
-	import TagIconChip from '$lib/components/pp/tag-icon-chip.svelte'
-	import { getSwatch } from '$lib/tag-meta'
-	import { formatMoney } from '$lib/utils'
+	import Card from '#lib/components/pp/card.svelte'
+	import TagIconChip from '#lib/components/pp/tag-icon-chip.svelte'
+	import { getSwatch } from '#lib/tag-meta.js'
+	import { formatMoney } from '#lib/utils/index.js'
 
 	import CalendarIcon from '@lucide/svelte/icons/calendar'
 	import WalletIcon from '@lucide/svelte/icons/wallet'
@@ -227,7 +227,7 @@
 	</span>
 	<h1 class="m-0 font-display text-2xl font-bold tracking-[-0.03em]">This page is under construction</h1>
 	<p class="m-0 text-muted-foreground">Check out the payments page for now.</p>
-	<Button href={resolve('/payments')} class="rounded-full">Go to payments</Button>
+	<Button href={resolve('payments')} class="rounded-full">Go to payments</Button>
 </div>
 
 <!--

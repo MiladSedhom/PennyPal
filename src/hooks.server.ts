@@ -1,6 +1,7 @@
-import type { Handle } from '@sveltejs/kit'
-import * as auth from '$lib/server/auth'
-import { catchUpRecurringPayments } from '$lib/server/recurring'
+import { redirect } from '@sveltejs/kit'
+import { sequence, type Handle } from '@sveltejs/kit/hooks'
+import * as auth from '#lib/server/auth.js'
+import { catchUpRecurringPayments } from '#lib/server/recurring.js'
 
 const handleAuth: Handle = async ({ event, resolve }) => {
 	const sessionToken = event.cookies.get(auth.sessionCookieName)
@@ -32,4 +33,11 @@ const handleAuth: Handle = async ({ event, resolve }) => {
 	return resolve(event)
 }
 
-export const handle: Handle = handleAuth
+// Every page outside the (auth) group needs a session; remote functions gate themselves via getLoggedInUser.
+const requireLogin: Handle = ({ event, resolve }) => {
+	const routeId = event.route.id
+	if (!event.locals.user && routeId && !routeId.startsWith('/(auth)')) redirect(302, '/login')
+	return resolve(event)
+}
+
+export const handle = sequence(handleAuth, requireLogin)

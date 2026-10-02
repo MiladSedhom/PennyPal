@@ -1,18 +1,18 @@
 <script lang="ts">
 	import { resolve } from '$app/paths'
 	import { page } from '$app/state'
-	import { getAccountConnections, disconnectOAuth } from '$lib/remote/auth.remote'
-	import { Button } from '$lib/components/ui/button'
-	import { dialogs } from '$lib/components/pp/confirm-dialog'
-	import GoogleIcon from '$lib/components/icons/google.svelte'
-	import GithubIcon from '$lib/components/icons/github.svelte'
+	import { getAccountConnections, disconnectOAuth } from '#lib/remote/auth.remote.js'
+	import { Button } from '#lib/components/ui/button/index.js'
+	import { dialogs } from '#lib/components/pp/confirm-dialog/index.js'
+	import GoogleIcon from '#lib/components/icons/google.svelte'
+	import GithubIcon from '#lib/components/icons/github.svelte'
 	import CheckIcon from '@lucide/svelte/icons/check'
 
 	const connections = $derived(await getAccountConnections())
 
 	const providers = [
-		{ key: 'google', label: 'Google', Icon: GoogleIcon, connect: resolve('/login/google') },
-		{ key: 'github', label: 'GitHub', Icon: GithubIcon, connect: resolve('/login/github') }
+		{ key: 'google', label: 'Google', Icon: GoogleIcon, connect: resolve('login/google') },
+		{ key: 'github', label: 'GitHub', Icon: GithubIcon, connect: resolve('login/github') }
 	] as const
 
 	let notice = $state<string | null>(null)

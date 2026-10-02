@@ -1,6 +1,6 @@
 import { query } from '$app/server'
-import { db } from '$lib/server/db'
-import { budget } from '$lib/server/db/schema'
+import { db } from '#lib/server/db/index.js'
+import { budget } from '#lib/server/db/schema/index.js'
 import { and, eq, lte, gte, or, isNull, desc } from 'drizzle-orm'
 import { getLoggedInUser } from './auth.remote'
 

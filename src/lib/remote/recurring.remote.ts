@@ -1,11 +1,11 @@
 import { command, query } from '$app/server'
-import { db } from '$lib/server/db'
-import { payment, paymentsToTags, recurringPayment, recurringPaymentsToTags } from '$lib/server/db/schema'
+import { db } from '#lib/server/db/index.js'
+import { payment, paymentsToTags, recurringPayment, recurringPaymentsToTags } from '#lib/server/db/schema/index.js'
 import { and, asc, eq } from 'drizzle-orm'
 import { getLoggedInUser } from './auth.remote'
 import { getPayments } from './payments.remote'
-import { catchUpRecurringPayments, reanchorRollingRule } from '$lib/server/recurring'
-import { firstOccurrenceAtOrAfter, MAX_INTERVAL_COUNT, type Schedule } from '$lib/recurrence'
+import { catchUpRecurringPayments, reanchorRollingRule } from '#lib/server/recurring.js'
+import { firstOccurrenceAtOrAfter, MAX_INTERVAL_COUNT, type Schedule } from '#lib/recurrence.js'
 import * as v from 'valibot'
 
 export const getRecurringPayments = query(async () => {

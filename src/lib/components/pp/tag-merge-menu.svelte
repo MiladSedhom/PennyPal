@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Command } from 'bits-ui'
-	import * as Popover from '$lib/components/ui/popover'
+	import * as Popover from '#lib/components/ui/popover/index.js'
 	import TagIconChip from './tag-icon-chip.svelte'
 	import MergeIcon from '@lucide/svelte/icons/merge'
 

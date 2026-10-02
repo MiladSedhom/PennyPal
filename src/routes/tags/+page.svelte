@@ -1,15 +1,15 @@
 <script lang="ts">
-	import { getTags, createOrUpdateTag, deleteTag, mergeTags } from '$lib/remote/tags.remote'
-	import { getPayments } from '$lib/remote/payments.remote'
+	import { getTags, createOrUpdateTag, deleteTag, mergeTags } from '#lib/remote/tags.remote.js'
+	import { getPayments } from '#lib/remote/payments.remote.js'
 
-	import TagIconChip from '$lib/components/pp/tag-icon-chip.svelte'
-	import TagMergeMenu from '$lib/components/pp/tag-merge-menu.svelte'
-	import { Button } from '$lib/components/ui/button'
-	import * as Drawer from '$lib/components/ui/drawer'
-	import { dialogs } from '$lib/components/pp/confirm-dialog'
+	import TagIconChip from '#lib/components/pp/tag-icon-chip.svelte'
+	import TagMergeMenu from '#lib/components/pp/tag-merge-menu.svelte'
+	import { Button } from '#lib/components/ui/button/index.js'
+	import * as Drawer from '#lib/components/ui/drawer/index.js'
+	import { dialogs } from '#lib/components/pp/confirm-dialog/index.js'
 	import { MediaQuery } from 'svelte/reactivity'
-	import { TAG_PALETTE, TAG_COLOR_LIST, ICON_CHOICES, ICON_LIBRARY, getSwatch, getIcon } from '$lib/tag-meta'
-	import { formatMoney } from '$lib/utils'
+	import { TAG_PALETTE, TAG_COLOR_LIST, ICON_CHOICES, ICON_LIBRARY, getSwatch, getIcon } from '#lib/tag-meta.js'
+	import { formatMoney } from '#lib/utils/index.js'
 
 	import CheckIcon from '@lucide/svelte/icons/check'
 	import PlusIcon from '@lucide/svelte/icons/plus'
@@ -17,7 +17,7 @@
 	import Trash2Icon from '@lucide/svelte/icons/trash-2'
 	import SearchIcon from '@lucide/svelte/icons/search'
 	import XIcon from '@lucide/svelte/icons/x'
-	import { toTitleCase } from '$lib/utils/to-title-case'
+	import { toTitleCase } from '#lib/utils/to-title-case.js'
 
 	const tags = $derived(await getTags())
 	const payments = $derived(await getPayments())
@@ -120,9 +120,9 @@
 			}
 		})}
 	>
-		<input type="hidden" name="id" value={fields.id.value() ?? ''} />
-		<input type="hidden" name="color" value={fields.color.value() ?? 'sage'} />
-		<input type="hidden" name="icon" value={fields.icon.value() ?? 'Tag'} />
+		<input {...fields.id.as('hidden', fields.id.value() ?? '')} />
+		<input {...fields.color.as('hidden', fields.color.value() ?? 'sage')} />
+		<input {...fields.icon.as('hidden', fields.icon.value() ?? 'Tag')} />
 
 		<!-- Live preview -->
 		<div class="mb-6 flex items-center gap-4 rounded-2xl bg-muted p-5">

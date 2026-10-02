@@ -1,5 +1,5 @@
 <script lang="ts">
-	import AuthCard from '$lib/components/auth-card.svelte'
+	import AuthCard from '#lib/components/auth-card.svelte'
 </script>
 
 <svelte:head>

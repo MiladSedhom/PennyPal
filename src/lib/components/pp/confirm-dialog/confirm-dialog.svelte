@@ -1,7 +1,7 @@
 <script lang="ts">
-	import * as AlertDialog from '$lib/components/ui/alert-dialog'
-	import * as Drawer from '$lib/components/ui/drawer'
-	import { Button } from '$lib/components/ui/button'
+	import * as AlertDialog from '#lib/components/ui/alert-dialog/index.js'
+	import * as Drawer from '#lib/components/ui/drawer/index.js'
+	import { Button } from '#lib/components/ui/button/index.js'
 	import { dialogs, type ConfirmTone } from './store.svelte'
 	import { MediaQuery } from 'svelte/reactivity'
 	import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle'

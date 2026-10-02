@@ -1,11 +1,11 @@
 import { command, form, query } from '$app/server'
-import { db } from '$lib/server/db'
-import { tag, paymentsToTags, recurringPaymentsToTags } from '$lib/server/db/schema'
+import { db } from '#lib/server/db/index.js'
+import { tag, paymentsToTags, recurringPaymentsToTags } from '#lib/server/db/schema/index.js'
 import { and, eq, inArray, ne } from 'drizzle-orm'
 import { getLoggedInUser } from './auth.remote'
 import { getPayments, getPaymentTagsFilterOptions } from './payments.remote'
-import { tagUpsertSchema } from '$lib/schemas'
-import { DEFAULT_TAG_COLOR, DEFAULT_TAG_ICON } from '$lib/tag-meta'
+import { tagUpsertSchema } from '#lib/schemas/index.js'
+import { DEFAULT_TAG_COLOR, DEFAULT_TAG_ICON } from '#lib/tag-meta.js'
 import * as v from 'valibot'
 import { invalid } from '@sveltejs/kit'
 
@@ -82,34 +82,35 @@ export const mergeTags = command(mergeTagsSchema, async ({ sourceId, targetId })
 	await db.transaction(async (tx) => {
 		// Drop source links whose payment already carries the target tag — re-pointing
 		// them would collide on the (paymentId, tagId) primary key — then move the rest.
-		await tx.delete(paymentsToTags).where(
-			and(
-				eq(paymentsToTags.tagId, sourceId),
-				inArray(
-					paymentsToTags.paymentId,
-					tx.select({ id: paymentsToTags.paymentId }).from(paymentsToTags).where(eq(paymentsToTags.tagId, targetId))
+		await tx
+			.delete(paymentsToTags)
+			.where(
+				and(
+					eq(paymentsToTags.tagId, sourceId),
+					inArray(
+						paymentsToTags.paymentId,
+						tx.select({ id: paymentsToTags.paymentId }).from(paymentsToTags).where(eq(paymentsToTags.tagId, targetId))
+					)
 				)
 			)
-		)
 		await tx.update(paymentsToTags).set({ tagId: targetId }).where(eq(paymentsToTags.tagId, sourceId))
 
 		// Same dedup-then-move for recurring-rule links.
-		await tx.delete(recurringPaymentsToTags).where(
-			and(
-				eq(recurringPaymentsToTags.tagId, sourceId),
-				inArray(
-					recurringPaymentsToTags.recurringPaymentId,
-					tx
-						.select({ id: recurringPaymentsToTags.recurringPaymentId })
-						.from(recurringPaymentsToTags)
-						.where(eq(recurringPaymentsToTags.tagId, targetId))
+		await tx
+			.delete(recurringPaymentsToTags)
+			.where(
+				and(
+					eq(recurringPaymentsToTags.tagId, sourceId),
+					inArray(
+						recurringPaymentsToTags.recurringPaymentId,
+						tx
+							.select({ id: recurringPaymentsToTags.recurringPaymentId })
+							.from(recurringPaymentsToTags)
+							.where(eq(recurringPaymentsToTags.tagId, targetId))
+					)
 				)
 			)
-		)
-		await tx
-			.update(recurringPaymentsToTags)
-			.set({ tagId: targetId })
-			.where(eq(recurringPaymentsToTags.tagId, sourceId))
+		await tx.update(recurringPaymentsToTags).set({ tagId: targetId }).where(eq(recurringPaymentsToTags.tagId, sourceId))
 
 		await tx.delete(tag).where(and(eq(tag.id, sourceId), eq(tag.userId, user.id)))
 	})

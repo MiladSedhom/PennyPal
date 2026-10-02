@@ -6,9 +6,9 @@
 	import MoonIcon from '@lucide/svelte/icons/moon'
 	import LogOutIcon from '@lucide/svelte/icons/log-out'
 	import MenuIcon from '@lucide/svelte/icons/menu'
-	import { getLoggedInUser, logout } from '$lib/remote/auth.remote'
-	import Button from '$lib/components/ui/button/button.svelte'
-	import * as Drawer from '$lib/components/ui/drawer'
+	import { getSessionUser, logout } from '#lib/remote/auth.remote.js'
+	import Button from '#lib/components/ui/button/button.svelte'
+	import * as Drawer from '#lib/components/ui/drawer/index.js'
 
 	const nav = [
 		{ id: 'dashboard', label: 'Dashboard', path: '/' as const },
@@ -17,7 +17,7 @@
 		{ id: 'tags', label: 'Tags', path: '/tags' as const }
 	]
 
-	const loggedInUser = $derived(await getLoggedInUser())
+	const loggedInUser = $derived(await getSessionUser())
 
 	function isCurrentActivePath(path: string) {
 		if (path === '/') return page.url.pathname === '/'
@@ -82,7 +82,7 @@
 				</form>
 				<Button
 					variant="ghost"
-					href={resolve('/account')}
+					href={resolve('account')}
 					class="inline-flex h-9.5 w-9.5 items-center justify-center rounded-full bg-muted text-md font-bold text-foreground no-underline font-display"
 					aria-label="Account"
 				>
@@ -130,7 +130,7 @@
 					<Drawer.Footer class="mt-4 flex-row items-center gap-3 border-t border-border px-0 pb-0">
 						<Button
 							variant="ghost"
-							href={resolve('/account')}
+							href={resolve('account')}
 							onclick={() => (menuOpen = false)}
 							class="inline-flex h-9.5 w-9.5 items-center justify-center rounded-full bg-muted font-display text-md font-bold text-foreground no-underline"
 							aria-label="Account"

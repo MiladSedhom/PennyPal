@@ -1,9 +1,9 @@
 import { command, query } from '$app/server'
-import { db } from '$lib/server/db'
-import { payment, paymentsToTags, tag } from '$lib/server/db/schema'
+import { db } from '#lib/server/db/index.js'
+import { payment, paymentsToTags, tag } from '#lib/server/db/schema/index.js'
 import { and, asc, desc, eq, gte, ilike, inArray, isNotNull, lt, lte, or, sql } from 'drizzle-orm'
-import { getLoggedInUser } from '$lib/remote/auth.remote'
-import { reanchorRollingRule } from '$lib/server/recurring'
+import { getLoggedInUser } from '#lib/remote/auth.remote.js'
+import { reanchorRollingRule } from '#lib/server/recurring.js'
 import * as v from 'valibot'
 
 export const getPayments = query(async () => {

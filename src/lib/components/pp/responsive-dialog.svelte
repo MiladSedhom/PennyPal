@@ -1,9 +1,9 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte'
 	import { MediaQuery } from 'svelte/reactivity'
-	import * as Dialog from '$lib/components/ui/dialog'
-	import * as Drawer from '$lib/components/ui/drawer'
-	import { cn } from '$lib/utils'
+	import * as Dialog from '#lib/components/ui/dialog/index.js'
+	import * as Drawer from '#lib/components/ui/drawer/index.js'
+	import { cn } from '#lib/utils/index.js'
 	import XIcon from '@lucide/svelte/icons/x'
 
 	let {

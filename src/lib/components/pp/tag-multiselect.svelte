@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { Command } from 'bits-ui'
-	import * as Popover from '$lib/components/ui/popover'
+	import * as Popover from '#lib/components/ui/popover/index.js'
 	import TagChip from './tag-chip.svelte'
 	import TagIconChip from './tag-icon-chip.svelte'
 	import PlusIcon from '@lucide/svelte/icons/plus'
 	import CheckIcon from '@lucide/svelte/icons/check'
 	import type { PopoverTriggerProps } from 'bits-ui'
-	import { focusAdjacentTabbable } from '$lib/utils/focus-adjacent-tabbable'
-	import { quickCreateTag } from '$lib/remote/tags.remote'
+	import { focusAdjacentTabbable } from '#lib/utils/focus-adjacent-tabbable.js'
+	import { quickCreateTag } from '#lib/remote/tags.remote.js'
 	import { tick } from 'svelte'
 
 	type Tag = { id: number; name: string; color: string; icon: string }

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import CalendarIcon from '@lucide/svelte/icons/calendar'
 	import { type DateValue, DateFormatter, getLocalTimeZone } from '@internationalized/date'
-	import { cn } from '$lib/utils/index'
-	import { Button, type ButtonProps } from '$lib/components/ui/button/index.js'
-	import { Calendar } from '$lib/components/ui/calendar/index.js'
-	import * as Popover from '$lib/components/ui/popover/index.js'
+	import { cn } from '#lib/utils/index.js'
+	import { Button, type ButtonProps } from '#lib/components/ui/button/index.js'
+	import { Calendar } from '#lib/components/ui/calendar/index.js'
+	import * as Popover from '#lib/components/ui/popover/index.js'
 	import type { ClassValue } from 'svelte/elements'
 
 	const df = new DateFormatter('en-US', {

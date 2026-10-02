@@ -10,15 +10,15 @@
 		type DateValue
 	} from '@internationalized/date'
 
-	import TagIconChip from '$lib/components/pp/tag-icon-chip.svelte'
-	import { getSwatch, getIcon } from '$lib/tag-meta'
-	import { formatMoney } from '$lib/utils'
-	import * as Popover from '$lib/components/ui/popover'
-	import * as DropdownMenu from '$lib/components/ui/dropdown-menu'
-	import * as Drawer from '$lib/components/ui/drawer'
-	import { Button } from '$lib/components/ui/button'
-	import { RangeCalendar } from '$lib/components/ui/range-calendar'
-	import { Slider } from '$lib/components/ui/slider'
+	import TagIconChip from '#lib/components/pp/tag-icon-chip.svelte'
+	import { getSwatch, getIcon } from '#lib/tag-meta.js'
+	import { formatMoney } from '#lib/utils/index.js'
+	import * as Popover from '#lib/components/ui/popover/index.js'
+	import * as DropdownMenu from '#lib/components/ui/dropdown-menu/index.js'
+	import * as Drawer from '#lib/components/ui/drawer/index.js'
+	import { Button } from '#lib/components/ui/button/index.js'
+	import { RangeCalendar } from '#lib/components/ui/range-calendar/index.js'
+	import { Slider } from '#lib/components/ui/slider/index.js'
 
 	import SearchIcon from '@lucide/svelte/icons/search'
 	import XIcon from '@lucide/svelte/icons/x'
@@ -33,7 +33,7 @@
 	import type { DateRange } from 'bits-ui'
 	import type { PaymentFilters, SortKey, StatusFilter } from './filters.svelte'
 	import type { Tag } from './payments-format'
-	import { getPaymentTagsFilterOptions } from '$lib/remote/payments.remote'
+	import { getPaymentTagsFilterOptions } from '#lib/remote/payments.remote.js'
 
 	type TagStat = Tag & { count: number; spend: number }
 	let {

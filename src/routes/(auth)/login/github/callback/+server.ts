@@ -1,5 +1,5 @@
 import type { RequestHandler } from './$types'
-import { finishOAuthLogin, githubClient, linkOAuthAccount } from '$lib/server/oauth'
+import { finishOAuthLogin, githubClient, linkOAuthAccount } from '#lib/server/oauth.js'
 
 type GitHubUser = { id: number; login: string; name: string | null; email: string | null }
 type GitHubEmail = { email: string; primary: boolean; verified: boolean }

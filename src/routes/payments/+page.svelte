@@ -6,14 +6,14 @@
 		deletePayment,
 		confirmPayment,
 		confirmAllPendingPayments
-	} from '$lib/remote/payments.remote'
-	import { getTags } from '$lib/remote/tags.remote'
-	import { dialogs } from '$lib/components/pp/confirm-dialog'
+	} from '#lib/remote/payments.remote.js'
+	import { getTags } from '#lib/remote/tags.remote.js'
+	import { dialogs } from '#lib/components/pp/confirm-dialog/index.js'
 	import { type PaginationState } from '@tanstack/table-core'
 
-	import PaymentsForm from '$lib/components/payments-form.svelte'
-	import PaymentEditDialog from '$lib/components/payment-edit-dialog.svelte'
-	import { formatMoney } from '$lib/utils'
+	import PaymentsForm from '#lib/components/payments-form.svelte'
+	import PaymentEditDialog from '#lib/components/payment-edit-dialog.svelte'
+	import { formatMoney } from '#lib/utils/index.js'
 
 	import { PaymentFilters } from './filters.svelte'
 	import { formatRowDate, type Row } from './payments-format'

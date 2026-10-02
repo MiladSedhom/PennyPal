@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { createColumnHelper, getCoreRowModel, type SortingState, type PaginationState } from '@tanstack/table-core'
 
-	import TagChip from '$lib/components/pp/tag-chip.svelte'
-	import { formatMoney } from '$lib/utils'
-	import * as Table from '$lib/components/ui/table'
-	import * as DropdownMenu from '$lib/components/ui/dropdown-menu'
-	import { Button } from '$lib/components/ui/button'
-	import { createSvelteTable, FlexRender } from '$lib/components/ui/data-table'
+	import TagChip from '#lib/components/pp/tag-chip.svelte'
+	import { formatMoney } from '#lib/utils/index.js'
+	import * as Table from '#lib/components/ui/table/index.js'
+	import * as DropdownMenu from '#lib/components/ui/dropdown-menu/index.js'
+	import { Button } from '#lib/components/ui/button/index.js'
+	import { createSvelteTable, FlexRender } from '#lib/components/ui/data-table/index.js'
 
 	import ChevronLeftIcon from '@lucide/svelte/icons/chevron-left'
 	import ChevronRightIcon from '@lucide/svelte/icons/chevron-right'

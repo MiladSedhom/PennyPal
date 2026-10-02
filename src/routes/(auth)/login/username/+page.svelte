@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { Button } from '$lib/components/ui/button'
-	import { chooseUsername } from '$lib/remote/auth.remote'
+	import { Button } from '#lib/components/ui/button/index.js'
+	import { chooseUsername } from '#lib/remote/auth.remote.js'
 	import WalletIcon from '@lucide/svelte/icons/wallet'
 	import LoaderIcon from '@lucide/svelte/icons/loader-circle'
-	import GoogleIcon from '$lib/components/icons/google.svelte'
-	import GithubIcon from '$lib/components/icons/github.svelte'
+	import GoogleIcon from '#lib/components/icons/google.svelte'
+	import GithubIcon from '#lib/components/icons/github.svelte'
 
 	let { data } = $props()
 
@@ -20,7 +20,9 @@
 	<div class="w-full max-w-[420px] overflow-hidden rounded-card border bg-card shadow-lg">
 		<div class="border-b border-border px-8 py-6">
 			<div class="flex items-center gap-[11px]">
-				<span class="inline-flex h-[30px] w-[30px] items-center justify-center rounded-[9px] bg-primary text-primary-foreground">
+				<span
+					class="inline-flex h-[30px] w-[30px] items-center justify-center rounded-[9px] bg-primary text-primary-foreground"
+				>
 					<WalletIcon size={16} />
 				</span>
 				<span class="font-display text-[21px] font-bold tracking-[-0.04em]">PennyPal</span>

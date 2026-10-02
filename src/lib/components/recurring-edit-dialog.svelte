@@ -1,10 +1,10 @@
 <script lang="ts">
-	import ResponsiveDialog from '$lib/components/pp/responsive-dialog.svelte'
-	import * as Select from '$lib/components/ui/select'
-	import { Button } from '$lib/components/ui/button'
-	import DatePicker from '$lib/components/ui/date-picker/date-picker.svelte'
-	import TagMultiSelect from '$lib/components/pp/tag-multiselect.svelte'
-	import { createRecurringPayment, updateRecurringPayment } from '$lib/remote/recurring.remote'
+	import ResponsiveDialog from '#lib/components/pp/responsive-dialog.svelte'
+	import * as Select from '#lib/components/ui/select/index.js'
+	import { Button } from '#lib/components/ui/button/index.js'
+	import DatePicker from '#lib/components/ui/date-picker/date-picker.svelte'
+	import TagMultiSelect from '#lib/components/pp/tag-multiselect.svelte'
+	import { createRecurringPayment, updateRecurringPayment } from '#lib/remote/recurring.remote.js'
 	import {
 		MAX_INTERVAL_COUNT,
 		intervalUnit,
@@ -12,7 +12,7 @@
 		occurrence,
 		type RecurringInterval,
 		type Schedule
-	} from '$lib/recurrence'
+	} from '#lib/recurrence.js'
 	import { CalendarDate, getLocalTimeZone, type DateValue } from '@internationalized/date'
 	import XIcon from '@lucide/svelte/icons/x'
 	import CheckIcon from '@lucide/svelte/icons/check'

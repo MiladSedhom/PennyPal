@@ -4,7 +4,7 @@
 	import ArrowDownIcon from '@lucide/svelte/icons/arrow-down'
 	import ArrowUpDownIcon from '@lucide/svelte/icons/arrow-up-down'
 
-	import { Button } from '$lib/components/ui/button/index.js'
+	import { Button } from '#lib/components/ui/button/index.js'
 
 	interface Props extends ComponentProps<typeof Button> {
 		isSorted: false | 'asc' | 'desc'

@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { Button } from '$lib/components/ui/button'
+	import { Button } from '#lib/components/ui/button/index.js'
 	import { resolve } from '$app/paths'
-	import { loginOrRegister } from '$lib/remote/auth.remote'
+	import { loginOrRegister } from '#lib/remote/auth.remote.js'
 	import EyeIcon from '@lucide/svelte/icons/eye'
 	import EyeOffIcon from '@lucide/svelte/icons/eye-off'
 	import LoaderIcon from '@lucide/svelte/icons/loader-circle'
-	import GoogleIcon from '$lib/components/icons/google.svelte'
-	import GithubIcon from '$lib/components/icons/github.svelte'
+	import GoogleIcon from '#lib/components/icons/google.svelte'
+	import GithubIcon from '#lib/components/icons/github.svelte'
 	import { toggleMode } from 'mode-watcher'
 	import SunIcon from '@lucide/svelte/icons/sun'
 	import MoonIcon from '@lucide/svelte/icons/moon'
@@ -61,12 +61,13 @@
 
 		<!-- OAuth -->
 		<div class="flex flex-col gap-2.5">
-			<a href={resolve('/login/google')} data-sveltekit-reload class={oauthBtn}>
-				<GoogleIcon size={17} /> Continue with Google
-			</a>
-			<a href={resolve('/login/github')} data-sveltekit-reload class={oauthBtn}>
-				<GithubIcon size={17} /> Continue with GitHub
-			</a>
+			<a href={resolve('login/google')} data-sveltekit-reload class={oauthBtn}
+				><GoogleIcon size={17} />Continue with Google</a
+			>
+
+			<a href={resolve('login/github')} data-sveltekit-reload class={oauthBtn}
+				><GithubIcon size={17} />Continue with GitHub</a
+			>
 		</div>
 
 		<div class="flex items-center gap-3">
