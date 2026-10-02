@@ -1,6 +1,6 @@
 import { onMount } from 'svelte'
 import { Debounced, PersistedState, watch } from 'runed'
-import { getLocalTimeZone, parseDate } from '@internationalized/date'
+import { getLocalTimeZone, parseDate, toCalendarDate } from '@internationalized/date'
 import type { DateRange } from 'bits-ui'
 
 export type SortKey = 'date' | 'amount'
@@ -53,28 +53,10 @@ export class PaymentFilters {
 
 	#debouncedSearch = new Debounced(() => this.search, 300)
 	#debouncedAmount = new Debounced(() => this.amountRange, 300)
-	// seprate range for query so we contorl when they trigger a refetch.
-	#dateRangeStart = $state<string | null>(DEFAULTS.from)
-	#dateRangeEnd = $state<string | null>(DEFAULTS.to)
 	#store = new PersistedState<FilterSnapshot>(STORAGE_KEY, DEFAULTS)
 
 	constructor() {
 		onMount(() => this.#restore())
-		// Commit the picked range to the query only when it's a complete start+end pair (or fully
-		// cleared); ignore the start-only state the calendar passes through during re-selection.
-		watch(
-			() => [this.dateRange.start, this.dateRange.end] as const,
-			([start, end]) => {
-				if (start && end) {
-					this.#dateRangeStart = start.toString()
-					this.#dateRangeEnd = end.toString()
-				} else if (!start && !end) {
-					this.#dateRangeStart = null
-					this.#dateRangeEnd = null
-				}
-			}
-		)
-
 		watch(
 			() => this.snapshot,
 			(snapshot) => {
@@ -113,21 +95,14 @@ export class PaymentFilters {
 		)
 	}
 
-	get dateStart(): string | null {
-		return this.#dateRangeStart
-	}
-	get dateEnd(): string | null {
-		return this.#dateRangeEnd
-	}
-
 	// Resolved to instants here so the range follows the user's timezone, not the server's.
 	get createdFrom(): string | null {
-		return this.#dateRangeStart ? parseDate(this.#dateRangeStart).toDate(getLocalTimeZone()).toISOString() : null
+		const { start } = this.dateRange
+		return start ? toCalendarDate(start).toDate(getLocalTimeZone()).toISOString() : null
 	}
 	get createdBefore(): string | null {
-		return this.#dateRangeEnd
-			? parseDate(this.#dateRangeEnd).add({ days: 1 }).toDate(getLocalTimeZone()).toISOString()
-			: null
+		const { end } = this.dateRange
+		return end ? toCalendarDate(end).add({ days: 1 }).toDate(getLocalTimeZone()).toISOString() : null
 	}
 
 	/** Serializable view of the filters; also the change signal for persistence. */
@@ -137,8 +112,8 @@ export class PaymentFilters {
 			tags: this.tagIds,
 			min: this.amountMin,
 			max: this.amountMax,
-			from: this.dateStart,
-			to: this.dateEnd,
+			from: this.dateRange.start?.toString() ?? null,
+			to: this.dateRange.end?.toString() ?? null,
 			sort: this.sortKey,
 			dir: this.sortDir,
 			status: this.status,
@@ -162,9 +137,6 @@ export class PaymentFilters {
 		this.recurringOnly = stored.recurringOnly ?? DEFAULTS.recurringOnly
 	}
 
-	toggleTag = (id: number) => {
-		this.tagIds = this.tagIds.includes(id) ? this.tagIds.filter((t) => t !== id) : [...this.tagIds, id]
-	}
 	clearTags = () => {
 		this.tagIds = []
 	}
@@ -180,16 +152,6 @@ export class PaymentFilters {
 
 	clearDateRange = () => {
 		this.dateRange = { start: undefined, end: undefined }
-	}
-
-	/**
-	 * Commit the current selection to the query, including a start-only "from" date. Call when the
-	 * date picker closes so a half-picked range still takes effect (a complete range already commits
-	 * on its own via the constructor's watch).
-	 */
-	commitDateRange = () => {
-		this.#dateRangeStart = this.dateRange.start ? this.dateRange.start.toString() : null
-		this.#dateRangeEnd = this.dateRange.end ? this.dateRange.end.toString() : null
 	}
 
 	clearStatus = () => {

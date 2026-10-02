@@ -19,7 +19,7 @@
 
 	import { PaymentFilters } from './filters.svelte'
 	import { formatRowDate, type Row } from './payments-format'
-	import PaymentsFilterBar from './payments-filter-bar.svelte'
+	import PaymentsFilterBar from './filter-bar/filter-bar.svelte'
 	import PaymentsTable from './payments-table.svelte'
 
 	const filters = new PaymentFilters()
