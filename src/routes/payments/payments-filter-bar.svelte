@@ -31,7 +31,7 @@
 	import SlidersHorizontalIcon from '@lucide/svelte/icons/sliders-horizontal'
 
 	import type { DateRange } from 'bits-ui'
-	import type { PaymentFilters, SortKey, StatusFilter } from './filters.svelte'
+	import type { PaymentFilters, SortKey, RecurringStatusFilter } from './filters.svelte'
 	import type { Tag } from './payments-format'
 	import { getPaymentTagsFilterOptions } from '#lib/remote/payments.remote.js'
 
@@ -50,7 +50,7 @@
 	} = $props()
 
 	const PRIMARY_TAG_COUNT = 6
-	const STATUS_OPTIONS: { key: StatusFilter; label: string }[] = [
+	const STATUS_OPTIONS: { key: RecurringStatusFilter; label: string }[] = [
 		{ key: 'all', label: 'All' },
 		{ key: 'pending', label: 'Pending' },
 		{ key: 'confirmed', label: 'Confirmed' }
@@ -93,7 +93,7 @@
 	const amountLabel = $derived(formatAmountLabel(filters.amountMin, filters.amountMax))
 
 	const dateRangeFormatter = new DateFormatter('en-US', { month: 'short', day: 'numeric' })
-	const rangeLabel = $derived(formatRangeLabel(filters.range))
+	const rangeLabel = $derived(formatRangeLabel(filters.dateRange))
 
 	type DatePreset = { label: string; start: DateValue; end: DateValue }
 	const now = today(getLocalTimeZone())
@@ -106,11 +106,11 @@
 		{ label: 'This year', start: startOfYear(now), end: endOfYear(now) }
 	]
 	function applyDatePreset(preset: DatePreset) {
-		filters.range = { start: preset.start, end: preset.end }
+		filters.dateRange = { start: preset.start, end: preset.end }
 	}
 	const isDatePresetActive = (preset: DatePreset) =>
-		filters.range.start?.toString() === preset.start.toString() &&
-		filters.range.end?.toString() === preset.end.toString()
+		filters.dateRange.start?.toString() === preset.start.toString() &&
+		filters.dateRange.end?.toString() === preset.end.toString()
 
 	// --- sort ---
 	const SORT_OPTIONS: { key: SortKey; label: string }[] = [
@@ -130,7 +130,7 @@
 		filters.recurringOnly = false
 	}
 
-	const dateRangeActive = $derived(Boolean(filters.range.start || filters.range.end))
+	const dateRangeActive = $derived(Boolean(filters.dateRange.start || filters.dateRange.end))
 	const activeFilterCount = $derived(
 		[dateRangeActive, amountActive, recurringActive].filter(Boolean).length + filters.tagIds.length
 	)
@@ -207,7 +207,7 @@
 {/snippet}
 
 {#snippet dateRangePanel(numberOfMonths: number, calendarClass = '')}
-	<RangeCalendar bind:value={filters.range} {numberOfMonths} class={calendarClass} />
+	<RangeCalendar bind:value={filters.dateRange} {numberOfMonths} class={calendarClass} />
 	<div class="mt-2 flex flex-wrap gap-2 px-1 pb-1">
 		{#each datePresets as preset (preset.label)}
 			{@const isActive = isDatePresetActive(preset)}
@@ -330,7 +330,7 @@
 	</div>
 
 	<div class="hidden md:contents">
-		<Popover.Root onOpenChange={(open) => !open && filters.commitRange()}>
+		<Popover.Root onOpenChange={(open) => !open && filters.commitDateRange()}>
 			<Popover.Trigger>
 				{#snippet child({ props })}
 					<Button
@@ -403,7 +403,7 @@
 			<DropdownMenu.Content class="w-52" align="end">
 				<DropdownMenu.RadioGroup
 					value={filters.status}
-					onValueChange={(value) => (filters.status = value as StatusFilter)}
+					onValueChange={(value) => (filters.status = value as RecurringStatusFilter)}
 				>
 					<DropdownMenu.GroupHeading class="caption px-2 py-1.5">Status</DropdownMenu.GroupHeading>
 					{#each STATUS_OPTIONS as { key, label } (key)}
@@ -448,7 +448,7 @@
 		</Button>
 	{/if}
 
-	<Drawer.Root onOpenChange={(open) => !open && filters.commitRange()}>
+	<Drawer.Root onOpenChange={(open) => !open && filters.commitDateRange()}>
 		<Drawer.Trigger>
 			{#snippet child({ props })}
 				<Button
