@@ -67,7 +67,10 @@
 	const MIN_AMOUNT_CEILING = 500
 	const amountCeiling = $derived(Math.max(biggestPayment, MIN_AMOUNT_CEILING))
 
-	const sliderValue = $derived<[number, number]>([filters.amountMin ?? 0, filters.amountMax ?? amountCeiling])
+	const sliderValue = $derived<[number, number]>([
+		filters.amountRange.min ?? 0,
+		filters.amountRange.max ?? amountCeiling
+	])
 	function onSliderChange([min, max]: number[]) {
 		// A min of 0 or a max at the ceiling means "no bound", so store null instead of the edge value.
 		filters.setAmount(min <= 0 ? null : min, max >= amountCeiling ? null : max)
@@ -80,7 +83,7 @@
 		{ label: '$500+', min: 500, max: null }
 	]
 	const isBracketActive = (bracket: AmountSliderBracket) =>
-		filters.amountMin === bracket.min && filters.amountMax === bracket.max
+		filters.amountRange.min === bracket.min && filters.amountRange.max === bracket.max
 
 	function formatAmountLabel(min: number | null, max: number | null): string {
 		if (min != null && max != null) return `${formatMoney(min)}–${formatMoney(max)}`
@@ -89,8 +92,7 @@
 		return 'Amount'
 	}
 
-	const amountActive = $derived(filters.amountMin != null || filters.amountMax != null)
-	const amountLabel = $derived(formatAmountLabel(filters.amountMin, filters.amountMax))
+	const amountLabel = $derived(formatAmountLabel(filters.amountRange.min, filters.amountRange.max))
 
 	const dateRangeFormatter = new DateFormatter('en-US', { month: 'short', day: 'numeric' })
 	const rangeLabel = $derived(formatRangeLabel(filters.dateRange))
@@ -120,26 +122,10 @@
 	const sortLabel = $derived(SORT_OPTIONS.find((o) => o.key === filters.sortKey)?.label ?? 'Date')
 
 	const statusLabel = $derived(STATUS_OPTIONS.find((o) => o.key === filters.status)?.label ?? 'All')
-	const recurringActive = $derived(filters.recurringOnly || filters.status !== 'all')
 	const recurringLabel = $derived.by(() => {
 		if (filters.recurringOnly) return filters.status === 'all' ? 'Recurring only' : `Recurring · ${statusLabel}`
 		return filters.status === 'all' ? 'Recurring' : statusLabel
 	})
-	function clearRecurring() {
-		filters.status = 'all'
-		filters.recurringOnly = false
-	}
-
-	const dateRangeActive = $derived(Boolean(filters.dateRange.start || filters.dateRange.end))
-	const activeFilterCount = $derived(
-		[dateRangeActive, amountActive, recurringActive].filter(Boolean).length + filters.tagIds.length
-	)
-	function clearAllFilters() {
-		filters.clearRange()
-		filters.clearAmount()
-		filters.clearTags()
-		clearRecurring()
-	}
 
 	/** The tags surfaced as chips: top by usage, top by spend, plus any currently selected. */
 	function selectPrimaryTags(stats: TagStat[], allTags: Tag[], selectedIds: number[]): Tag[] {
@@ -276,11 +262,11 @@
 			/>
 		</div>
 	</div>
-	{#if amountActive}
+	{#if filters.isAmountActive}
 		<Button
 			variant="link"
 			size="sm"
-			onclick={() => filters.clearAmount()}
+			onclick={filters.clearAmount}
 			class="mt-3 w-full text-[12.5px] font-semibold text-kit-navy"
 		>
 			Clear
@@ -339,13 +325,13 @@
 						size="sm"
 						class={[
 							'rounded-full text-[12.5px] font-semibold hover:text-foreground',
-							dateRangeActive ? 'text-foreground' : 'text-muted-foreground'
+							filters.isDateRangeActive ? 'text-foreground' : 'text-muted-foreground'
 						]}
 					>
 						<CalendarIcon class="size-3.5" />
 						{rangeLabel}
-						{#if dateRangeActive}
-							{@render clearChip(() => filters.clearRange(), 'Clear date range')}
+						{#if filters.isDateRangeActive}
+							{@render clearChip(filters.clearDateRange, 'Clear date range')}
 						{/if}
 					</Button>
 				{/snippet}
@@ -364,13 +350,13 @@
 						size="sm"
 						class={[
 							'rounded-full text-[12.5px] font-semibold hover:text-foreground',
-							amountActive ? 'text-foreground' : 'text-muted-foreground'
+							filters.isAmountActive ? 'text-foreground' : 'text-muted-foreground'
 						]}
 					>
 						<WalletIcon class="size-3.5" />
 						{amountLabel}
-						{#if amountActive}
-							{@render clearChip(() => filters.clearAmount(), 'Clear amount filter')}
+						{#if filters.isAmountActive}
+							{@render clearChip(filters.clearAmount, 'Clear amount filter')}
 						{/if}
 					</Button>
 				{/snippet}
@@ -389,13 +375,13 @@
 						size="sm"
 						class={[
 							'rounded-full text-[12.5px] font-semibold hover:text-foreground',
-							recurringActive ? 'text-foreground' : 'text-muted-foreground'
+							filters.isStatusActive ? 'text-foreground' : 'text-muted-foreground'
 						]}
 					>
 						<RepeatIcon class="size-3.5" />
 						{recurringLabel}
-						{#if recurringActive}
-							{@render clearChip(clearRecurring, 'Clear recurring filters')}
+						{#if filters.isStatusActive}
+							{@render clearChip(filters.clearStatus, 'Clear recurring filters')}
 						{/if}
 					</Button>
 				{/snippet}
@@ -457,16 +443,16 @@
 					size="sm"
 					class={[
 						'rounded-full text-[12.5px] font-semibold md:hidden',
-						activeFilterCount > 0 ? 'text-foreground' : 'text-muted-foreground'
+						filters.activeCount > 0 ? 'text-foreground' : 'text-muted-foreground'
 					]}
 				>
 					<SlidersHorizontalIcon class="size-3.5" />
 					Filters
-					{#if activeFilterCount > 0}
+					{#if filters.activeCount > 0}
 						<span
 							class="inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-semibold leading-none text-primary-foreground [text-box:trim-both_cap_alphabetic]"
 						>
-							{activeFilterCount}
+							{filters.activeCount}
 						</span>
 					{/if}
 				</Button>
@@ -543,7 +529,7 @@
 				</section>
 			</div>
 			<Drawer.Footer class="flex-row gap-2 border-t border-border">
-				<Button variant="secondary" onclick={clearAllFilters} class="flex-1 rounded-full">Clear all</Button>
+				<Button variant="secondary" onclick={filters.clearAll} class="flex-1 rounded-full">Clear all</Button>
 				<Drawer.Close>
 					{#snippet child({ props })}
 						<Button {...props} class="flex-1 rounded-full">Show results</Button>

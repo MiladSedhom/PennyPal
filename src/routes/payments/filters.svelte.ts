@@ -52,7 +52,7 @@ export class PaymentFilters {
 	recurringOnly = $state(DEFAULTS.recurringOnly)
 
 	#debouncedSearch = new Debounced(() => this.search, 300)
-	#debouncedAmount = new Debounced(() => ({ min: this.amountMin, max: this.amountMax }), 300)
+	#debouncedAmount = new Debounced(() => this.amountRange, 300)
 	// seprate range for query so we contorl when they trigger a refetch.
 	#dateRangeStart = $state<string | null>(DEFAULTS.from)
 	#dateRangeEnd = $state<string | null>(DEFAULTS.to)
@@ -90,6 +90,27 @@ export class PaymentFilters {
 
 	get debouncedAmount(): { min: number | null; max: number | null } {
 		return this.#debouncedAmount.current
+	}
+
+	// Typing a min above the max is allowed mid-edit; everything downstream reads the ordered range.
+	get amountRange(): { min: number | null; max: number | null } {
+		const { amountMin: min, amountMax: max } = this
+		return min != null && max != null && min > max ? { min: max, max: min } : { min, max }
+	}
+
+	get isDateRangeActive(): boolean {
+		return Boolean(this.dateRange.start || this.dateRange.end)
+	}
+	get isAmountActive(): boolean {
+		return this.amountMin != null || this.amountMax != null
+	}
+	get isStatusActive(): boolean {
+		return this.status !== DEFAULTS.status || this.recurringOnly !== DEFAULTS.recurringOnly
+	}
+	get activeCount(): number {
+		return (
+			[this.isDateRangeActive, this.isAmountActive, this.isStatusActive].filter(Boolean).length + this.tagIds.length
+		)
 	}
 
 	get dateStart(): string | null {
@@ -141,23 +162,23 @@ export class PaymentFilters {
 		this.recurringOnly = stored.recurringOnly ?? DEFAULTS.recurringOnly
 	}
 
-	toggleTag(id: number) {
+	toggleTag = (id: number) => {
 		this.tagIds = this.tagIds.includes(id) ? this.tagIds.filter((t) => t !== id) : [...this.tagIds, id]
 	}
-	clearTags() {
+	clearTags = () => {
 		this.tagIds = []
 	}
 
-	setAmount(min: number | null, max: number | null) {
+	setAmount = (min: number | null, max: number | null) => {
 		this.amountMin = min
 		this.amountMax = max
 	}
-	clearAmount() {
+	clearAmount = () => {
 		this.amountMin = null
 		this.amountMax = null
 	}
 
-	clearRange() {
+	clearDateRange = () => {
 		this.dateRange = { start: undefined, end: undefined }
 	}
 
@@ -166,12 +187,24 @@ export class PaymentFilters {
 	 * date picker closes so a half-picked range still takes effect (a complete range already commits
 	 * on its own via the constructor's watch).
 	 */
-	commitDateRange() {
+	commitDateRange = () => {
 		this.#dateRangeStart = this.dateRange.start ? this.dateRange.start.toString() : null
 		this.#dateRangeEnd = this.dateRange.end ? this.dateRange.end.toString() : null
 	}
 
-	setSort(key: SortKey) {
+	clearStatus = () => {
+		this.status = DEFAULTS.status
+		this.recurringOnly = DEFAULTS.recurringOnly
+	}
+
+	clearAll = () => {
+		this.clearDateRange()
+		this.clearAmount()
+		this.clearTags()
+		this.clearStatus()
+	}
+
+	setSort = (key: SortKey) => {
 		this.sortKey = key
 		this.sortDir = 'desc'
 	}
