@@ -1,11 +1,11 @@
 import { onMount } from 'svelte'
 import { Debounced, PersistedState, watch } from 'runed'
-import { parseDate } from '@internationalized/date'
+import { getLocalTimeZone, parseDate, toCalendarDate } from '@internationalized/date'
 import type { DateRange } from 'bits-ui'
 
 export type SortKey = 'date' | 'amount'
 export type SortDir = 'asc' | 'desc'
-export type StatusFilter = 'all' | 'pending' | 'confirmed'
+export type RecurringStatusFilter = 'all' | 'pending' | 'confirmed'
 
 type FilterSnapshot = {
 	search: string
@@ -16,7 +16,7 @@ type FilterSnapshot = {
 	to: string | null
 	sort: SortKey
 	dir: SortDir
-	status: StatusFilter
+	status: RecurringStatusFilter
 	recurringOnly: boolean
 }
 
@@ -45,39 +45,18 @@ export class PaymentFilters {
 	tagIds = $state<number[]>([...DEFAULTS.tags])
 	amountMin = $state<number | null>(DEFAULTS.min)
 	amountMax = $state<number | null>(DEFAULTS.max)
-	range = $state<DateRange>({ start: undefined, end: undefined })
+	dateRange = $state<DateRange>({ start: undefined, end: undefined })
 	sortKey = $state<SortKey>(DEFAULTS.sort)
 	sortDir = $state<SortDir>(DEFAULTS.dir)
-	status = $state<StatusFilter>(DEFAULTS.status)
+	status = $state<RecurringStatusFilter>(DEFAULTS.status)
 	recurringOnly = $state(DEFAULTS.recurringOnly)
 
 	#debouncedSearch = new Debounced(() => this.search, 300)
-	#debouncedAmount = new Debounced(() => ({ min: this.amountMin, max: this.amountMax }), 300)
-	// seprate range for query so we contorl when they trigger a refetch.
-	#queryStart = $state<string | null>(DEFAULTS.from)
-	#queryEnd = $state<string | null>(DEFAULTS.to)
+	#debouncedAmount = new Debounced(() => this.amountRange, 300)
 	#store = new PersistedState<FilterSnapshot>(STORAGE_KEY, DEFAULTS)
 
 	constructor() {
-		// Restore once, after mount: localStorage is unavailable during SSR, so deferring
-		// keeps the server render and the first client render identical (no hydration flash).
 		onMount(() => this.#restore())
-		// Commit the picked range to the query only when it's a complete start+end pair (or fully
-		// cleared); ignore the start-only state the calendar passes through during re-selection.
-		watch(
-			() => [this.range.start, this.range.end] as const,
-			([start, end]) => {
-				if (start && end) {
-					this.#queryStart = start.toString()
-					this.#queryEnd = end.toString()
-				} else if (!start && !end) {
-					this.#queryStart = null
-					this.#queryEnd = null
-				}
-			}
-		)
-		// Persist on change. `lazy` skips the initial run so the defaults can't overwrite
-		// what's already stored before #restore() applies it.
 		watch(
 			() => this.snapshot,
 			(snapshot) => {
@@ -95,11 +74,35 @@ export class PaymentFilters {
 		return this.#debouncedAmount.current
 	}
 
-	get dateStart(): string | null {
-		return this.#queryStart
+	// Typing a min above the max is allowed mid-edit; everything downstream reads the ordered range.
+	get amountRange(): { min: number | null; max: number | null } {
+		const { amountMin: min, amountMax: max } = this
+		return min != null && max != null && min > max ? { min: max, max: min } : { min, max }
 	}
-	get dateEnd(): string | null {
-		return this.#queryEnd
+
+	get isDateRangeActive(): boolean {
+		return Boolean(this.dateRange.start || this.dateRange.end)
+	}
+	get isAmountActive(): boolean {
+		return this.amountMin != null || this.amountMax != null
+	}
+	get isStatusActive(): boolean {
+		return this.status !== DEFAULTS.status || this.recurringOnly !== DEFAULTS.recurringOnly
+	}
+	get activeCount(): number {
+		return (
+			[this.isDateRangeActive, this.isAmountActive, this.isStatusActive].filter(Boolean).length + this.tagIds.length
+		)
+	}
+
+	// Resolved to instants here so the range follows the user's timezone, not the server's.
+	get createdFrom(): string | null {
+		const { start } = this.dateRange
+		return start ? toCalendarDate(start).toDate(getLocalTimeZone()).toISOString() : null
+	}
+	get createdBefore(): string | null {
+		const { end } = this.dateRange
+		return end ? toCalendarDate(end).add({ days: 1 }).toDate(getLocalTimeZone()).toISOString() : null
 	}
 
 	/** Serializable view of the filters; also the change signal for persistence. */
@@ -109,8 +112,8 @@ export class PaymentFilters {
 			tags: this.tagIds,
 			min: this.amountMin,
 			max: this.amountMax,
-			from: this.dateStart,
-			to: this.dateEnd,
+			from: this.dateRange.start?.toString() ?? null,
+			to: this.dateRange.end?.toString() ?? null,
 			sort: this.sortKey,
 			dir: this.sortDir,
 			status: this.status,
@@ -124,7 +127,7 @@ export class PaymentFilters {
 		this.tagIds = [...(stored.tags ?? DEFAULTS.tags)]
 		this.amountMin = stored.min ?? DEFAULTS.min
 		this.amountMax = stored.max ?? DEFAULTS.max
-		this.range = {
+		this.dateRange = {
 			start: stored.from ? parseDate(stored.from) : undefined,
 			end: stored.to ? parseDate(stored.to) : undefined
 		}
@@ -134,37 +137,36 @@ export class PaymentFilters {
 		this.recurringOnly = stored.recurringOnly ?? DEFAULTS.recurringOnly
 	}
 
-	toggleTag(id: number) {
-		this.tagIds = this.tagIds.includes(id) ? this.tagIds.filter((t) => t !== id) : [...this.tagIds, id]
-	}
-	clearTags() {
+	clearTags = () => {
 		this.tagIds = []
 	}
 
-	setAmount(min: number | null, max: number | null) {
+	setAmount = (min: number | null, max: number | null) => {
 		this.amountMin = min
 		this.amountMax = max
 	}
-	clearAmount() {
+	clearAmount = () => {
 		this.amountMin = null
 		this.amountMax = null
 	}
 
-	clearRange() {
-		this.range = { start: undefined, end: undefined }
+	clearDateRange = () => {
+		this.dateRange = { start: undefined, end: undefined }
 	}
 
-	/**
-	 * Commit the current selection to the query, including a start-only "from" date. Call when the
-	 * date picker closes so a half-picked range still takes effect (a complete range already commits
-	 * on its own via the constructor's watch).
-	 */
-	commitRange() {
-		this.#queryStart = this.range.start ? this.range.start.toString() : null
-		this.#queryEnd = this.range.end ? this.range.end.toString() : null
+	clearStatus = () => {
+		this.status = DEFAULTS.status
+		this.recurringOnly = DEFAULTS.recurringOnly
 	}
 
-	setSort(key: SortKey) {
+	clearAll = () => {
+		this.clearDateRange()
+		this.clearAmount()
+		this.clearTags()
+		this.clearStatus()
+	}
+
+	setSort = (key: SortKey) => {
 		this.sortKey = key
 		this.sortDir = 'desc'
 	}

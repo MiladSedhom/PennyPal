@@ -2,24 +2,21 @@ import { command, form, getRequestEvent, query } from '$app/server'
 import { hash, verify } from '@node-rs/argon2'
 import { invalid, redirect } from '@sveltejs/kit'
 import * as v from 'valibot'
-import * as auth from '$lib/server/auth'
-import { oauthAccount, user } from '$lib/server/db/schema'
+import * as auth from '#lib/server/auth.js'
+import { oauthAccount, user } from '#lib/server/db/schema/index.js'
 import { and, eq } from 'drizzle-orm'
-import { db } from '$lib/server/db'
-import { chooseUsernameSchema, loginOrRegisterSchema } from '$lib/schemas'
-import { clearPendingSignup, readPendingSignup } from '$lib/server/oauth'
-import { createOAuthAccount, getOAuthAccountsByUser } from '$lib/server/db/modules/oauth-accounts'
+import { db } from '#lib/server/db/index.js'
+import { chooseUsernameSchema, loginOrRegisterSchema } from '#lib/schemas/index.js'
+import { clearPendingSignup, readPendingSignup } from '#lib/server/oauth.js'
+import { createOAuthAccount, getOAuthAccountsByUser } from '#lib/server/db/modules/oauth-accounts.js'
 
 export const getLoggedInUser = query(async () => {
-	const { locals, url } = getRequestEvent()
-
-	// Allow the whole /login/* subtree (sign-in, OAuth, the post-OAuth username step).
-	if (!locals.user && !url.pathname.startsWith('/login') && url.pathname !== '/register') {
-		throw redirect(302, '/login')
-	}
-
-	return locals.user!
+	const { locals } = getRequestEvent()
+	if (!locals.user) redirect(302, '/login')
+	return locals.user
 })
+
+export const getSessionUser = query(async () => getRequestEvent().locals.user)
 
 const ARGON_OPTS = { memoryCost: 19456, timeCost: 2, outputLen: 32, parallelism: 1 }
 

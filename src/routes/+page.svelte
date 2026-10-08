@@ -1,23 +1,23 @@
 <script lang="ts">
 	import ConstructionIcon from '@lucide/svelte/icons/construction'
 	import { resolve } from '$app/paths'
-	import { Button } from '$lib/components/ui/button'
+	import { Button } from '#lib/components/ui/button/index.js'
 	/*
-	import { getLoggedInUser } from '$lib/remote/auth.remote'
-	import { getPayments } from '$lib/remote/payments.remote'
-	import { getTags } from '$lib/remote/tags.remote'
-	import { getCurrentBudget } from '$lib/remote/budgets.remote'
-	import { getRecurringPayments } from '$lib/remote/recurring.remote'
-	import { formatCadence } from '$lib/recurrence'
-	import PaymentsForm from '$lib/components/payments-form.svelte'
-	import RecurringRenewDialog from '$lib/components/recurring-renew-dialog.svelte'
+	import { getLoggedInUser } from '#lib/remote/auth.remote.js'
+	import { getPayments } from '#lib/remote/payments.remote.js'
+	import { getTags } from '#lib/remote/tags.remote.js'
+	import { getCurrentBudget } from '#lib/remote/budgets.remote.js'
+	import { getRecurringPayments } from '#lib/remote/recurring.remote.js'
+	import { formatCadence } from '#lib/recurrence.js'
+	import PaymentsForm from '#lib/components/payments-form.svelte'
+	import RecurringRenewDialog from '#lib/components/recurring-renew-dialog.svelte'
 	import { resolve } from '$app/paths'
 	import { SvelteDate, SvelteSet, SvelteMap } from 'svelte/reactivity'
 
-	import Card from '$lib/components/pp/card.svelte'
-	import TagIconChip from '$lib/components/pp/tag-icon-chip.svelte'
-	import { getSwatch } from '$lib/tag-meta'
-	import { formatMoney } from '$lib/utils'
+	import Card from '#lib/components/pp/card.svelte'
+	import TagIconChip from '#lib/components/pp/tag-icon-chip.svelte'
+	import { getSwatch } from '#lib/tag-meta.js'
+	import { formatMoney } from '#lib/utils/index.js'
 
 	import CalendarIcon from '@lucide/svelte/icons/calendar'
 	import WalletIcon from '@lucide/svelte/icons/wallet'
@@ -217,13 +217,17 @@
 	*/
 </script>
 
+<svelte:head>
+	<title>Dashboard · PennyPal</title>
+</svelte:head>
+
 <div class="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-6 text-center">
-	<span class="flex size-14 items-center justify-center rounded-full bg-muted text-text-dim">
+	<span class="flex size-14 items-center justify-center rounded-full bg-muted text-muted-foreground">
 		<ConstructionIcon class="size-7" />
 	</span>
 	<h1 class="m-0 font-display text-2xl font-bold tracking-[-0.03em]">This page is under construction</h1>
-	<p class="m-0 text-text-dim">Check out the payments page for now.</p>
-	<Button href={resolve('/payments')} class="rounded-full">Go to payments</Button>
+	<p class="m-0 text-muted-foreground">Check out the payments page for now.</p>
+	<Button href={resolve('payments')} class="rounded-full">Go to payments</Button>
 </div>
 
 <!--
@@ -238,7 +242,7 @@
 		</div>
 		<div class="flex gap-2.5">
 			<span
-				class="inline-flex h-[40px] items-center gap-2 rounded-full border border-border-soft bg-transparent px-[18px] text-[13.5px] font-semibold text-foreground"
+				class="inline-flex h-[40px] items-center gap-2 rounded-full border border-border bg-transparent px-[18px] text-[13.5px] font-semibold text-foreground"
 			>
 				<CalendarIcon size={15} />
 				{monthLabel}
@@ -265,7 +269,7 @@
 					</div>
 					<div class="mt-2 flex justify-between">
 						<span class="caption !text-text-ink-soft">{pctUsed.toFixed(0)}% used · {daysLeft} days left</span>
-						<span class="caption !text-lime-text">{formatMoney(remaining)} remaining</span>
+						<span class="caption !text-kit-navy">{formatMoney(remaining)} remaining</span>
 					</div>
 				{:else}
 					<div class="mt-4">
@@ -326,25 +330,25 @@
 
 		<div class="flex flex-col gap-4">
 			<Card class="flex min-h-[122px] flex-col justify-between" pad="lg">
-				<span class="inline-flex items-center gap-[7px] text-[12.5px] font-semibold text-text-dim">
+				<span class="inline-flex items-center gap-[7px] text-[12.5px] font-semibold text-muted-foreground">
 					<TrendingDownIcon size={14} /> Daily average
 				</span>
 				<div>
 					<div class="font-display text-[30px] font-bold leading-none tracking-[-0.03em]">{formatMoney(dailyAvg)}</div>
-					<div class="mt-[5px] text-[12px] font-medium text-text-mute">
+					<div class="mt-[5px] text-[12px] font-medium text-faint">
 						Across {activeDays} active day{activeDays === 1 ? '' : 's'}
 					</div>
 				</div>
 			</Card>
 			<Card class="flex min-h-[122px] flex-col justify-between" pad="lg">
-				<span class="inline-flex items-center gap-[7px] text-[12.5px] font-semibold text-text-dim">
+				<span class="inline-flex items-center gap-[7px] text-[12.5px] font-semibold text-muted-foreground">
 					<PiggyBankIcon size={14} /> Projected savings
 				</span>
 				<div>
 					<div class="font-display text-[30px] font-bold leading-none tracking-[-0.03em]">
 						{budget ? formatMoney(projectedSavings) : '—'}
 					</div>
-					<div class="mt-[5px] text-[12px] font-medium text-text-mute">
+					<div class="mt-[5px] text-[12px] font-medium text-faint">
 						{budget ? 'If pace holds' : 'Set a budget to project'}
 					</div>
 				</div>
@@ -371,7 +375,7 @@
 						<div
 							class="w-full rounded-md"
 							style:height="{h}%"
-							style:background={i === trend.length - 1 ? 'var(--text)' : 'var(--mint-deep)'}
+							style:background={i === trend.length - 1 ? 'var(--foreground)' : 'color-mix(in srgb, var(--foreground) 10%, var(--background))'}
 							style:min-height="4px"
 						></div>
 					</div>
@@ -386,14 +390,14 @@
 		<Card class="flex flex-col">
 			<span class="mb-4 font-display text-[19px] font-semibold tracking-[-0.02em]">Insights</span>
 			{#if insights.length === 0}
-				<div class="flex flex-1 items-center justify-center py-6 text-[13px] text-text-mute">
+				<div class="flex flex-1 items-center justify-center py-6 text-[13px] text-faint">
 					<span class="inline-flex items-center gap-2"><SparklesIcon size={14} /> Add data to see insights</span>
 				</div>
 			{:else}
 				<div class="flex flex-1 flex-col gap-3">
 					{#each insights as ins, i (i)}
-						{@const toneBg = ins.tone === 'warn' ? '#f3e2c9' : ins.tone === 'good' ? 'var(--mint)' : '#cfe0e8'}
-						{@const toneInk = ins.tone === 'warn' ? '#8a5a1e' : ins.tone === 'good' ? 'var(--lime-text)' : '#2a5c71'}
+						{@const toneBg = ins.tone === 'warn' ? '#f3e2c9' : ins.tone === 'good' ? 'var(--muted)' : '#cfe0e8'}
+						{@const toneInk = ins.tone === 'warn' ? '#8a5a1e' : ins.tone === 'good' ? 'var(--bits-ui-navy)' : '#2a5c71'}
 						<div class="flex items-start gap-3">
 							<span
 								class="inline-flex h-[30px] w-[30px] shrink-0 items-center justify-center rounded-[9px]"
@@ -404,7 +408,7 @@
 							</span>
 							<div>
 								<div class="text-[13.5px] font-semibold">{ins.head}</div>
-								<div class="mt-0.5 text-[12.5px] leading-[1.45] text-text-dim">{ins.body}</div>
+								<div class="mt-0.5 text-[12.5px] leading-[1.45] text-muted-foreground">{ins.body}</div>
 							</div>
 						</div>
 					{/each}
@@ -419,13 +423,13 @@
 				<span class="font-display text-[19px] font-semibold tracking-[-0.02em]">Budgets by category</span>
 				<a
 					href={resolve('/tags')}
-					class="rounded-full border border-border-soft bg-transparent px-[13px] py-[7px] text-[12.5px] font-semibold text-foreground no-underline"
+					class="rounded-full border border-border bg-transparent px-[13px] py-[7px] text-[12.5px] font-semibold text-foreground no-underline"
 				>
 					Manage
 				</a>
 			</div>
 			{#if categoryBudgets.length === 0}
-				<div class="py-8 text-center text-[13px] text-text-mute">
+				<div class="py-8 text-center text-[13px] text-faint">
 					No category budgets yet — set a monthly budget on a tag.
 				</div>
 			{:else}
@@ -440,14 +444,14 @@
 								<span class="flex-1 text-[14px] font-semibold">{c.name}</span>
 								<span class="text-[13.5px] font-semibold tabular-nums">
 									{formatMoney(c.spent)}
-									<span class="font-medium text-text-mute">/ {formatMoney(c.budget)}</span>
+									<span class="font-medium text-faint">/ {formatMoney(c.budget)}</span>
 								</span>
 							</div>
-							<div class="ml-[42px] h-[7px] overflow-hidden rounded-full bg-border-soft">
+							<div class="ml-[42px] h-[7px] overflow-hidden rounded-full bg-border">
 								<div
 									class="h-full rounded-full"
 									style:width="{pct}%"
-									style:background={over ? 'var(--danger)' : swatch.ink}
+									style:background={over ? 'var(--destructive)' : swatch.ink}
 								></div>
 							</div>
 						</div>
@@ -459,10 +463,10 @@
 		<Card class="flex flex-col">
 			<span class="mb-4 font-display text-[19px] font-semibold tracking-[-0.02em]">Upcoming</span>
 			{#if upcoming.length === 0}
-				<div class="flex flex-1 items-center justify-center py-6 text-[13px] text-text-mute">
+				<div class="flex flex-1 items-center justify-center py-6 text-[13px] text-faint">
 					<a
 						href={resolve('/recurring')}
-						class="inline-flex items-center gap-2 text-text-mute no-underline hover:text-foreground"
+						class="inline-flex items-center gap-2 text-faint no-underline hover:text-foreground"
 					>
 						<RepeatIcon size={14} /> No recurring payments — add one
 					</a>
@@ -470,7 +474,7 @@
 			{:else}
 				<div class="flex flex-col">
 					{#each upcoming as b, i (i)}
-						<div class="flex items-center gap-3 py-3" class:border-t={i > 0} class:border-border-soft={i > 0}>
+						<div class="flex items-center gap-3 py-3" class:border-t={i > 0} class:border-border={i > 0}>
 							<TagIconChip color={b.color} icon={b.icon} size={32} />
 							<div class="min-w-0 flex-1">
 								<div class="truncate text-[13.5px] font-semibold">{b.note}</div>
@@ -480,14 +484,14 @@
 								<button
 									type="button"
 									onclick={() => (paying = b)}
-									class="inline-flex items-center gap-1 rounded-full bg-mint px-3 py-1.5 text-[12px] font-semibold text-foreground hover:bg-mint-deep"
+									class="inline-flex items-center gap-1 rounded-full bg-muted px-3 py-1.5 text-[12px] font-semibold text-foreground hover:bg-foreground/10"
 								>
 									<CheckIcon size={12} /> Pay
 								</button>
 							{/if}
 							<div class="text-right">
 								<div class="text-[13.5px] font-semibold tabular-nums">{formatMoney(b.amount)}</div>
-								<span class="caption {b.due === 'Due' ? '!text-[color:var(--danger)]' : ''}">{b.due}</span>
+								<span class="caption {b.due === 'Due' ? '!text-[color:var(--destructive)]' : ''}">{b.due}</span>
 							</div>
 						</div>
 					{/each}

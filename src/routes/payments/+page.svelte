@@ -2,25 +2,24 @@
 	import { watch } from 'runed'
 	import {
 		getPaymentsPage,
-		getPaymentsMeta,
+		getPaymentTagsFilterOptions,
 		deletePayment,
 		confirmPayment,
 		confirmAllPendingPayments
-	} from '$lib/remote/payments.remote'
-	import { getTags } from '$lib/remote/tags.remote'
-	import { dialogs } from '$lib/components/pp/confirm-dialog'
+	} from '#lib/remote/payments.remote.js'
+	import { getTags } from '#lib/remote/tags.remote.js'
+	import { dialogs } from '#lib/components/pp/confirm-dialog/index.js'
 	import { type PaginationState } from '@tanstack/table-core'
 
-	import PaymentsForm from '$lib/components/payments-form.svelte'
-	import PaymentEditDialog from '$lib/components/payment-edit-dialog.svelte'
-	import Card from '$lib/components/pp/card.svelte'
-	import { Button } from '$lib/components/ui/button'
-	import { formatMoney } from '$lib/utils'
-	import ArrowUpRightIcon from '@lucide/svelte/icons/arrow-up-right'
+	import PaymentsForm from '#lib/components/payments-form.svelte'
+	import PaymentEditDialog from '#lib/components/payment-edit-dialog.svelte'
+	import { formatMoney } from '#lib/utils/index.js'
+	import { Button } from '#lib/components/ui/button/index.js'
+	import CheckIcon from '@lucide/svelte/icons/check'
 
 	import { PaymentFilters } from './filters.svelte'
 	import { formatRowDate, type Row } from './payments-format'
-	import PaymentsFilterBar from './payments-filter-bar.svelte'
+	import PaymentsFilterBar from './filter-bar/filter-bar.svelte'
 	import PaymentsTable from './payments-table.svelte'
 
 	const filters = new PaymentFilters()
@@ -35,17 +34,16 @@
 		tagIds: filters.tagIds,
 		amountMin: filters.debouncedAmount.min,
 		amountMax: filters.debouncedAmount.max,
-		dateStart: filters.dateStart,
-		dateEnd: filters.dateEnd,
-		confirmed: filters.status,
+		createdFrom: filters.createdFrom,
+		createdBefore: filters.createdBefore,
+		status: filters.status,
 		recurringOnly: filters.recurringOnly
 	})
 
 	const pageData = $derived(await getPaymentsPage(args))
-	const meta = $derived(await getPaymentsMeta())
 	const tags = $derived(await getTags())
 
-	// Reset to the first page whenever a filter or sort changes (not on page change).
+	// reset to the first page whenever a filter or sort changes (not on page change).
 	watch(
 		() => filters.snapshot,
 		() => {
@@ -58,7 +56,7 @@
 
 	function refreshPayments() {
 		getPaymentsPage(args).refresh()
-		getPaymentsMeta().refresh()
+		getPaymentTagsFilterOptions().refresh()
 	}
 
 	async function confirmRow(r: Row) {
@@ -89,25 +87,28 @@
 	}
 </script>
 
-<div class="p-10 pt-4">
+<svelte:head>
+	<title>Payments · PennyPal</title>
+</svelte:head>
+
+<div class="p-4 md:p-10 md:pt-4">
 	<div class="flex items-end justify-between mb-4">
 		<div>
-			<h1 class="m-0 mt-1.5 font-display text-2xl font-bold tracking-[-0.04em] text-foreground">Payments</h1>
+			<h1 class="font-display text-xl font-bold tracking-[-0.03em] text-foreground md:text-2xl">Payments</h1>
 		</div>
-		<div class="flex gap-2.5">
+		<div class="flex flex-wrap justify-end gap-2.5">
+			{#if filters.status === 'pending' && pageData.total > 0}
+				<Button variant="secondary" onclick={confirmAllPending} class="rounded-full">
+					<CheckIcon class="size-4" /> Confirm all ({pageData.total})
+				</Button>
+			{/if}
 			<PaymentsForm onsaved={refreshPayments} />
 		</div>
 	</div>
 
-	<Card pad="none" class="mb-4">
-		<PaymentsFilterBar
-			{filters}
-			{tags}
-			{meta}
-			pendingCount={filters.status === 'pending' ? pageData.total : 0}
-			onconfirmAll={confirmAllPending}
-		/>
-	</Card>
+	<div class="mb-4">
+		<PaymentsFilterBar {filters} />
+	</div>
 
 	<PaymentsTable
 		{filters}

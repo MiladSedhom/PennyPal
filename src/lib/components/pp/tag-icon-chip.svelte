@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getSwatch, getIcon } from '$lib/tag-meta'
+	import { getSwatch, getIcon } from '#lib/tag-meta.js'
 
 	type Props = { color: string; icon: string; size?: number }
 	const { color, icon, size = 32 }: Props = $props()

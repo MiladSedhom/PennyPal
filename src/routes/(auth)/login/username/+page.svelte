@@ -1,11 +1,10 @@
 <script lang="ts">
-	import { Button } from '$lib/components/ui/button'
-	import { chooseUsername } from '$lib/remote/auth.remote'
-	import Card from '$lib/components/pp/card.svelte'
+	import { Button } from '#lib/components/ui/button/index.js'
+	import { chooseUsername } from '#lib/remote/auth.remote.js'
 	import WalletIcon from '@lucide/svelte/icons/wallet'
 	import LoaderIcon from '@lucide/svelte/icons/loader-circle'
-	import GoogleIcon from '$lib/components/icons/google.svelte'
-	import GithubIcon from '$lib/components/icons/github.svelte'
+	import GoogleIcon from '#lib/components/icons/google.svelte'
+	import GithubIcon from '#lib/components/icons/github.svelte'
 
 	let { data } = $props()
 
@@ -13,11 +12,17 @@
 	const busy = $derived(chooseUsername.pending > 0)
 </script>
 
+<svelte:head>
+	<title>Choose a username · PennyPal</title>
+</svelte:head>
+
 <div class="flex min-h-screen items-center justify-center p-6">
-	<Card pad="none" class="w-full max-w-[420px] overflow-hidden shadow-lg">
-		<div class="border-b border-border-soft px-8 py-6">
+	<div class="w-full max-w-[420px] overflow-hidden rounded-card border bg-card shadow-lg">
+		<div class="border-b border-border px-8 py-6">
 			<div class="flex items-center gap-[11px]">
-				<span class="inline-flex h-[30px] w-[30px] items-center justify-center rounded-[9px] bg-primary text-primary-foreground">
+				<span
+					class="inline-flex h-[30px] w-[30px] items-center justify-center rounded-[9px] bg-primary text-primary-foreground"
+				>
 					<WalletIcon size={16} />
 				</span>
 				<span class="font-display text-[21px] font-bold tracking-[-0.04em]">PennyPal</span>
@@ -38,7 +43,7 @@
 					{...chooseUsername.fields.username.as('text', data.suggestedName)}
 					autocomplete="username"
 					placeholder="e.g. {data.suggestedName || 'penny_saver'}"
-					class="rounded-[10px] border border-border bg-bg-warm px-[14px] py-[11px] text-[14px] font-medium text-foreground outline-none focus:border-ring"
+					class="rounded-[10px] border border-border bg-muted px-[14px] py-[11px] text-[14px] font-medium text-foreground outline-none focus:border-ring"
 				/>
 			</label>
 
@@ -59,5 +64,5 @@
 				Continue
 			</Button>
 		</form>
-	</Card>
+	</div>
 </div>

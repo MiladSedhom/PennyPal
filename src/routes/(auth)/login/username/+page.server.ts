@@ -1,6 +1,6 @@
 import { redirect } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
-import { readPendingSignup } from '$lib/server/oauth'
+import { readPendingSignup } from '#lib/server/oauth.js'
 
 export const load: PageServerLoad = (event) => {
 	if (event.locals.user) redirect(302, '/')

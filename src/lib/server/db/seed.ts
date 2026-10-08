@@ -5,7 +5,7 @@
  *           pnpm db:seed someuser   (targets a specific username)
  *
  * Runs outside SvelteKit, so it reads DATABASE_URL straight from .env and builds
- * its own drizzle client (it must NOT import $lib/server/db, which depends on $env).
+ * its own drizzle client (it must NOT import #lib/server/db, which depends on $app/env).
  *
  * It wipes the target user's existing payments/tags/budgets, then inserts fresh
  * data so reruns stay clean.

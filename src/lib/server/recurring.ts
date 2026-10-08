@@ -1,7 +1,7 @@
 import { and, desc, eq, inArray, isNull, lte, or } from 'drizzle-orm'
-import { db } from '$lib/server/db'
-import { payment, paymentsToTags, recurringPayment, recurringPaymentsToTags } from '$lib/server/db/schema'
-import { firstOccurrenceAtOrAfter, occurrence, type Schedule } from '$lib/recurrence'
+import { db } from '#lib/server/db/index.js'
+import { payment, paymentsToTags, recurringPayment, recurringPaymentsToTags } from '#lib/server/db/schema/index.js'
+import { firstOccurrenceAtOrAfter, occurrence, type Schedule } from '#lib/recurrence.js'
 
 // Per-instance throttle so the auth hook's call is a Map lookup on most requests.
 const lastChecked = new Map<string, number>()

@@ -2,9 +2,15 @@ import type { RequestEvent } from '@sveltejs/kit'
 import { redirect } from '@sveltejs/kit'
 import { createHmac, timingSafeEqual } from 'node:crypto'
 import { Google, GitHub } from 'arctic'
-import { env } from '$env/dynamic/private'
-import { createSession, generateSessionToken, setSessionTokenCookie } from '$lib/server/auth'
-import { createOAuthAccount, getOAuthAccount, getUserByEmail } from '$lib/server/db/modules/oauth-accounts'
+import {
+	AUTH_SECRET,
+	GITHUB_CLIENT_ID,
+	GITHUB_CLIENT_SECRET,
+	GOOGLE_CLIENT_ID,
+	GOOGLE_CLIENT_SECRET
+} from '$app/env/private'
+import { createSession, generateSessionToken, setSessionTokenCookie } from '#lib/server/auth.js'
+import { createOAuthAccount, getOAuthAccount, getUserByEmail } from '#lib/server/db/modules/oauth-accounts.js'
 
 export type OAuthProvider = 'google' | 'github'
 
@@ -12,22 +18,21 @@ export type OAuthProvider = 'google' | 'github'
 // (localhost in dev, the deployed origin in prod). Both must be registered with the provider.
 export function googleClient(origin: string) {
 	return new Google(
-		requireEnv('GOOGLE_CLIENT_ID'),
-		requireEnv('GOOGLE_CLIENT_SECRET'),
+		requireEnv(GOOGLE_CLIENT_ID, 'GOOGLE_CLIENT_ID'),
+		requireEnv(GOOGLE_CLIENT_SECRET, 'GOOGLE_CLIENT_SECRET'),
 		`${origin}/login/google/callback`
 	)
 }
 
 export function githubClient(origin: string) {
 	return new GitHub(
-		requireEnv('GITHUB_CLIENT_ID'),
-		requireEnv('GITHUB_CLIENT_SECRET'),
+		requireEnv(GITHUB_CLIENT_ID, 'GITHUB_CLIENT_ID'),
+		requireEnv(GITHUB_CLIENT_SECRET, 'GITHUB_CLIENT_SECRET'),
 		`${origin}/login/github/callback`
 	)
 }
 
-function requireEnv(name: string): string {
-	const value = env[name]
+function requireEnv(value: string | undefined, name: string): string {
 	if (!value) throw new Error(`${name} is not set`)
 	return value
 }
@@ -84,9 +89,11 @@ export async function finishOAuthLogin(event: RequestEvent, profile: OAuthProfil
  */
 export async function linkOAuthAccount(event: RequestEvent, profile: OAuthProfile): Promise<never> {
 	const userId = event.locals.user?.id
+
 	if (!userId) return finishOAuthLogin(event, profile)
 
 	const existing = await getOAuthAccount(profile.provider, profile.providerUserId)
+
 	if (existing) {
 		// Already linked to this user → no-op; linked to someone else → refuse.
 		redirect(302, existing.userId === userId ? `/account?linked=${profile.provider}` : '/account?error=in_use')
@@ -118,7 +125,7 @@ const PENDING_TTL_SECONDS = 60 * 10
 
 // HMAC-signed so a user can't forge a providerUserId and squat someone else's identity.
 function sign(payload: string): string {
-	return createHmac('sha256', requireEnv('AUTH_SECRET')).update(payload).digest('base64url')
+	return createHmac('sha256', requireEnv(AUTH_SECRET, 'AUTH_SECRET')).update(payload).digest('base64url')
 }
 
 export function setPendingSignup(event: RequestEvent, data: PendingSignup) {
@@ -134,13 +141,17 @@ export function setPendingSignup(event: RequestEvent, data: PendingSignup) {
 
 export function readPendingSignup(event: RequestEvent): PendingSignup | null {
 	const cookie = event.cookies.get(PENDING_COOKIE)
+
 	if (!cookie) return null
+
 	const [payload, signature] = cookie.split('.')
+
 	if (!payload || !signature) return null
 
 	const expected = sign(payload)
 	const a = Buffer.from(signature)
 	const b = Buffer.from(expected)
+
 	if (a.length !== b.length || !timingSafeEqual(a, b)) return null
 
 	try {

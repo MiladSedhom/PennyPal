@@ -1,11 +1,10 @@
 <script lang="ts">
-	import * as Dialog from '$lib/components/ui/dialog'
-	import { Button } from '$lib/components/ui/button'
-	import DatePicker from '$lib/components/ui/date-picker/date-picker.svelte'
-	import TagMultiSelect from '$lib/components/pp/tag-multiselect.svelte'
-	import { updatePayment } from '$lib/remote/payments.remote'
+	import ResponsiveDialog from '#lib/components/pp/responsive-dialog.svelte'
+	import { Button } from '#lib/components/ui/button/index.js'
+	import DatePicker from '#lib/components/ui/date-picker/date-picker.svelte'
+	import TagMultiSelect from '#lib/components/pp/tag-multiselect.svelte'
+	import { updatePayment } from '#lib/remote/payments.remote.js'
 	import { CalendarDate, getLocalTimeZone } from '@internationalized/date'
-	import XIcon from '@lucide/svelte/icons/x'
 	import CheckIcon from '@lucide/svelte/icons/check'
 	import LoaderCircleIcon from '@lucide/svelte/icons/loader-circle'
 
@@ -58,91 +57,72 @@
 	}
 </script>
 
-<Dialog.Root
-	open={payment !== null}
-	onOpenChange={(isOpen) => {
-		if (!isOpen) onclose()
-	}}
->
-	<Dialog.Content class="max-w-[440px] gap-0 rounded-2xl border-none bg-card p-0 shadow-2xl" showCloseButton={false}>
-		<div class="flex items-center justify-between border-b border-border-soft px-6 py-4">
-			<Dialog.Title class="m-0 font-display text-[19px] font-bold tracking-[-0.025em]">Edit payment</Dialog.Title>
+<ResponsiveDialog open={payment !== null} title="Edit payment" {onclose} class="max-w-[440px]">
+	<form
+		class="flex flex-col gap-4 px-4 pb-4 md:px-6 md:py-5"
+		onsubmit={(e) => {
+			e.preventDefault()
+			save()
+		}}
+	>
+		<div class="grid grid-cols-2 gap-3">
+			<div class="flex flex-col gap-1.5">
+				<span class="caption">Date</span>
+				<DatePicker
+					bind:value={date}
+					class="w-full rounded-[10px]! border-transparent bg-muted! px-3!"
+					title={date.toString()}
+				/>
+			</div>
+			<div class="flex flex-col gap-1.5">
+				<span class="caption">Amount</span>
+				<input
+					type="number"
+					bind:value={amount}
+					placeholder="0"
+					step="1"
+					min="0"
+					class="w-full rounded-[10px] border border-transparent bg-muted px-3 py-2 text-right font-mono text-[13.5px] font-medium text-foreground"
+				/>
+			</div>
+		</div>
+
+		<div class="flex flex-col gap-1.5">
+			<span class="caption">Tags</span>
+			<div class="rounded-[10px] bg-muted">
+				<TagMultiSelect {tags} bind:selected={selectedTags} />
+			</div>
+		</div>
+
+		<div class="flex flex-col gap-1.5">
+			<span class="caption">Note</span>
+			<input
+				bind:value={note}
+				placeholder="—"
+				class="w-full rounded-[10px] border border-transparent bg-muted px-3 py-2 text-[13.5px] text-foreground"
+			/>
+		</div>
+
+		<div class="mt-1 flex gap-2 md:justify-end">
 			<button
 				type="button"
 				onclick={onclose}
-				class="flex h-8 w-8 items-center justify-center rounded-full border-none bg-bg-warm p-0 text-text-dim hover:bg-mint"
-				aria-label="Close"
+				class="flex-1 border-none bg-transparent px-3 py-2 text-[13.5px] font-semibold text-muted-foreground hover:text-foreground md:flex-none"
 			>
-				<XIcon size={16} />
+				Cancel
 			</button>
+			<Button
+				type="submit"
+				class="h-[36px] flex-1 gap-2 rounded-full bg-muted px-[18px] text-[13.5px] font-semibold text-foreground hover:bg-foreground/10 md:flex-none"
+				disabled={saving || !(amount > 0)}
+			>
+				{#if saving}
+					<LoaderCircleIcon size={15} class="animate-spin" />
+				{:else}
+					<CheckIcon size={15} />
+				{/if}
+				Save changes
+			</Button>
 		</div>
-
-		<form
-			class="flex flex-col gap-4 px-6 py-5"
-			onsubmit={(e) => {
-				e.preventDefault()
-				save()
-			}}
-		>
-			<div class="grid grid-cols-2 gap-3">
-				<div class="flex flex-col gap-1.5">
-					<span class="caption">Date</span>
-					<DatePicker
-						bind:value={date}
-						class="w-full rounded-[10px]! border-transparent bg-bg-warm! px-3!"
-						title={date.toString()}
-					/>
-				</div>
-				<div class="flex flex-col gap-1.5">
-					<span class="caption">Amount</span>
-					<input
-						type="number"
-						bind:value={amount}
-						placeholder="0"
-						step="1"
-						min="0"
-						class="w-full rounded-[10px] border border-transparent bg-bg-warm px-3 py-2 text-right font-mono text-[13.5px] font-medium text-foreground"
-					/>
-				</div>
-			</div>
-
-			<div class="flex flex-col gap-1.5">
-				<span class="caption">Tags</span>
-				<div class="rounded-[10px] bg-bg-warm">
-					<TagMultiSelect {tags} bind:selected={selectedTags} />
-				</div>
-			</div>
-
-			<div class="flex flex-col gap-1.5">
-				<span class="caption">Note</span>
-				<input
-					bind:value={note}
-					placeholder="—"
-					class="w-full rounded-[10px] border border-transparent bg-bg-warm px-3 py-2 text-[13.5px] text-foreground"
-				/>
-			</div>
-
-			<div class="mt-1 flex justify-end gap-2">
-				<button
-					type="button"
-					onclick={onclose}
-					class="border-none bg-transparent px-3 py-2 text-[13.5px] font-semibold text-text-dim hover:text-foreground"
-				>
-					Cancel
-				</button>
-				<Button
-					type="submit"
-					class="h-[36px] gap-2 rounded-full bg-mint px-[18px] text-[13.5px] font-semibold text-foreground hover:bg-mint-deep"
-					disabled={saving || !(amount > 0)}
-				>
-					{#if saving}
-						<LoaderCircleIcon size={15} class="animate-spin" />
-					{:else}
-						<CheckIcon size={15} />
-					{/if}
-					Save changes
-				</Button>
-			</div>
-		</form>
-	</Dialog.Content>
-</Dialog.Root>
+	</form>
+</ResponsiveDialog>

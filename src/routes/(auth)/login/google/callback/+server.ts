@@ -1,6 +1,6 @@
 import type { RequestHandler } from './$types'
 import { decodeIdToken } from 'arctic'
-import { finishOAuthLogin, googleClient, linkOAuthAccount } from '$lib/server/oauth'
+import { finishOAuthLogin, googleClient, linkOAuthAccount } from '#lib/server/oauth.js'
 
 type GoogleClaims = { sub: string; email?: string; email_verified?: boolean; name?: string }
 

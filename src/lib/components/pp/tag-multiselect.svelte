@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { Command } from 'bits-ui'
-	import * as Popover from '$lib/components/ui/popover'
+	import * as Popover from '#lib/components/ui/popover/index.js'
 	import TagChip from './tag-chip.svelte'
 	import TagIconChip from './tag-icon-chip.svelte'
 	import PlusIcon from '@lucide/svelte/icons/plus'
 	import CheckIcon from '@lucide/svelte/icons/check'
 	import type { PopoverTriggerProps } from 'bits-ui'
-	import { focusAdjacentTabbable } from '$lib/utils/focus-adjacent-tabbable'
-	import { quickCreateTag } from '$lib/remote/tags.remote'
+	import { focusAdjacentTabbable } from '#lib/utils/focus-adjacent-tabbable.js'
+	import { quickCreateTag } from '#lib/remote/tags.remote.js'
 	import { tick } from 'svelte'
 
 	type Tag = { id: number; name: string; color: string; icon: string }
@@ -67,7 +67,7 @@
 	<Popover.Trigger
 		bind:ref={trigger}
 		{...triggerProps}
-		class="flex w-full items-center gap-1.5 rounded-sm border border-transparent bg-transparent px-2.5 py-2 text-left text-foreground hover:bg-bg-warm"
+		class="flex w-full items-center gap-1.5 rounded-sm border border-transparent bg-transparent px-2.5 py-2 text-left text-foreground hover:bg-muted"
 	>
 		{#if selectedTags.length > 0}
 			<span class="flex flex-wrap items-center gap-1.5">
@@ -76,7 +76,7 @@
 				{/each}
 			</span>
 		{:else}
-			<span class="inline-flex items-center gap-1.5 text-[13px] text-text-mute">
+			<span class="inline-flex items-center gap-1.5 text-[13px] text-faint">
 				<PlusIcon size={11} />
 				{placeholder}
 			</span>
@@ -99,23 +99,23 @@
 				bind:value={search}
 				placeholder="Search Tags..."
 				onkeydown={paletteKeydown}
-				class="m-2.5 rounded-sm border border-transparent bg-bg-warm px-2.5 py-1.5 text-[13px] text-foreground placeholder:text-text-mute"
+				class="m-2.5 rounded-sm border border-transparent bg-muted px-2.5 py-1.5 text-[13px] text-foreground placeholder:text-faint"
 			/>
 			<Command.List class="max-h-[260px] overflow-y-auto px-2.5 pb-2.5">
 				{#if !canCreateTag}
-					<Command.Empty class="px-2.5 py-3 text-center text-[12.5px] text-text-mute">No tags match.</Command.Empty>
+					<Command.Empty class="px-2.5 py-3 text-center text-[12.5px] text-faint">No tags match.</Command.Empty>
 				{/if}
 				{#each tags as tg (tg.id)}
 					{@const isSelected = selected.includes(tg.id)}
 					<Command.Item
 						value={tg.name}
 						onSelect={() => toggle(tg.id)}
-						class="flex w-full cursor-pointer items-center gap-2.5 rounded-sm px-2.5 py-2 text-left text-foreground data-selected:bg-bg-warm"
+						class="flex w-full cursor-pointer items-center gap-2.5 rounded-sm px-2.5 py-2 text-left text-foreground data-selected:bg-muted"
 					>
 						<TagIconChip color={tg.color} icon={tg.icon} size={26} />
 						<span class="flex-1 text-[13.5px] font-semibold">{tg.name}</span>
 						{#if isSelected}
-							<CheckIcon size={15} class="text-lime-text" />
+							<CheckIcon size={15} class="text-kit-navy" />
 						{/if}
 					</Command.Item>
 				{/each}
@@ -124,11 +124,9 @@
 						value={search}
 						forceMount
 						onSelect={createTag}
-						class="flex w-full cursor-pointer items-center gap-2.5 rounded-sm px-2.5 py-2 text-left text-foreground data-selected:bg-bg-warm"
+						class="flex w-full cursor-pointer items-center gap-2.5 rounded-sm px-2.5 py-2 text-left text-foreground data-selected:bg-muted"
 					>
-						<span
-							class="inline-flex size-[26px] shrink-0 items-center justify-center rounded-lg bg-bg-warm text-text-mute"
-						>
+						<span class="inline-flex size-[26px] shrink-0 items-center justify-center rounded-lg bg-muted text-faint">
 							<PlusIcon size={14} />
 						</span>
 						<span class="flex-1 text-[13.5px]">

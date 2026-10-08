@@ -1,7 +1,7 @@
 import type { RequestHandler } from './$types'
 import { redirect } from '@sveltejs/kit'
 import { generateState } from 'arctic'
-import { githubClient } from '$lib/server/oauth'
+import { githubClient } from '#lib/server/oauth.js'
 
 export const GET: RequestHandler = (event) => {
 	const state = generateState()
@@ -12,5 +12,5 @@ export const GET: RequestHandler = (event) => {
 	// Started from /account "Connect" → link to the current user instead of logging in.
 	if (event.url.searchParams.has('link')) event.cookies.set('oauth_link', '1', opts)
 
-	redirect(302, url.toString())
+	redirect(302, url.toString(), { external: [url.origin] })
 }
