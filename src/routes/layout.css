@@ -201,6 +201,12 @@
 	::placeholder {
 		color: var(--bits-ui-muted-text);
 	}
+	/* Hold the exit frame until bits-ui unmounts, otherwise closing overlays snap back to full opacity. */
+	[data-state='closed'],
+	[data-closed] {
+		--tw-animation-fill-mode: forwards;
+		animation-fill-mode: forwards;
+	}
 	::selection {
 		background: color-mix(in srgb, var(--foreground) 10%, var(--background));
 	}
